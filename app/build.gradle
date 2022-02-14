@@ -55,4 +55,5 @@ dependencies {
 
     //데이터바인딩
     kapt 'com.android.databinding:compiler:4.0.2'
+
 }
