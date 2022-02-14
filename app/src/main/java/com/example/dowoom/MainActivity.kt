@@ -12,7 +12,7 @@ import androidx.databinding.DataBindingUtil
 import com.example.dowoom.Fragments.*
 import com.example.dowoom.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     lateinit var homeFrag: HomeFrag
     lateinit var gameFrag: GameFrag
@@ -57,11 +57,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 //todo : https://jwsoft91.tistory.com/52
-                // 그리고 fragment view model 알아보기
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-
             }
         })
     }
@@ -90,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         var selectedFragment : Fragment? = null
         selectedFragment = tab
         selectedFragment?.let {
-            supportFragmentManager.beginTransaction().replace(R.id.frameLayout,it).commit()
+            replaceFragment(selectedFragment,selectedFragment.tag!!)
         }
     }
 }
