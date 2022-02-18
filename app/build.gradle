@@ -56,7 +56,6 @@ dependencies {
     //데이터바인딩
     kapt 'com.android.databinding:compiler:4.0.2'
 
-    //뷰 페이저2
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
 
 }

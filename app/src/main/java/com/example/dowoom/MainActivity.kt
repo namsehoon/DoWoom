@@ -4,15 +4,14 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 
 
-
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.databinding.DataBindingUtil
 import com.example.dowoom.Fragments.*
 import com.example.dowoom.databinding.ActivityMainBinding
 
-class MainActivity : BaseActivity() {
+//baseActivity() 상속 (intent, replaceFragment startNextActivity(클래스::class.java). todo binding 추가 예정)
+class MainActivity : BaseActivity(TAG = "MainActivity") {
+
 
     lateinit var homeFrag: HomeFrag
     lateinit var gameFrag: GameFrag
@@ -25,8 +24,10 @@ class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        activityTag = MainActivity::class.simpleName
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         //초기화
         initialized()
@@ -35,33 +36,22 @@ class MainActivity : BaseActivity() {
         binding.tabLayout.addOnTabSelectedListener(object :
         TabLayout.OnTabSelectedListener {
 
+            // 선택될 때
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when(tab?.position) {
-                    0 -> {
-                        replaceview(homeFrag)
-                    }
-                    1 -> {
-                        replaceview(talkFrag)
-                    }
-                    2 -> {
-                        replaceview(gameFrag)
-                    }
-                    3 -> {
-                        replaceview(comuFrag)
-                    }
-                    4 -> {
-                        replaceview(settingFrag)
-                    }
+                    0 -> { replaceview(homeFrag) }
+                    1 -> { replaceview(talkFrag) }
+                    2 -> { replaceview(gameFrag) }
+                    3 -> { replaceview(comuFrag) }
+                    4 -> { replaceview(settingFrag) }
                 }
             }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                //todo : https://jwsoft91.tistory.com/52
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
+            // 선택되지 않을 시
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            // 다시 선택 될 때,
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
+
     }
 
     //시작시에,
@@ -83,12 +73,15 @@ class MainActivity : BaseActivity() {
 
     }
 
+    //fragment 변경
     private fun replaceview(tab:Fragment) {
         //화면변경
         var selectedFragment : Fragment? = null
         selectedFragment = tab
-        selectedFragment?.let {
-            replaceFragment(selectedFragment,selectedFragment.tag!!)
+        selectedFragment.let {
+            //프레그먼트 변경
+
+            replaceFragment(selectedFragment,selectedFragment::class.simpleName!!)
         }
     }
 }
