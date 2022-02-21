@@ -25,7 +25,6 @@ class MainActivity : BaseActivity(TAG = "MainActivity") {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        activityTag = MainActivity::class.simpleName
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -72,6 +71,31 @@ class MainActivity : BaseActivity(TAG = "MainActivity") {
         //처음 시작시 보여지는 프래그먼트
         supportFragmentManager.beginTransaction().add(R.id.frameLayout, homeFrag).commit()
 
+        //툴바 사용 as actionbar
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        binding.toolbarMain.title.let { "툴바 타이틀" }
+
+        //todo https://stickode.tistory.com/177
+        //todo https://stickode.tistory.com/177
+        //todo https://stickode.tistory.com/177
+        //todo https://stickode.tistory.com/177
+
+        //todo https://stickode.tistory.com/177
+        //todo https://stickode.tistory.com/177
+        //todo https://stickode.tistory.com/177
+
+        //todo 개 빡치네
+
+
+
+
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main,menu)
+        return true
     }
 
     //fragment 변경

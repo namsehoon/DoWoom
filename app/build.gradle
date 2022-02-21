@@ -8,12 +8,12 @@ plugins {
 apply plugin : 'kotlin-kapt'
 
 android {
-    compileSdk 32
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.example.dowoom"
         minSdk 21
-        targetSdk 32
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -38,6 +38,7 @@ android {
         // 데이터바인딩
         enabled = true
     }
+
 }
 
 dependencies {
