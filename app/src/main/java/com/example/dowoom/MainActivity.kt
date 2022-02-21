@@ -5,6 +5,7 @@ import com.google.android.material.tabs.TabLayout
 
 
 import android.os.Bundle
+import android.view.Menu
 import androidx.databinding.DataBindingUtil
 import com.example.dowoom.Fragments.*
 import com.example.dowoom.databinding.ActivityMainBinding
@@ -84,4 +85,6 @@ class MainActivity : BaseActivity(TAG = "MainActivity") {
             replaceFragment(selectedFragment,selectedFragment::class.simpleName!!)
         }
     }
+
+
 }
