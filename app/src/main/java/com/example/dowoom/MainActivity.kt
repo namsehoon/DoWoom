@@ -5,14 +5,15 @@ import com.google.android.material.tabs.TabLayout
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import com.example.dowoom.Fragments.*
 import com.example.dowoom.databinding.ActivityMainBinding
 
 //baseActivity() 상속 (intent, replaceFragment startNextActivity(클래스::class.java). todo binding 추가 예정)
-class MainActivity : BaseActivity(TAG = "MainActivity") {
-
+class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.layout.activity_main) {
 
     lateinit var homeFrag: HomeFrag
     lateinit var gameFrag: GameFrag
@@ -20,14 +21,8 @@ class MainActivity : BaseActivity(TAG = "MainActivity") {
     lateinit var comuFrag: ComuFrag
     lateinit var settingFrag: SettingFrag
 
-
-    //데이터바인딩
-    private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
 
         //초기화
         initialized()
@@ -56,10 +51,6 @@ class MainActivity : BaseActivity(TAG = "MainActivity") {
 
     //시작시에,
     fun initialized() {
-        //바인딩
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
-        //main.xml 정의된 이름.
-        binding.activity = this
 
         //프레그먼트
         homeFrag = HomeFrag()
@@ -71,32 +62,34 @@ class MainActivity : BaseActivity(TAG = "MainActivity") {
         //처음 시작시 보여지는 프래그먼트
         supportFragmentManager.beginTransaction().add(R.id.frameLayout, homeFrag).commit()
 
-        //툴바 사용 as actionbar
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        binding.toolbarMain.title.let { "툴바 타이틀" }
 
-        //todo https://stickode.tistory.com/177
-        //todo https://stickode.tistory.com/177
-        //todo https://stickode.tistory.com/177
-        //todo https://stickode.tistory.com/177
-
-        //todo https://stickode.tistory.com/177
-        //todo https://stickode.tistory.com/177
-        //todo https://stickode.tistory.com/177
-
-        //todo 개 빡치네
-
-
-
-
+        setSupportActionBar(findViewById(R.id.toolbarMain))
+        supportActionBar?.also {
+            //타이틀 사용 여부
+            it.setDisplayShowTitleEnabled(false)
+        }
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main,menu)
-        return true
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item?.itemId) {
+            R.id.notiItem -> {
+                Log.d("abcd","notiItem 클릭됨")
+                return super.onOptionsItemSelected(item)
+            }
+            R.id.filterItem -> {
+                Log.d("abcd","filterItem 클릭됨")
+                return  super.onOptionsItemSelected(item)
+            }
+            R.id.settingItem -> {
+                Log.d("abcd","settingItem 클릭됨")
+                return super.onOptionsItemSelected(item)
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+
     }
+
 
     //fragment 변경
     private fun replaceview(tab:Fragment) {
@@ -109,6 +102,5 @@ class MainActivity : BaseActivity(TAG = "MainActivity") {
             replaceFragment(selectedFragment,selectedFragment::class.simpleName!!)
         }
     }
-
 
 }
