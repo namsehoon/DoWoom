@@ -30,7 +30,6 @@ local.properties
 
 ### Kotlin ###
 # Compiled class file
-*.class
 
 # Log file
 *.log
