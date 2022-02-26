@@ -3,9 +3,11 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
 
+
 }
 // 데이터 바인딩
 apply plugin : 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdk 31
@@ -61,6 +63,15 @@ dependencies {
     implementation "androidx.activity:activity-ktx:1.4.0"
     implementation "androidx.fragment:fragment-ktx:1.4.0"
 
+    //파이어베이스
+    implementation platform('com.google.firebase:firebase-bom:29.1.0')
 
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    //인증
+    implementation 'com.google.firebase:firebase-auth'
 
+    //MVVM 뷰모델
+    implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0")
+    kapt("androidx.lifecycle:lifecycle-compiler:2.1.0")
 }

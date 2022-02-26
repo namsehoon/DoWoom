@@ -9,12 +9,19 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="?" />
+    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="baseFragment, baseActivity 설정">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ChangesViewManager" show_ignored="true" />
   <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/Users/namsehun/.android/avd/Pixel_3a_XL_API_30.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -26,9 +33,9 @@
       <list>
         <option value="valueResourceFile" />
         <option value="Class" />
-        <option value="Kotlin Class" />
         <option value="resourceFile" />
         <option value="layoutResourceFile" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -64,11 +71,24 @@
     <option name="LAST_EDITED_BUILD_TYPE" value="release" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app" />
+    </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.example.dowoom.Login" />
       <recent name="com.example.dowoom.Viewmodels" />
       <recent name="com.example.dowoom.Fragments" />
     </key>
+    <key name="android.template.1739204860">
+      <recent name="com.example.dowoom.start" />
+    </key>
     <key name="android.template.-1422520432">
+      <recent name="com.example.dowoom" />
+    </key>
+    <key name="android.template.291988965">
+      <recent name="com.example.dowoom.Start.Register" />
+      <recent name="com.example.dowoom.Start" />
+      <recent name="com.example.dowoom.Login" />
       <recent name="com.example.dowoom" />
     </key>
   </component>
@@ -211,7 +231,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645523608734</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="baseFragment, baseActivity 설정">
+      <created>1645523886769</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1645523886769</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -236,6 +263,7 @@
     <MESSAGE value="toolbar 작업중" />
     <MESSAGE value="툴바 생성 및 컨트롤 : 액티비티&#10;툴바 visible : 프래그먼트" />
     <MESSAGE value="?" />
-    <option name="LAST_COMMIT_MESSAGE" value="?" />
+    <MESSAGE value="baseFragment, baseActivity 설정" />
+    <option name="LAST_COMMIT_MESSAGE" value="baseFragment, baseActivity 설정" />
   </component>
 </project>
