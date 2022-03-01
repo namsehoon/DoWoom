@@ -38,7 +38,7 @@ android {
 
     dataBinding {
         // 데이터바인딩
-        enabled = true
+        enabled true
     }
 
 }
@@ -50,28 +50,27 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    //데이터바인딩
-    kapt 'com.android.databinding:compiler:4.0.2'
 
     //ktx
     implementation "androidx.activity:activity-ktx:1.4.0"
-    implementation "androidx.fragment:fragment-ktx:1.4.0"
+    implementation "androidx.fragment:fragment-ktx:1.4.1"
 
     //파이어베이스
     implementation platform('com.google.firebase:firebase-bom:29.1.0')
-
+    implementation 'com.google.firebase:firebase-database-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
-    //인증
-    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
 
     //MVVM 뷰모델
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0")
     kapt("androidx.lifecycle:lifecycle-compiler:2.1.0")
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.1.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
+
 }

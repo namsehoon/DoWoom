@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:tag="ComuFrag"
-        tools:context=".Fragments.ComuFrag">
+        tools:context=".fragments.ComuFrag">
 
         <TextView
             android:layout_width="wrap_content"

@@ -6,11 +6,12 @@ import com.google.android.material.tabs.TabLayout
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
-import androidx.databinding.DataBindingUtil
-import com.example.dowoom.Fragments.*
+import com.example.dowoom.fragments.*
 import com.example.dowoom.databinding.ActivityMainBinding
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 //baseActivity() 상속 (intent, replaceFragment startNextActivity(클래스::class.java). todo binding 추가 예정)
 class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.layout.activity_main) {
@@ -29,23 +30,51 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
 
         //텝 리스너
         binding.tabLayout.addOnTabSelectedListener(object :
-        TabLayout.OnTabSelectedListener {
+            TabLayout.OnTabSelectedListener {
 
             // 선택될 때
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                when(tab?.position) {
-                    0 -> { replaceview(homeFrag) }
-                    1 -> { replaceview(talkFrag) }
-                    2 -> { replaceview(gameFrag) }
-                    3 -> { replaceview(comuFrag) }
-                    4 -> { replaceview(settingFrag) }
+                when (tab?.position) {
+                    0 -> {
+                        replaceview(homeFrag)
+                    }
+                    1 -> {
+                        replaceview(talkFrag)
+                    }
+                    2 -> {
+                        replaceview(gameFrag)
+                    }
+                    3 -> {
+                        replaceview(comuFrag)
+                    }
+                    4 -> {
+                        replaceview(settingFrag)
+                    }
                 }
             }
+
             // 선택되지 않을 시
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
             // 다시 선택 될 때,
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
+
+//        //쓰기
+//        val database:FirebaseDatabase = FirebaseDatabase.getInstance()
+//        val myref:DatabaseReference = database.getReference("message")
+//        myref.setValue("안녕!")
+//
+//        //읽기
+//        myref.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                val value = snapshot.value
+//                Log.d("Abcd","변화된 값 : "+value)
+//            }
+//            override fun onCancelled(error: DatabaseError) {
+//                Log.d("abcd"," 취소될 때 에러 : "+error)
+//            }
+//        })
 
     }
 
@@ -68,6 +97,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
             //타이틀 사용 여부
             it.setDisplayShowTitleEnabled(false)
         }
+
+        val db = Firebase.database
+        val myRef = db.getReference("message")
+
+        myRef.setValue("Hrllo, world")
 
     }
 
