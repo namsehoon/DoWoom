@@ -3,7 +3,6 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
 
-
 }
 // 데이터 바인딩
 apply plugin : 'kotlin-kapt'
@@ -72,5 +71,14 @@ dependencies {
     kapt("androidx.lifecycle:lifecycle-compiler:2.1.0")
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.1.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
+
+
+    //sharedpreferneces datastore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences-core:1.0.0")
+
+    //코루틴
+    api  "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
+    api  "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
 
 }

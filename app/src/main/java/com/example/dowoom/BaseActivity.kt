@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import com.example.dowoom.DataStore.DataStoreST
 
 //생명주기 관리를 위한, 1.데이터 바인
 abstract class BaseActivity<T: ViewDataBinding>(TAG:String? = null, @LayoutRes private val layoutRes: Int) : AppCompatActivity() {
@@ -18,6 +19,7 @@ abstract class BaseActivity<T: ViewDataBinding>(TAG:String? = null, @LayoutRes p
     var activityTag:String? = null
     //2.데이터 바인딩
     protected  lateinit var binding:T
+
     init {
         this.activityTag = TAG
 
@@ -28,6 +30,7 @@ abstract class BaseActivity<T: ViewDataBinding>(TAG:String? = null, @LayoutRes p
         super.onCreate(savedInstanceState)
         //3.데이터 바인딩
         binding = DataBindingUtil.setContentView(this,layoutRes)
+
     }
 
 

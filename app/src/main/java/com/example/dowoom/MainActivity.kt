@@ -5,13 +5,22 @@ import com.google.android.material.tabs.TabLayout
 
 
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.MenuItem
+import androidx.lifecycle.lifecycleScope
+import com.example.dowoom.Data.dataModel.User
+import com.example.dowoom.DataStore.DataStore
+import com.example.dowoom.DataStore.DataStoreST
 import com.example.dowoom.fragments.*
 import com.example.dowoom.databinding.ActivityMainBinding
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 //baseActivity() 상속 (intent, replaceFragment startNextActivity(클래스::class.java). todo binding 추가 예정)
 class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.layout.activity_main) {
@@ -21,6 +30,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
     lateinit var talkFrag: TalkFrag
     lateinit var comuFrag: ComuFrag
     lateinit var settingFrag: SettingFrag
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,19 +70,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-//        //쓰기
-//        val database:FirebaseDatabase = FirebaseDatabase.getInstance()
-//        val myref:DatabaseReference = database.getReference("message")
-//        myref.setValue("안녕!")
-//
-//        //읽기
-//        myref.addValueEventListener(object : ValueEventListener {
+//        //todo : 여기부터
+//        val connectedRef = Firebase.database.getReference(".info/connected")
+//        connectedRef.addValueEventListener(object : ValueEventListener {
 //            override fun onDataChange(snapshot: DataSnapshot) {
-//                val value = snapshot.value
-//                Log.d("Abcd","변화된 값 : "+value)
+//                val connected = snapshot.getValue(User::class.java) ?: false
+//                if (connected) {
+//                    Log.d("abcd","연결됨")
+//                } else {
+//                    Log.d("abcd", "연결끊김")
+//                }
 //            }
+//
 //            override fun onCancelled(error: DatabaseError) {
-//                Log.d("abcd"," 취소될 때 에러 : "+error)
+//                Log.d("abcd","취소됨")
 //            }
 //        })
 
