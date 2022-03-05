@@ -8,7 +8,7 @@
 
         <variable
             name="viewmodel"
-            type="com.example.dowoom.viewmodel.HomeViewModel" />
+            type="com.example.dowoom.viewmodel.mainViewmodel.HomeViewModel" />
 
 
     </data>

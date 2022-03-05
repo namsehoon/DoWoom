@@ -12,16 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DoWoom">
         <activity
-            android:name=".initial.CheckActivity"
+            android:name=".activity.register.CheckActivity"
             android:exported="false" />
         <activity
-            android:name=".initial.FindByEmailActivity"
+            android:name=".activity.login.FindByEmailActivity"
             android:exported="false" />
         <activity
-            android:name=".initial.register.RegisterActivity"
+            android:name=".activity.register.RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".initial.StartActivity"
+            android:name=".activity.login.StartActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,10 +30,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".initial.login.LoginActivity"
+            android:name=".activity.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
     </application>

@@ -12,14 +12,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="firebase, homefragment, recyclerview">
+    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="datastore">
       <change afterPath="$PROJECT_DIR$/google-services.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/BaseActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/BaseActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/BaseActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/MainActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/home_fragment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/home_fragment.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +28,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ChangesViewManager" show_ignored="true" />
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/Users/namsehun/.android/avd/Pixel_3a_XL_API_30.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/Users/namsehun/.android/avd/Pixel_4_API_30.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -85,8 +86,8 @@
         <option value="Class" />
         <option value="resourceFile" />
         <option value="layoutResourceFile" />
-        <option value="Kotlin Class" />
         <option value="Kotlin Object" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -114,6 +115,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="android-custom-view/Users/namsehun/Library/Android/sdk/sources/android-31/android/view/View.java_SELECTED" value="View" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -134,11 +136,11 @@
       <recent name="$PROJECT_DIR$/app" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
-      <recent name="com.example.dowoom.DataStore" />
-      <recent name="com.example.dowoom.Data.model" />
-      <recent name="com.example.dowoom.Login" />
-      <recent name="com.example.dowoom.Viewmodels" />
-      <recent name="com.example.dowoom.Fragments" />
+      <recent name="com.example.dowoom.activity.main" />
+      <recent name="com.example.dowoom.viewmodel.mainViewmodel" />
+      <recent name="com.example.dowoom.viewmodel.registerViewmodel" />
+      <recent name="com.example.dowoom.viewmodel.loginViewmodel" />
+      <recent name="com.example.dowoom.Model" />
     </key>
     <key name="android.template.1739204860">
       <recent name="com.example.dowoom.start" />
@@ -339,7 +341,21 @@
       <option name="project" value="LOCAL" />
       <updated>1646129815003</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="datastore">
+      <created>1646274062354</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1646274062354</updated>
+    </task>
+    <task id="LOCAL-00015" summary="ㅌㅌ">
+      <created>1646471431215</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1646471431215</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -368,6 +384,8 @@
     <MESSAGE value="baseFragment, baseActivity 설정" />
     <MESSAGE value="login viewmodel 생성" />
     <MESSAGE value="firebase, homefragment, recyclerview" />
-    <option name="LAST_COMMIT_MESSAGE" value="firebase, homefragment, recyclerview" />
+    <MESSAGE value="datastore" />
+    <MESSAGE value="ㅌㅌ" />
+    <option name="LAST_COMMIT_MESSAGE" value="ㅌㅌ" />
   </component>
 </project>
