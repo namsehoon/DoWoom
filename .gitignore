@@ -9,4 +9,6 @@
 ### Firebase Patch ###
 .runtimeconfig.json
 .firebase/
-
+.json
+.bin
+.lock
