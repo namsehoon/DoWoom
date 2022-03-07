@@ -6,18 +6,15 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.dowoom.DataStore.DataStore
 import com.example.dowoom.DataStore.DataStoreST
 import com.example.dowoom.R
-import com.example.dowoom.Repo.nicknameCheckRepo
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.databinding.ActivityCheckBinding
 import com.example.dowoom.viewmodel.registerViewmodel.CheckViewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", R.layout.activity_check), View.OnClickListener, AdapterView.OnItemSelectedListener {
@@ -35,14 +32,11 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
         super.onCreate(savedInstanceState)
 
         initialized()
-
-
+        checkViewmodel = ViewModelProvider(this).get(CheckViewmodel::class.java)
 
     }
 
     fun initialized() {
-        //뷰 모델
-        checkViewmodel = ViewModelProvider(this).get(CheckViewmodel::class.java)
         //datastore
         datastore = DataStoreST.getInstance(this)
 
@@ -58,14 +52,18 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
             binding.checkSpinner.adapter = adapter
         }
 
+
+
     }
 
 
     //리스너
     override fun onClick(v: View?) {
+
         nickname = binding.etNickname.text.toString()
         statusMsg = binding.etStatusMsg.text.toString()
         spinnerText = binding.checkSpinner.selectedItem.toString()
+
 
         //todo 물음표 설명란 만들어야 함.
         when(v) {
@@ -81,15 +79,16 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
                 startNextActivity(RegisterActivity::class.java)
             }
             binding.checkBtn -> {
-                checkViewmodel.getResult(nickname!!).observe(this, {
-                    if(it == true) {
-                        // 닉네임을 사용 할 수 있으면
+                checkViewmodel.checkData(binding.etNickname.text.toString()).observe(this, { resultBoolean ->
+                    Log.d("Abcd","result boolean is :"+ resultBoolean)
+                    if(resultBoolean == true) {
                         binding.nextBtn.visibility = View.VISIBLE
                     } else {
                         // 사용 할 수 없으면
                         binding.nextBtn.visibility = View.INVISIBLE
                         Toast.makeText(this@CheckActivity, "이미 등록된 닉네임 입니다.", Toast.LENGTH_SHORT).show()
                     }
+
                 })
 
 
@@ -97,6 +96,7 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
 
         }
     }
+
 
     fun saveData(nickname:String, statusMsg:String, spinnerText:String) {
 
@@ -116,5 +116,10 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
     override fun onNothingSelected(parent: AdapterView<*>?) {
         Toast.makeText(this,"서포터 또는 수혜자를 선택 해주세요.",Toast.LENGTH_SHORT).show()
         return
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
     }
 }

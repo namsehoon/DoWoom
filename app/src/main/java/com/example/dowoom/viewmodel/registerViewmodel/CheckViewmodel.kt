@@ -1,32 +1,45 @@
 package com.example.dowoom.viewmodel.registerViewmodel
 
-import android.provider.ContactsContract
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.dowoom.Model.User
-import com.example.dowoom.Repo.nicknameCheckRepo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import android.util.Log
+import androidx.lifecycle.*
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class CheckViewmodel : ViewModel() {
 
-    //닉네임을 넣으면 boolean을 리턴한다. nickname을 observe 해야한다.
-    private val repo = nicknameCheckRepo()
+    val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    val myRef: DatabaseReference = database.getReference("User")
 
+    fun checkData(nickname:String) : LiveData<Boolean>  {
 
-    //viewmodel -> repository를 보고 있음
-    //1. nickname 중복여부를 관찰(repo), 2.중복이 안되면 다음으로 넘어가게끔
-     fun getResult(nickname:String) : LiveData<Boolean> {
+        //유저들 -> 하위노드 (유저) -> nickname -> 값이 nickname과 같은 쿼리
+
         val mutableData = MutableLiveData<Boolean>()
-        repo.checkData(nickname).observeForever {
-            mutableData.postValue(it)
+        val query = myRef.orderByChild("nickname").equalTo(nickname)
+
+        //유저들 -> 하위노드 (유저) -> nickname -> 값이 nickname과 같은 쿼리
+        query.get().addOnSuccessListener {
+            Log.i("firebase", "Got value ${it.value}")
+            //if 문
+            if(it.value == null) {
+                mutableData.value = true
+                Log.d("abcd","사용 할 수 있습니다.")
+            } else {
+                mutableData.value = false
+            }
+            Log.d("abcd","mutable is : "+mutableData.value)
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
         }
+
         return mutableData
+
     }
 
+    override fun onCleared() {
+        super.onCleared()
+
+    }
 
 }
+
