@@ -59,52 +59,66 @@
         app:layout_constraintStart_toStartOf="@+id/etPhoneNumber"
         app:layout_constraintTop_toBottomOf="@+id/etPhoneNumber" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="인증번호 입력"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/btGetAuthNumber"
-        app:layout_constraintTop_toBottomOf="@+id/btGetAuthNumber" />
-
-    <EditText
-        android:id="@+id/etAuthNumber"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:ems="10"
-        android:inputType="textPersonName"
+        android:layout_marginTop="36dp"
         app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btGetAuthNumber">
 
-    <TextView
-        android:id="@+id/tvReGetAuthNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="인증번호 다시받기"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/etAuthNumber" />
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="인증번호 입력"
+            android:layout_marginHorizontal="20sp"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/btGetAuthNumber"
+            app:layout_constraintTop_toBottomOf="@+id/btGetAuthNumber" />
 
-    <Button
-        android:id="@+id/btPutAuthNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20sp"
-        android:layout_marginTop="44dp"
-        android:text="인증하기"
-        app:layout_constraintEnd_toEndOf="@+id/etAuthNumber"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/etAuthNumber"
-        app:layout_constraintTop_toBottomOf="@+id/tvReGetAuthNumber" />
+        <EditText
+            android:id="@+id/etAuthNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20sp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/textView4"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+        <TextView
+            android:id="@+id/tvReGetAuthNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="20sp"
+            android:text="인증번호 다시받기"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/textView4"
+            app:layout_constraintTop_toBottomOf="@+id/etAuthNumber" />
+
+        <Button
+            android:id="@+id/btPutAuthNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20sp"
+            android:layout_marginTop="44dp"
+            android:text="인증하기"
+            app:layout_constraintEnd_toEndOf="@+id/etAuthNumber"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/etAuthNumber"
+            app:layout_constraintTop_toBottomOf="@+id/tvReGetAuthNumber" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -13,7 +13,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="git">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/registerViewmodel/RegisterViewmodel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/BaseViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/SingleLiveEvent.kt" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/google-services.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" afterDir="false" />
@@ -26,11 +27,15 @@
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Repo/nicknameCheckRepo.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/register/CheckActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/register/CheckActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Model/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Model/User.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Repo/UserRepo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Repo/UserRepo.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/register/RegisterActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/register/RegisterActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/registerViewmodel/CheckViewmodel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/registerViewmodel/CheckViewmodel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/registerViewmodel/RegisterViewmodel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/registerViewmodel/RegisterViewmodel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_register.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_register.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -98,7 +103,9 @@
         <option value="resourceFile" />
         <option value="layoutResourceFile" />
         <option value="Kotlin Object" />
+        <option value="Kotlin File" />
         <option value="Kotlin Class" />
+        <option value="Kotlin Interface" />
       </list>
     </option>
   </component>
@@ -147,11 +154,11 @@
       <recent name="$PROJECT_DIR$/app" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.example.dowoom.viewmodel" />
       <recent name="com.example.dowoom.activity.main" />
       <recent name="com.example.dowoom.viewmodel.mainViewmodel" />
       <recent name="com.example.dowoom.viewmodel.registerViewmodel" />
       <recent name="com.example.dowoom.viewmodel.loginViewmodel" />
-      <recent name="com.example.dowoom.Model" />
     </key>
     <key name="android.template.1739204860">
       <recent name="com.example.dowoom.start" />
@@ -380,7 +387,42 @@
       <option name="project" value="LOCAL" />
       <updated>1646647150181</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="check activity 끝, register 및 로그인 ac 시작">
+      <created>1646647216284</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1646647216284</updated>
+    </task>
+    <task id="LOCAL-00019" summary="git">
+      <created>1646693966668</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1646693966668</updated>
+    </task>
+    <task id="LOCAL-00020" summary="git">
+      <created>1646694009913</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1646694009913</updated>
+    </task>
+    <task id="LOCAL-00021" summary="git">
+      <created>1646694068699</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1646694068699</updated>
+    </task>
+    <task id="LOCAL-00022" summary="d">
+      <created>1646694183571</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1646694183571</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -412,7 +454,9 @@
     <MESSAGE value="datastore" />
     <MESSAGE value="ㅌㅌ" />
     <MESSAGE value="check activity viewmodel, repo, get query" />
+    <MESSAGE value="check activity 끝, register 및 로그인 ac 시작" />
     <MESSAGE value="git" />
-    <option name="LAST_COMMIT_MESSAGE" value="git" />
+    <MESSAGE value="d" />
+    <option name="LAST_COMMIT_MESSAGE" value="d" />
   </component>
 </project>

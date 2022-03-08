@@ -1,6 +1,6 @@
 package com.example.dowoom.Model
 
-data class User (var age:Int = 0, var nickname:String? = null, var stateMsg:String? = null, var popularity:String? = null, var status:Boolean = false)
+data class User (var age:Int = 0, var nickname:String? = null, var stateMsg:String? = null, var popularity:String? = null, var status:Boolean = false, var email:String? = null, var sOrB:Boolean)
 
 
 
