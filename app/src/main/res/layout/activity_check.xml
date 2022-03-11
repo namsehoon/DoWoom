@@ -7,14 +7,14 @@
     <data>
 
         <variable
-            name="checkViewmodel"
-            type="com.example.dowoom.viewmodel.registerViewmodel.CheckViewmodel" />
+            name="vm"
+            type="com.example.dowoom.CheckViewmodel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.register.CheckActivity">
+        tools:context=".viewmodel.registervm.CheckActivity">
 
 
         <TextView
@@ -57,7 +57,7 @@
             android:layout_marginTop="16dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name"
+            android:text="@={vm.etNickname}"
             android:privateImeOptions="defaultInputmode=korean"
             app:layout_constraintEnd_toStartOf="@+id/checkBtn"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="44dp"
             android:text="확인"
+            android:onClick="@{() -> vm.requestOkOrNotFun()}"
             app:layout_constraintBottom_toBottomOf="@+id/etNickname"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/etNickname"
@@ -92,7 +93,7 @@
             android:layout_marginTop="16dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name"
+            android:text="@={vm.etStateMsg}"
             android:privateImeOptions="defaultInputmode=korean"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"

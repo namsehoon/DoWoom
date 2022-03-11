@@ -7,7 +7,7 @@
     <data>
         <variable
             name="vm"
-            type="com.example.dowoom.viewmodel.registerViewmodel.RegisterViewmodel" />
+            type="com.example.dowoom.viewmodel.registervm.RegisterViewmodel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -44,22 +44,26 @@
         android:layout_marginHorizontal="20sp"
         android:layout_marginTop="16dp"
         android:ems="10"
+        android:text="@={vm.etPhoneNum}"
         android:hint="휴대폰 번호(- 없이 숫자만 입력)"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-    <Button
+    <TextView
         android:id="@+id/btGetAuthNumber"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:background="@color/logoYellow"
+        android:layout_height="40sp"
         android:text="인증문자 받기"
+        android:onClick="@{() -> vm.requestAuth()}"
         app:layout_constraintEnd_toEndOf="@+id/etPhoneNumber"
         app:layout_constraintStart_toStartOf="@+id/etPhoneNumber"
         app:layout_constraintTop_toBottomOf="@+id/etPhoneNumber" />
 
     <LinearLayout
+        android:id="@+id/registerLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
@@ -89,6 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20sp"
             android:ems="10"
+            android:text="@={vm.etAuthNum}"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -102,18 +107,21 @@
             android:layout_marginTop="8dp"
             android:layout_marginHorizontal="20sp"
             android:text="인증번호 다시받기"
+            android:onClick="@{() -> vm.requestAuth()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/textView4"
             app:layout_constraintTop_toBottomOf="@+id/etAuthNumber" />
 
-        <Button
+        <TextView
             android:id="@+id/btPutAuthNumber"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40sp"
             android:layout_marginHorizontal="20sp"
+            android:background="@color/logoYellow"
             android:layout_marginTop="44dp"
             android:text="인증하기"
+            android:onClick="@{() -> vm.authComplete()}"
             app:layout_constraintEnd_toEndOf="@+id/etAuthNumber"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/etAuthNumber"

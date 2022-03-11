@@ -3,12 +3,14 @@ package com.example.dowoom.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.example.dowoom.R
+import com.example.dowoom.viewmodel.BaseViewModel
 
 //생명주기 관리를 위한, 1.데이터 바인
 abstract class BaseActivity<T: ViewDataBinding>(TAG:String? = null, @LayoutRes private val layoutRes: Int) : AppCompatActivity() {
@@ -16,7 +18,7 @@ abstract class BaseActivity<T: ViewDataBinding>(TAG:String? = null, @LayoutRes p
     //태그
     var activityTag:String? = null
     //2.데이터 바인딩
-    protected  lateinit var binding:T
+    protected lateinit var binding:T
 
     init {
         this.activityTag = TAG
@@ -29,6 +31,10 @@ abstract class BaseActivity<T: ViewDataBinding>(TAG:String? = null, @LayoutRes p
         //3.데이터 바인딩
         binding = DataBindingUtil.setContentView(this,layoutRes)
 
+    }
+    //토스트 메시지
+    fun showToast(message:String) {
+        Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
     }
 
 

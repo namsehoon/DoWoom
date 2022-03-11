@@ -16,7 +16,8 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         fun newInstance() = HomeFrag()
     }
 
-    private val viewModel: HomeViewModel by viewModels()
+    //https://developer.android.com/kotlin/ktx
+    val viewModel by viewModels<HomeViewModel>()
     private lateinit var adapter:onlineAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

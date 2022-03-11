@@ -37,7 +37,7 @@ android {
 
     dataBinding {
         // 데이터바인딩
-        enabled true
+        enabled = true
     }
 
 }
@@ -67,11 +67,13 @@ dependencies {
 
 
     //MVVM 뷰모델
-    implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
-    kapt("androidx.lifecycle:lifecycle-compiler:2.1.0")
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.1.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
+    kapt("androidx.lifecycle:lifecycle-compiler:2.2.0")
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
 
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-runtime:2.2.0"
 
     //sharedpreferneces datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -81,8 +83,5 @@ dependencies {
     api  "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
     api  "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
 
-    //rx java
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
-    implementation 'io.reactivex.rxjava3:rxjava:3.0.7'
 
 }

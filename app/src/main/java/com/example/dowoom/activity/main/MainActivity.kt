@@ -7,10 +7,12 @@ import com.google.android.material.tabs.TabLayout
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import androidx.activity.viewModels
 import com.example.dowoom.R
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.fragments.*
 import com.example.dowoom.databinding.ActivityMainBinding
+import com.example.dowoom.viewmodel.mainViewmodel.MainViewModel
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 

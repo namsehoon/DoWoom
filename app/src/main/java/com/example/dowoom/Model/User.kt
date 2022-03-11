@@ -1,7 +1,40 @@
 package com.example.dowoom.Model
 
-data class User (var age:Int = 0, var nickname:String? = null, var stateMsg:String? = null, var popularity:String? = null, var status:Boolean = false, var email:String? = null, var sOrB:Boolean)
+import com.google.firebase.database.Exclude
+import com.google.firebase.database.IgnoreExtraProperties
 
+data class User (var age:Int = 0, var nickname:String? = null, var stateMsg:String? = null, var popularity:String? = null, var status:Boolean = false, var email:String? = null, var sOrB:Boolean?) {
+
+    //constructor (update?)
+    fun User(nickname:String?, stateMsg:String?, sOrB:Boolean?) {
+        this.nickname = nickname
+        this.stateMsg = stateMsg
+        this.sOrB = sOrB
+    }
+
+}
+
+
+
+//참조 : https://firebase.google.com/docs/database/android/read-and-write?hl=ko#kotlin+ktx_7
+@IgnoreExtraProperties
+data class updateUserAtRegister( //(update?)
+    var uid:String? = "",
+    var nickname:String? = "",
+    var stateMsg:String? = "",
+    var sOrB:Boolean? = false
+)  {
+    //매핑
+    @Exclude
+    fun toMap():Map<String, Any?> {
+        return mapOf(
+            "uid" to uid,
+            "nickname" to nickname,
+            "stateMsg" to stateMsg,
+            "sOrB" to sOrB
+        )
+    }
+}
 
 
 //

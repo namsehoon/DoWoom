@@ -6,6 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dowoom.Model.User
 import com.google.firebase.database.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 
 /**
@@ -14,7 +19,7 @@ import com.google.firebase.database.*
 3.LiveData는 Observer 패턴을 기반으로하며 ViewModel과 View 간의 통신을 쉽게 한다.
 4.데이터 변경을 관찰하고 데이터를 자동으로 업데이트한다.
  * */
-class userRepo(application: Application) {
+class userRepo {
 
     val mutableData = MutableLiveData<MutableList<User>>()
     //firebase 인스턴스 및 참조
@@ -49,9 +54,37 @@ class userRepo(application: Application) {
         return mutableData
     }
 
-    //insert new user
-    fun insertNewUser(number: String, nickname :String, statusMsg:String, sOrB:Boolean) {
 
+
+    suspend fun checkData(nickname:String) : Flow<Boolean> {
+
+        //유저들 -> 하위노드 (유저) -> nickname -> 값이 nickname과 같은 쿼리
+        return flow {
+            var result = false
+            val query = myRef.orderByChild("nickname").equalTo(nickname)
+            query.get().addOnSuccessListener {
+                Log.i("firebase", "Got value ${it.value}")
+                //if 문
+                if(it.value == null) {
+                    result = true
+                    Log.d("abcd","사용 할 수 있습니다.")
+                } else {
+                    result = false
+                }
+                Log.d("Abcd", "userrepo result is : "+result)
+            }.addOnFailureListener{
+                Log.e("firebase", "Error getting data", it)
+            }
+            delay(500)
+            emit(result)
+
+        }.flowOn(Dispatchers.IO)
+
+
+    }
+
+    //insert new user
+    fun insertNewUser(number: String) {
 
         myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -59,22 +92,14 @@ class userRepo(application: Application) {
                 if (snapshot.child(number).exists()) {
                     Log.d("abcd","이미 존재하는 사용자 입니다.")
                 } else {
-                    //유저객체 생성
-                    val user = User(0, nickname,statusMsg,null,false,null, sOrB)
-
                     //insert to db
-                    myRef.child(number).setValue(user).addOnSuccessListener {
-                        Log.d("abcd", "succeed in insertNewUser")
-                    }
-                        //만약 실패하면.
-                        .addOnFailureListener { error ->
-                            Log.d("abcd","error in insertNewUser is :"+ error.message)
-                        }
+                    val key:String = myRef.push().key!!
+                    Log.d("abcd","key is : "+key)
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.d("abcd","error in insertNewUser onCancelled is :"+ error.message)
+                TODO("Not yet implemented")
             }
         })
 

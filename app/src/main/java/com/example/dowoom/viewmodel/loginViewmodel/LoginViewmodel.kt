@@ -2,9 +2,10 @@ package com.example.dowoom.viewmodel.loginViewmodel
 
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
+import com.example.dowoom.viewmodel.BaseViewModel
 
 //로그인 뷰모델
-class LoginViewmodel : ViewModel() {
+class LoginViewmodel : BaseViewModel() {
 
     //폰 번호
     var phone = ObservableField<String>()
