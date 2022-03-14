@@ -29,7 +29,7 @@ class onlineAdapter(private val context:Context) : RecyclerView.Adapter<onlineAd
         val user : User = userList[position]
         holder.name.text = user.nickname
         holder.age.text = user.age.toString()
-        holder.popularity.text = user.popularity
+        holder.popularity.text = user.popularity.toString()
         holder.stateMsg.text = user.stateMsg
     }
 

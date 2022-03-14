@@ -21,15 +21,17 @@ import kotlinx.coroutines.flow.flowOn
  * */
 class userRepo {
 
-    val mutableData = MutableLiveData<MutableList<User>>()
     //firebase 인스턴스 및 참조
     val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     val myRef: DatabaseReference = database.getReference("User")
+
+
 
     //get all user
      fun getData(): LiveData<MutableList<User>> {
         // livedata 객체 만들기
         //firebase 추가 된 데이터 이벤트 리스너
+        val mutableData = MutableLiveData<MutableList<User>>()
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
 
             //user객체가 들어갈 수 있는 변할 수 있는 mutable 리스트 빈 객체 생성
@@ -63,7 +65,7 @@ class userRepo {
             var result = false
             val query = myRef.orderByChild("nickname").equalTo(nickname)
             query.get().addOnSuccessListener {
-                Log.i("firebase", "Got value ${it.value}")
+                Log.d("abcd", "Got value ${it.value}")
                 //if 문
                 if(it.value == null) {
                     result = true
@@ -73,7 +75,7 @@ class userRepo {
                 }
                 Log.d("Abcd", "userrepo result is : "+result)
             }.addOnFailureListener{
-                Log.e("firebase", "Error getting data", it)
+                Log.d("abcd", "Error getting data", it)
             }
             delay(500)
             emit(result)

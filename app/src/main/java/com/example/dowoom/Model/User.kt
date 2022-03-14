@@ -3,16 +3,8 @@ package com.example.dowoom.Model
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 
-data class User (var age:Int = 0, var nickname:String? = null, var stateMsg:String? = null, var popularity:String? = null, var status:Boolean = false, var email:String? = null, var sOrB:Boolean?) {
-
-    //constructor (update?)
-    fun User(nickname:String?, stateMsg:String?, sOrB:Boolean?) {
-        this.nickname = nickname
-        this.stateMsg = stateMsg
-        this.sOrB = sOrB
-    }
-
-}
+//todo : if sOrB가 true이면 == 서포터 else 수혜자
+data class User (var age:Int = 0, var nickname:String? = null, var stateMsg:String? = null, var popularity:Int? = 0, var status:Boolean = false, var email:String? = null, var sOrB:Boolean? = true)
 
 
 

@@ -1,6 +1,7 @@
 package com.example.dowoom.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -9,6 +10,10 @@ import com.example.dowoom.Adapter.onlineAdapter
 import com.example.dowoom.viewmodel.mainViewmodel.HomeViewModel
 import com.example.dowoom.R
 import com.example.dowoom.databinding.HomeFragmentBinding
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.home_fragment) {
 
@@ -42,7 +47,9 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         binding.lifecycleOwner = this
 
 
-
+        var auth = Firebase.auth
+        var firebaseUser: FirebaseUser? = auth.currentUser
+        Log.d("abcd", "firebaseuser is in homefragment : "+firebaseUser?.uid)
     }
 
     fun observerData(){

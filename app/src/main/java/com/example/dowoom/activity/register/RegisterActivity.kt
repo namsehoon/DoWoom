@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.example.dowoom.DataStore.DataStore
 import com.example.dowoom.DataStore.DataStoreST
+import com.example.dowoom.Model.User
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.R
 import com.example.dowoom.databinding.ActivityRegisterBinding
@@ -19,6 +20,8 @@ import com.example.dowoom.activity.main.MainActivity
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,6 +36,10 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
 
     private lateinit var auth:FirebaseAuth
     lateinit var datastore: DataStore
+    var nickname:String? = null
+    var age: Int = 0
+    var stateMsg: String? = null
+    var sOrB: Boolean? = false
 
 
 //    private val registerViewmodel by lazy {
@@ -43,11 +50,24 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
 
     private var resendToken:PhoneAuthProvider.ForceResendingToken? = null
     private var storedVerificationId = ""
+    private lateinit var firebase:FirebaseDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initialized()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        //사용자가 현재 로그인 되어있는지 확인
+        //todo :  인증 객체의 초기화가 완료되지 않은 경우에도 getCurrentUser가 null을 반환할 수 있습니다.
+        val currentuser = auth.currentUser
+        if(currentuser != null) {
+            Log.d("abcd", "currentuser?.phoneNumber is : "+currentuser?.phoneNumber.toString())
+        } else {
+            Log.d("abcd", "현재 로그인 한 사용자가 없습니다.")
+        }
     }
 
 
@@ -61,6 +81,9 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
         //viwmodel call back 실행
         initViewmodelCallback()
         datastore = DataStoreST.getInstance(this)
+
+        //firebase
+        firebase = Firebase.database
     }
 
     //콜백
@@ -103,6 +126,11 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
                 resendToken = token
             }
 
+            override fun onCodeAutoRetrievalTimeOut(p0: String) {
+                super.onCodeAutoRetrievalTimeOut(p0)
+                Log.d("abacd","인증 시간이 초과 되었습니다. 재전송을 클릭 해주세요."+p0)
+            }
+
         }
     }
 
@@ -140,6 +168,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
                             storedVerificationId,
                             viewModel.etAuthNum.value.toString()
                         )
+
                     verifyPhoneNumberWithCode(phoneCredential)
                 }catch (e:Exception) {
                     Log.d("abcd","인증완료 버튼 클릭 : "+e.toString())
@@ -149,9 +178,12 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
         }
     }
 
-    //인증실행
+    // 사용자 로그인
     private fun verifyPhoneNumberWithCode(phoneAuthCredential: PhoneAuthCredential) {
-        //기존
+        //PhoneAuthCredential 이 객체로 사용자 로그인 처리가 가능함.
+
+
+//        //기존
 //        UserInfo.tel = binding.phoneAuthEtPhoneNum.text.toString()
 //        if (UserInfo.tel.isNotBlank() && UserInfo.phoneAuthNum.isNotBlank() &&
 //            (UserInfo.tel == binding.phoneAuthEtPhoneNum.text.toString() && UserInfo.phoneAuthNum == binding.phoneAuthEtAuthNum.text.toString())
@@ -162,16 +194,45 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
 //            return
 //        }
 
+
+
         //신규
         Firebase.auth.signInWithCredential(phoneAuthCredential)
-          .addOnCompleteListener { task ->
+          .addOnCompleteListener(this) { task ->
               if(task.isSuccessful) {
                   showToast("인증성공")
                   binding.etAuthNumber.isEnabled = true
-                  startNextActivity(MainActivity::class.java)
+                  val job = CoroutineScope(Dispatchers.IO).launch {
+
+                      //유저 정보
+                      val newUser = task.result?.user
+
+                      nickname = datastore.readData("nickname")
+                      stateMsg = datastore.readData("statusMsg")
+                      val sb = datastore.readData("spinner")
+                      sOrB = sb.equals("서포터")
+                      datastore.storeData("uid",newUser?.uid!!)
+                      datastore.storeData("number", newUser.phoneNumber!!)
+
+
+                      val user = User(0,nickname,stateMsg,0,false,null,sOrB)
+                      val ref = firebase.getReference("User")
+                      //db에 넣기
+                      ref.child(newUser.phoneNumber!!).setValue(user)
+
+
+                      Log.d("abcd", "new user is : "+user.toString())
+
+
+                  }
+                  job.isCompleted.let {
+                      startNextActivity(MainActivity::class.java)
+                  }
+
                   //edit text auth number input enabled true
               } else {
                   showToast("인증실패")
+                  Log.d("abcd", "사용자 로그인 실패 : "+task.exception?.message)
                   binding.etAuthNumber.isEnabled = true
               }
 
