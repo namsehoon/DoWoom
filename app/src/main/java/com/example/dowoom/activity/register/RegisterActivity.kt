@@ -1,5 +1,6 @@
 package com.example.dowoom.activity.register
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +13,7 @@ import com.example.dowoom.DataStore.DataStoreST
 import com.example.dowoom.Model.User
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.R
+import com.example.dowoom.activity.login.StartActivity
 import com.example.dowoom.databinding.ActivityRegisterBinding
 import com.example.dowoom.viewmodel.registervm.RegisterViewmodel
 import com.google.firebase.auth.ktx.auth
@@ -40,6 +42,8 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
     var age: Int = 0
     var stateMsg: String? = null
     var sOrB: Boolean? = false
+    var authNum:String? = null
+    var phoneNum: String? = null
 
 
 //    private val registerViewmodel by lazy {
@@ -58,17 +62,6 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
         initialized()
     }
 
-    override fun onStart() {
-        super.onStart()
-        //사용자가 현재 로그인 되어있는지 확인
-        //todo :  인증 객체의 초기화가 완료되지 않은 경우에도 getCurrentUser가 null을 반환할 수 있습니다.
-        val currentuser = auth.currentUser
-        if(currentuser != null) {
-            Log.d("abcd", "currentuser?.phoneNumber is : "+currentuser?.phoneNumber.toString())
-        } else {
-            Log.d("abcd", "현재 로그인 한 사용자가 없습니다.")
-        }
-    }
 
 
     fun initialized() {
@@ -91,11 +84,12 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
         object  : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             //번호인증 혹은 기타 다른인증 끝난 상태
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                showToast("인증코드가 전송되었습니다. 90초 이내에 입력해주세요.")
+                Log.d("abcd","인증코드가 전송되었습니다. 90초 이내에 입력해주세요.")
 
                 //폰 번호 저장
                 CoroutineScope(Dispatchers.IO).launch {
                     datastore.storeData("number", viewModel.etPhoneNum.value.toString())
+                    authNum = datastore.storeData("authNum", credential.smsCode.toString()).toString()
                 }
                 //인증코드 입력
                 binding.etAuthNumber.setText(credential.smsCode.toString())
@@ -178,22 +172,36 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
         }
     }
 
+    //이미 있는 유저라면, 로그인으로 처리
+    private fun ifUserExist() {
+        phoneNum = binding.etPhoneNumber.text.toString()
+        if (phoneNum == binding.etPhoneNumber.text.toString() && authNum == binding.etAuthNumber.text.toString())
+        { // 이전에  인증한 번호와 인증번호인 경우
+            showToast("인증 성공")
+            CoroutineScope(Dispatchers.Main).launch {
+                datastore.storeData("number",binding.etPhoneNumber.text.toString())
+            }
+            startActivity(intent)
+            return
+        }
+    }
+
     // 사용자 로그인
     private fun verifyPhoneNumberWithCode(phoneAuthCredential: PhoneAuthCredential) {
-        //PhoneAuthCredential 이 객체로 사용자 로그인 처리가 가능함.
+        //재사용
+        CoroutineScope(Dispatchers.IO).launch {
+            nickname = datastore.readData("nickname")
+            stateMsg = datastore.readData("statusMsg")
+            val sb = datastore.readData("spinner")
+            sOrB = sb.equals("서포터")
+        }
 
+        val intent = Intent(this,MainActivity::class.java)
+        //task내에 해당 속성이 적용된 activity부터 top activity까지 모두 제거한 뒤 해당 activity를 활성화하여 top이 되도록 함
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-//        //기존
-//        UserInfo.tel = binding.phoneAuthEtPhoneNum.text.toString()
-//        if (UserInfo.tel.isNotBlank() && UserInfo.phoneAuthNum.isNotBlank() &&
-//            (UserInfo.tel == binding.phoneAuthEtPhoneNum.text.toString() && UserInfo.phoneAuthNum == binding.phoneAuthEtAuthNum.text.toString())
-//        ) { // 이전에  인증한 번호와 인증번호인 경우
-//            showToast("인증 성공")
-//            UserInfo.tel = binding.phoneAuthEtPhoneNum.text.toString()
-//            startActivity(Intent(this@PhoneAuthActivity, UserInfoActivity::class.java))
-//            return
-//        }
-
+        //이미 있는 유저라면,
+        ifUserExist()
 
 
         //신규
@@ -202,31 +210,16 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
               if(task.isSuccessful) {
                   showToast("인증성공")
                   binding.etAuthNumber.isEnabled = true
-                  val job = CoroutineScope(Dispatchers.IO).launch {
 
+                  val job = CoroutineScope(Dispatchers.IO).launch {
                       //유저 정보
                       val newUser = task.result?.user
-
-                      nickname = datastore.readData("nickname")
-                      stateMsg = datastore.readData("statusMsg")
-                      val sb = datastore.readData("spinner")
-                      sOrB = sb.equals("서포터")
                       datastore.storeData("uid",newUser?.uid!!)
                       datastore.storeData("number", newUser.phoneNumber!!)
-
-
-                      val user = User(0,nickname,stateMsg,0,false,null,sOrB)
-                      val ref = firebase.getReference("User")
-                      //db에 넣기
-                      ref.child(newUser.phoneNumber!!).setValue(user)
-
-
-                      Log.d("abcd", "new user is : "+user.toString())
-
-
                   }
                   job.isCompleted.let {
-                      startNextActivity(MainActivity::class.java)
+                      viewModel.userInsert(nickname!!,stateMsg!!,sOrB!!)
+                      startActivity(intent)
                   }
 
                   //edit text auth number input enabled true

@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DoWoom">
         <activity
+            android:name=".activity.login.LoadingActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".viewmodel.registervm.CheckActivity"
             android:exported="false" />
         <activity
@@ -23,11 +32,7 @@
         <activity
             android:name=".activity.login.StartActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.login.LoginActivity"
@@ -35,7 +40,7 @@
         <activity
             android:name=".activity.main.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
     </application>
 
 </manifest>

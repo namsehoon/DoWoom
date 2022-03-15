@@ -18,17 +18,14 @@ class StartActivity : BaseActivity<ActivityStartBinding>(TAG = "StartActivity", 
 
 
 
-
         //여기서 permission ?
 
         binding.startBtn.setOnClickListener {
             startNextActivity(CheckActivity::class.java)
-            finish()
         }
 
         binding.loginBtn.setOnClickListener {
             startNextActivity(RegisterActivity::class.java)
-            finish()
         }
     }
 }

@@ -2,15 +2,21 @@ package com.example.dowoom.Repo
 
 import android.app.Application
 import android.util.Log
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dowoom.Model.User
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 
 
 /**
@@ -24,6 +30,7 @@ class userRepo {
     //firebase 인스턴스 및 참조
     val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     val myRef: DatabaseReference = database.getReference("User")
+    val auth:FirebaseUser? = Firebase.auth.currentUser
 
 
 
@@ -56,7 +63,17 @@ class userRepo {
         return mutableData
     }
 
-
+    suspend fun autoLogin() : Flow<Boolean> {
+        return flow {
+            var logined = false
+            val user = auth
+            if (user != null) {
+                logined = true
+            }
+            delay(500)
+            emit(logined)
+        }
+    }
 
     suspend fun checkData(nickname:String) : Flow<Boolean> {
 
@@ -86,24 +103,24 @@ class userRepo {
     }
 
     //insert new user
-    fun insertNewUser(number: String) {
+    suspend fun insertNewUser(number: String, nickname: String,stateMsg:String,sOrB:Boolean) : Flow<Boolean> {
 
-        myRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                //이미 존재하는지 확인
-                if (snapshot.child(number).exists()) {
-                    Log.d("abcd","이미 존재하는 사용자 입니다.")
-                } else {
-                    //insert to db
-                    val key:String = myRef.push().key!!
-                    Log.d("abcd","key is : "+key)
-                }
-            }
+        return flow {
+            var result = false
+                myRef.addValueEventListener(object : ValueEventListener  {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                            val user = User(0,nickname,stateMsg,0,false,null,sOrB)
+                            myRef.child(number).setValue(user)
+                            Log.d("abcd","사용자가 추가 되었습니다. in userrepo")
+                            result = true
+                        }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
-
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.d("abcd", "error in user repo : "+error.message)
+                    }
+                })
+            delay(500)
+            this.emit(result)
+        }.flowOn(Dispatchers.IO)
     }
 }

@@ -1,13 +1,21 @@
 package com.example.dowoom.viewmodel.registervm
 
+import android.provider.ContactsContract
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.dowoom.Repo.userRepo
 import com.example.dowoom.viewmodel.BaseViewModel
 import com.example.dowoom.viewmodel.SingleLiveEvent
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class RegisterViewmodel : ViewModel() {
+
+    val repo = userRepo()
 
     // 인증번호 다시 보내기
     var isResendPhoneAuth: Boolean = false
@@ -15,6 +23,9 @@ class RegisterViewmodel : ViewModel() {
     val etPhoneNum = MutableLiveData<String>("")
     //editText 인증 번호
     val etAuthNum = MutableLiveData<String>("")
+
+    //insert
+    private val _insertComplete = MutableLiveData<Boolean>()
 
     //인증 요청 , SingleLiveEvent : viewmodel에서 view에 이벤트를 전달할 때, "값"을 전달하는 경우가 아닌 이벤트가 발생했다는 "사실"만을 전달하고 싶을 때.
     private val _requestAuth = MutableLiveData<Boolean>()
@@ -24,6 +35,7 @@ class RegisterViewmodel : ViewModel() {
     private val _authComplete = SingleLiveEvent<Unit>()
 
     // 이건 view(activity, fragment) 에서 사용
+    val insertComplete:LiveData<Boolean> get() = _insertComplete
     val requestAuth:LiveData<Boolean> get() = _requestAuth
     val requestResendPhoneAuth:LiveData<Boolean> get() =  _requestResendPhoneAuth
     val authComplete:LiveData<Unit> get() = _authComplete
@@ -39,12 +51,26 @@ class RegisterViewmodel : ViewModel() {
            //인증 번호 재요청
                Log.d("Abcd","폰번호 : "+etPhoneNum.value)
            _requestResendPhoneAuth.value = !etPhoneNum.value.isNullOrBlank()
-        }
+       }
     }
 
     // 인증 완료
     fun authComplete() {
         _authComplete.call()
+    }
+
+
+    //todo = 사용자가 이미 존재해도 데이터 업데이트 됨.
+    fun userInsert(nickname:String,statusMsg:String,sOrB:Boolean) {
+        viewModelScope.launch {
+            repo.insertNewUser(etPhoneNum.value.toString(),nickname,statusMsg,sOrB)
+                .catch {  e ->
+                    Log.d("abcd", "error in reguster viewmodel is :" + e.message)
+                }.collect {
+                    _insertComplete.value = it
+                }
+
+        }
     }
 
 

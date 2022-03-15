@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="startAC"
-            type="com.example.dowoom.activity.login.StartActivity" />
+            name="viewmodel"
+            type="com.example.dowoom.viewmodel.registervm.StartViewmodel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
