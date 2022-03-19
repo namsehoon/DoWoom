@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".viewmodel.registervm.CheckActivity"
+            android:name=".activity.register.CheckActivity"
             android:exported="false" />
         <activity
             android:name=".activity.login.FindByEmailActivity"

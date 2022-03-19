@@ -6,6 +6,7 @@ import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dowoom.Adapter.UserBindAdapter
 import com.example.dowoom.Adapter.onlineAdapter
 import com.example.dowoom.viewmodel.mainViewmodel.HomeViewModel
 import com.example.dowoom.R
@@ -23,39 +24,46 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
 
     //https://developer.android.com/kotlin/ktx
     val viewModel by viewModels<HomeViewModel>()
-    private lateinit var adapter:onlineAdapter
+    private lateinit var adapter: onlineAdapter
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-        adapter = onlineAdapter(requireContext())
-        binding.familiarRV.layoutManager = LinearLayoutManager(this.context)
-        binding.familiarRV.adapter = adapter
-        observerData()
-    }
     override fun onPrepareOptionsMenu(menu: Menu) {
         //툴바 filter item 보이게 하기
         menu.findItem(R.id.filterItem).isVisible = true
         super.onPrepareOptionsMenu(menu)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        //어뎁터
+        adapter = onlineAdapter(requireActivity())
+        binding.onlineRV.layoutManager = LinearLayoutManager(this.context)
+        binding.onlineRV.adapter = adapter
+    }
+
+    //view 변경 작업
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.viewmodel = viewModel
-        binding.lifecycleOwner = this
+        //바인딩
+        binding.vm = viewModel
+        binding.lifecycleOwner = requireActivity()
 
+
+        //옵저버 (back key 에러를 보완하기 위해서 여기서 getlifecyclerowner로 관찰)
+        observerData()
 
         var auth = Firebase.auth
         var firebaseUser: FirebaseUser? = auth.currentUser
         Log.d("abcd", "firebaseuser is in homefragment : "+firebaseUser?.uid)
     }
 
-    fun observerData(){
-        viewModel.fetchData().observe(this, Observer {
-            adapter.setListData(it)
-            adapter.notifyDataSetChanged()
+    fun observerData() {
+        //어뎁터 설정
+        //observe
+
+        viewModel.observeUser().observe(viewLifecycleOwner, Observer {
+            Log.d("abcd","it is ;" +it)
+            adapter.setUser(it)
         })
     }
 

@@ -7,7 +7,7 @@
     <data>
 
         <variable
-            name="viewmodel"
+            name="vm"
             type="com.example.dowoom.viewmodel.mainViewmodel.HomeViewModel" />
 
 
@@ -39,6 +39,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/familiarRV"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="500sp"
                 tools:listitem="@layout/item_recycler"/>

@@ -1,10 +1,11 @@
 package com.example.dowoom.viewmodel.mainViewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.dowoom.Model.User
+import androidx.lifecycle.*
+import com.example.dowoom.model.User
 import com.example.dowoom.Repo.userRepo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 /**
@@ -17,13 +18,11 @@ class HomeViewModel : ViewModel() {
     //유저 가져옴
     private val repo = userRepo()
 
-    fun fetchData(): LiveData<MutableList<User>> {
-        val mutableData = MutableLiveData<MutableList<User>>()
-        repo.getData().observeForever{
-            //mutableData 객체에 가져온 유저를 관할하게 끔 설정
-            mutableData.postValue(it)
-        }
-        return mutableData
+    fun observeUser() : LiveData<MutableList<User>> {
+        val userList =  MutableLiveData<MutableList<User>>()
+            repo.getData().observeForever(Observer {
+                userList.value = it
+            })
+        return userList
     }
-
 }

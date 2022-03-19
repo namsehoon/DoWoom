@@ -8,13 +8,13 @@
 
         <variable
             name="vm"
-            type="com.example.dowoom.CheckViewmodel" />
+            type="com.example.dowoom.viewmodel.registervm.CheckViewmodel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".viewmodel.registervm.CheckActivity">
+        tools:context=".activity.register.CheckActivity">
 
 
         <TextView
@@ -100,26 +100,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvStatusMsg" />
 
-        <Button
-            android:id="@+id/beforeBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="84dp"
-            android:text="이전"
-            app:layout_constraintEnd_toStartOf="@+id/nextBtn"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etStatusMsg" />
 
         <Button
             android:id="@+id/nextBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="72dp"
-            android:visibility="gone"
+            android:layout_marginBottom="36dp"
             android:text="다음"
-            app:layout_constraintBottom_toBottomOf="@+id/beforeBtn"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

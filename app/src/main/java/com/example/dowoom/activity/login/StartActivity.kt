@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import com.example.dowoom.R
 import com.example.dowoom.activity.BaseActivity
-import com.example.dowoom.viewmodel.registervm.CheckActivity
+import com.example.dowoom.activity.register.CheckActivity
 import com.example.dowoom.databinding.ActivityStartBinding
 import com.example.dowoom.activity.register.RegisterActivity
 import com.example.dowoom.viewmodel.registervm.StartViewmodel

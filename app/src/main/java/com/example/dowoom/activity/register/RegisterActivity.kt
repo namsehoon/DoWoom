@@ -10,10 +10,8 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.example.dowoom.DataStore.DataStore
 import com.example.dowoom.DataStore.DataStoreST
-import com.example.dowoom.Model.User
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.R
-import com.example.dowoom.activity.login.StartActivity
 import com.example.dowoom.databinding.ActivityRegisterBinding
 import com.example.dowoom.viewmodel.registervm.RegisterViewmodel
 import com.google.firebase.auth.ktx.auth

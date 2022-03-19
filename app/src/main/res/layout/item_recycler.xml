@@ -2,6 +2,13 @@
 <layout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+    
+    <data>
+        <variable
+            name="userItem"
+            type="com.example.dowoom.model.User" />
+        
+    </data>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -45,7 +52,7 @@
                     android:id="@+id/tvNickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="남세훈"
+                    android:text="@{userItem.nickname}"
                     />
 
                 <TextView
@@ -60,7 +67,7 @@
                     android:id="@+id/tvAge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="10"
+                    android:text="@{userItem.age.toString()}"
                     />
 
                 <TextView
@@ -75,7 +82,7 @@
                     android:id="@+id/tvPopularity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="11" />
+                    android:text="@{userItem.popularity.toString()}" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -89,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginBottom="16dp"
-                    android:text="심심해요 같이 놀아요." />
+                    android:text="@{userItem.stateMsg}" />
             </LinearLayout>
 
         </LinearLayout>

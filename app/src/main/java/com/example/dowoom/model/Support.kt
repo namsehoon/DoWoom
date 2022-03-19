@@ -1,4 +1,4 @@
-package com.example.dowoom.Model
+package com.example.dowoom.model
 
 import java.util.*
 

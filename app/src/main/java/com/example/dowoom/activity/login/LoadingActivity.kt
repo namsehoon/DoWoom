@@ -1,19 +1,14 @@
 package com.example.dowoom.activity.login
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import com.example.dowoom.CheckViewmodel
 import com.example.dowoom.R
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.activity.main.MainActivity
 import com.example.dowoom.databinding.ActivityLoadingBinding
 import com.example.dowoom.viewmodel.registervm.LoadingViewmodel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 class LoadingActivity : BaseActivity<ActivityLoadingBinding>(TAG = "로딩액티비티",R.layout.activity_loading) {
 

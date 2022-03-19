@@ -1,22 +1,17 @@
 package com.example.dowoom.Repo
 
-import android.app.Application
 import android.util.Log
-import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.dowoom.Model.User
+import com.example.dowoom.model.User
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 
 
 /**
@@ -39,30 +34,39 @@ class userRepo {
         // livedata 객체 만들기
         //firebase 추가 된 데이터 이벤트 리스너
         val mutableData = MutableLiveData<MutableList<User>>()
-        myRef.addListenerForSingleValueEvent(object : ValueEventListener {
-
-            //user객체가 들어갈 수 있는 변할 수 있는 mutable 리스트 빈 객체 생성
-            val listData: MutableList<User> = mutableListOf<User>()
-            //데이터가 변할 시, 이벤트
+        val listData: MutableList<User> = mutableListOf<User>()
+        myRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()){
-                    for (userSnapshot in snapshot.children){
+                    listData.clear() // 중복 출력 방지
+                    for (userData in snapshot.children){
+
                         // 각 유저를 가져와서, list에 넣어줌.
-                        val getData = userSnapshot.getValue(User::class.java)
+                        val getData = userData.getValue(User::class.java)
                         listData.add(getData!!)
 
-                        //관찰 할 데이터 setvalu를 이용해서 유저를 넣어준 후, return
-                        mutableData.value = listData
                     }
+
+                    //관찰 할 데이터 setvalu를 이용해서 유저를 넣어준 후, return
+                    mutableData.value = listData
                 }
             }
+            //user객체가 들어갈 수 있는 변할 수 있는 mutable 리스트 빈 객체 생성
+
+            //todo 여기부터
+//            0. 데이터를 가져올거임 실시간으로 그래서 childlistener에 대해서 공부
+//            1. 온라인되어있는 유저
+//            2. 뿌려줌
+
+            //오류가 발생 하였을 때
             override fun onCancelled(error: DatabaseError) {
-               Log.d("abcd","에러 : "+error)
+               Log.d("abcd","에러 : "+error.message)
             }
         })
         return mutableData
     }
 
+    //자동로그인
     suspend fun autoLogin() : Flow<Boolean> {
         return flow {
             var logined = false
@@ -72,28 +76,31 @@ class userRepo {
             }
             delay(500)
             emit(logined)
-        }
+        }.flowOn(Dispatchers.Main)
     }
 
+    //이미 사용하고 있는 닉넹미ㅇ
     suspend fun checkData(nickname:String) : Flow<Boolean> {
 
         //유저들 -> 하위노드 (유저) -> nickname -> 값이 nickname과 같은 쿼리
         return flow {
             var result = false
             val query = myRef.orderByChild("nickname").equalTo(nickname)
-            query.get().addOnSuccessListener {
-                Log.d("abcd", "Got value ${it.value}")
-                //if 문
-                if(it.value == null) {
-                    result = true
-                    Log.d("abcd","사용 할 수 있습니다.")
-                } else {
-                    result = false
-                }
-                Log.d("Abcd", "userrepo result is : "+result)
-            }.addOnFailureListener{
-                Log.d("abcd", "Error getting data", it)
-            }
+           withContext(Dispatchers.IO) {
+               query.get().addOnSuccessListener {
+                   Log.d("abcd", "Got value ${it.value}")
+                   //if 문
+                   if(it.value == null) {
+                       result = true
+                       Log.d("abcd","사용 할 수 있습니다.")
+                   } else {
+                       result = false
+                   }
+                   Log.d("Abcd", "userrepo result is : "+result)
+               }.addOnFailureListener{
+                   Log.d("abcd", "Error getting data", it)
+               }
+           }
             delay(500)
             emit(result)
 
@@ -107,7 +114,7 @@ class userRepo {
 
         return flow {
             var result = false
-                myRef.addValueEventListener(object : ValueEventListener  {
+                myRef.addListenerForSingleValueEvent(object : ValueEventListener  {
                     override fun onDataChange(snapshot: DataSnapshot) {
                             val user = User(0,nickname,stateMsg,0,false,null,sOrB)
                             myRef.child(number).setValue(user)
