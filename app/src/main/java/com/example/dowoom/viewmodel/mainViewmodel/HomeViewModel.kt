@@ -18,7 +18,9 @@ class HomeViewModel : ViewModel() {
     //유저 가져옴
     private val repo = userRepo()
 
-    fun observeUser() : LiveData<MutableList<User>> {
+
+
+    suspend fun observeUser() : LiveData<MutableList<User>> {
         val userList =  MutableLiveData<MutableList<User>>()
             repo.getData().observeForever(Observer {
                 userList.value = it

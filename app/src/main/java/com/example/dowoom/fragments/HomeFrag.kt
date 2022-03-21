@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.Adapter.UserBindAdapter
 import com.example.dowoom.Adapter.onlineAdapter
@@ -15,12 +17,16 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.home_fragment) {
 
     companion object {
         fun newInstance() = HomeFrag()
     }
+
 
     //https://developer.android.com/kotlin/ktx
     val viewModel by viewModels<HomeViewModel>()
@@ -57,14 +63,16 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         Log.d("abcd", "firebaseuser is in homefragment : "+firebaseUser?.uid)
     }
 
+
     fun observerData() {
         //어뎁터 설정
         //observe
-
-        viewModel.observeUser().observe(viewLifecycleOwner, Observer {
-            Log.d("abcd","it is ;" +it)
-            adapter.setUser(it)
-        })
+        CoroutineScope(Dispatchers.Main).launch {
+            viewModel.observeUser().observe(viewLifecycleOwner, Observer {
+                Log.d("abcd","it is ;" +it)
+                adapter.setUser(it)
+            })
+        }
     }
 
 

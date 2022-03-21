@@ -4,13 +4,30 @@ import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 
 //todo : if sOrB가 true이면 == 서포터 else 수혜자
-data class User (var age:Int? = 0, var nickname:String? = null, var stateMsg:String? = null, var popularity:Int? = 0, var status:Boolean = false, var email:String? = null, var sOrB:Boolean? = true)
+data class User(
+    var age: Int? = 0,
+    var nickname: String? = null,
+    var stateMsg: String? = null,
+    var popularity: Int? = 0,
+    var status: Boolean = false,
+    var email: String? = null,
+    var sOrB: Boolean? = true,
+    var Connect: Connect? = null
+
+
+
+
+) {
+    override fun toString(): String {
+        return super.toString()
+    }
+}
 
 
 
 //참조 : https://firebase.google.com/docs/database/android/read-and-write?hl=ko#kotlin+ktx_7
 @IgnoreExtraProperties
-data class updateUserAtRegister( //(update?)
+data class updateUser( //(update?)
     var uid:String? = "",
     var nickname:String? = "",
     var stateMsg:String? = "",
