@@ -4,18 +4,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.dowoom.Adapter.UserBindAdapter
-import com.example.dowoom.Adapter.onlineAdapter
+import com.example.dowoom.adapter.HomeAdapter
 import com.example.dowoom.viewmodel.mainViewmodel.HomeViewModel
 import com.example.dowoom.R
 import com.example.dowoom.databinding.HomeFragmentBinding
+import com.example.dowoom.model.User
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +27,7 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
 
     //https://developer.android.com/kotlin/ktx
     val viewModel by viewModels<HomeViewModel>()
-    private lateinit var adapter: onlineAdapter
+    private lateinit var adapter: HomeAdapter
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         //툴바 filter item 보이게 하기
@@ -42,7 +39,13 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         super.onViewCreated(view, savedInstanceState)
 
         //어뎁터
-        adapter = onlineAdapter(requireActivity())
+        adapter = HomeAdapter(requireActivity(),
+            profileClick = { user ->
+                Log.d("abcd"," 123123"+user.uid)
+        },
+        talkClick = { user ->
+            Log.d("abcd"," 234234"+user.uid)
+        })
         binding.onlineRV.layoutManager = LinearLayoutManager(this.context)
         binding.onlineRV.adapter = adapter
     }
@@ -69,9 +72,10 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         //observe
         CoroutineScope(Dispatchers.Main).launch {
             viewModel.observeUser().observe(viewLifecycleOwner, Observer {
-                Log.d("abcd","it is ;" +it)
+                Log.d("abcd","it user is : "+it.toString())
                 adapter.setUser(it)
             })
+
         }
     }
 

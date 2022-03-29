@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="chatroom"
+            type="com.example.dowoom.model.ChatRoom" />
+
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/logoYellow"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="100sp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start">
+
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="100sp"
+                android:src="@{chatroom.profileImg}"
+                android:layout_height="wrap_content"
+                tools:srcCompat="@tools:sample/avatars" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="2"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10sp">
+
+                <TextView
+                    android:id="@+id/tvNickname"
+                    android:gravity="start"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{chatroom.nickname}" />
+
+
+                <TextView
+                    android:layout_marginStart="20sp"
+                    android:id="@+id/tvLastTime"
+                    android:gravity="end"
+                    android:layout_weight="1"
+                    android:layout_gravity="center|end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{Long.toString(chatroom.timeStamp)}" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10sp"
+                android:weightSum="10"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvLastMsg"
+                    android:layout_weight="9"
+                    android:gravity="center|start"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@{chatroom.lastMessage}" />
+
+                <ImageView
+                    android:id="@+id/newMsg"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="5sp"
+                    android:padding="1dp"
+                    android:layout_gravity="center"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_baseline_new_releases_24"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

@@ -5,15 +5,14 @@ import com.google.firebase.database.IgnoreExtraProperties
 
 //todo : if sOrB가 true이면 == 서포터 else 수혜자
 data class User(
+    var uid:String? = null,
     var age: Int? = 0,
     var nickname: String? = null,
     var stateMsg: String? = null,
     var popularity: Int? = 0,
-    var status: Boolean = false,
+    var status: Boolean? = false,
     var email: String? = null,
     var sOrB: Boolean? = true,
-    var Connect: Connect? = null
-
 
 
 

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dowoom.Repo.userRepo
+import com.example.dowoom.repo.userRepo
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -30,16 +30,5 @@ class LoadingViewmodel: ViewModel() {
         }
     }
 
-//    fun autoLoginfun() : LiveData<Boolean> {
-//        viewModelScope.launch {
-//            repo.autoLogin().catch { e->
-//                Log.d("abcd"," auto login error is : "+e)
-//
-//            }
-//                .collect {
-//                _autoLogin.value = it
-//            }
-//        }
-//    }
 
 }

@@ -1,9 +1,7 @@
-package com.example.dowoom.DataStore
+package com.example.dowoom.dataStore
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.preference.Preference
-import android.service.autofill.Dataset
 import android.util.Log
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit

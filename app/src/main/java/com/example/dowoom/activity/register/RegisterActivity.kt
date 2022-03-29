@@ -8,8 +8,8 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import com.example.dowoom.DataStore.DataStore
-import com.example.dowoom.DataStore.DataStoreST
+import com.example.dowoom.dataStore.DataStore
+import com.example.dowoom.dataStore.DataStoreST
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.R
 import com.example.dowoom.databinding.ActivityRegisterBinding
@@ -209,14 +209,15 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
                   showToast("인증성공")
                   binding.etAuthNumber.isEnabled = true
 
+                  val newUser = task.result?.user
                   val job = CoroutineScope(Dispatchers.IO).launch {
                       //유저 정보
-                      val newUser = task.result?.user
+
                       datastore.storeData("uid",newUser?.uid!!)
                       datastore.storeData("number", newUser.phoneNumber!!)
                   }
                   job.isCompleted.let {
-                      viewModel.userInsert(nickname!!,stateMsg!!,sOrB!!)
+                      viewModel.userInsert(newUser?.uid!! ,nickname!!,stateMsg!!,sOrB!!)
                       startActivity(intent)
                   }
 

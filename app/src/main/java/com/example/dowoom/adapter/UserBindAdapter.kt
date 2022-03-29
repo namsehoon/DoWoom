@@ -1,4 +1,4 @@
-package com.example.dowoom.Adapter
+package com.example.dowoom.adapter
 
 import android.annotation.SuppressLint
 import androidx.databinding.BindingAdapter
@@ -12,7 +12,7 @@ object UserBindAdapter {
     @BindingAdapter("users")
     fun setBindPost(view:RecyclerView, users:LiveData<MutableList<User>> ) {
         view.adapter?.run {
-            if(this is onlineAdapter) {
+            if(this is HomeAdapter) {
                 users.value?.let { this.users = it} ?: {this.users = arrayListOf()}()
                 this.notifyDataSetChanged()
             }

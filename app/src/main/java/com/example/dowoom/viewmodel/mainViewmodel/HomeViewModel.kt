@@ -2,10 +2,7 @@ package com.example.dowoom.viewmodel.mainViewmodel
 
 import androidx.lifecycle.*
 import com.example.dowoom.model.User
-import com.example.dowoom.Repo.userRepo
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.dowoom.repo.userRepo
 
 
 /**
@@ -20,11 +17,17 @@ class HomeViewModel : ViewModel() {
 
 
 
+
     suspend fun observeUser() : LiveData<MutableList<User>> {
         val userList =  MutableLiveData<MutableList<User>>()
-            repo.getData().observeForever(Observer {
+            repo.getData().observeForever(Observer { it ->
                 userList.value = it
+
             })
+
+
+
         return userList
     }
+
 }

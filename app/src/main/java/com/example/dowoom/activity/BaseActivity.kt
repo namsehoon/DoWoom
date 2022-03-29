@@ -11,6 +11,10 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.example.dowoom.R
 import com.example.dowoom.viewmodel.BaseViewModel
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 
 //생명주기 관리를 위한, 1.데이터 바인
 abstract class BaseActivity<T: ViewDataBinding>(TAG:String? = null, @LayoutRes private val layoutRes: Int) : AppCompatActivity() {
@@ -30,6 +34,7 @@ abstract class BaseActivity<T: ViewDataBinding>(TAG:String? = null, @LayoutRes p
         super.onCreate(savedInstanceState)
         //3.데이터 바인딩
         binding = DataBindingUtil.setContentView(this,layoutRes)
+
 
     }
     //토스트 메시지
@@ -67,11 +72,12 @@ abstract class BaseActivity<T: ViewDataBinding>(TAG:String? = null, @LayoutRes p
     override fun onResume() {
         Log.d(activityTag,  activityTag + " onResume")
         super.onResume()
-    }
+       }
 
     override fun onPause() {
         Log.d(activityTag,  activityTag + " onPause")
         super.onPause()
+
     }
 
     override fun onStop() {

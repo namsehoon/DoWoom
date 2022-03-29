@@ -8,13 +8,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.dowoom.R
 import com.example.dowoom.activity.BaseActivity
+import com.example.dowoom.dataStore.DataStoreST
 import com.example.dowoom.fragments.*
 import com.example.dowoom.databinding.ActivityMainBinding
 import com.example.dowoom.viewmodel.mainViewmodel.MainViewModel
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 
 //baseActivity() 상속 (intent, replaceFragment startNextActivity(클래스::class.java). todo binding 추가 예정)
 class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.layout.activity_main) {
@@ -25,6 +31,26 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
     lateinit var comuFrag: ComuFrag
     lateinit var settingFrag: SettingFrag
 
+    var database: FirebaseDatabase? = null
+    var auth: FirebaseUser? = null
+
+
+
+    override fun onStop() {
+        super.onStop()
+        val connect = database!!.reference.child("Connect/".plus(auth!!.uid).plus("/connected/"))
+        connect.setValue(false).addOnFailureListener {
+            Log.d("abcd", " it.message is : " + it.message)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val connect = database!!.reference.child("Connect/".plus(auth!!.uid).plus("/connected/"))
+        connect.setValue(true).addOnFailureListener {
+            Log.d("abcd", " it.message is : " + it.message)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +90,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-
+        Log.d("abcd","auth uid in mainac : "+auth!!.uid)
     }
 
     //시작시에,
@@ -87,10 +113,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
             it.setDisplayShowTitleEnabled(false)
         }
 
-        val db = Firebase.database
-        val myRef = db.getReference("message")
+         database = Firebase.database
+         auth = Firebase.auth.currentUser
 
-        myRef.setValue("Hrllo, world")
+        val dataStore = DataStoreST.getInstance(this)
+        lifecycleScope.launch {
+            dataStore.storeData("as","as")
+        }
 
     }
 

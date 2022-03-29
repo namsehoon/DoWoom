@@ -1,13 +1,11 @@
 package com.example.dowoom.viewmodel.registervm
 
-import android.provider.ContactsContract
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dowoom.Repo.userRepo
-import com.example.dowoom.viewmodel.BaseViewModel
+import com.example.dowoom.repo.userRepo
 import com.example.dowoom.viewmodel.SingleLiveEvent
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -61,9 +59,9 @@ class RegisterViewmodel : ViewModel() {
 
 
     //todo = 사용자가 이미 존재해도 데이터 업데이트 됨.
-    fun userInsert(nickname:String,statusMsg:String,sOrB:Boolean) {
+    fun userInsert(uid:String, nickname:String,statusMsg:String,sOrB:Boolean) {
         viewModelScope.launch {
-            repo.insertNewUser(etPhoneNum.value.toString(),nickname,statusMsg,sOrB)
+            repo.insertNewUser(uid,etPhoneNum.value.toString(),nickname,statusMsg,sOrB)
                 .catch {  e ->
                     Log.d("abcd", "error in reguster viewmodel is :" + e.message)
                 }.collect {
