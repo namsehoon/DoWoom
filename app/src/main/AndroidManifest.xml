@@ -12,8 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DoWoom">
         <activity
+            android:name=".activity.chatRoom.ChatRoomActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.login.LoadingActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,9 +34,7 @@
             android:exported="true" />
         <activity
             android:name=".activity.login.StartActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".activity.login.LoginActivity"
             android:exported="false" />

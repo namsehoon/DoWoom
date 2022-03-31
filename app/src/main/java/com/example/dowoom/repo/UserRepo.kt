@@ -192,18 +192,16 @@ class userRepo {
 
         return flow {
             var result = false
-                myRef.addListenerForSingleValueEvent(object : ValueEventListener  {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                            val user = User(uid,0,nickname,stateMsg,0,false,null,sOrB)
-                            myRef.child(uid).setValue(user)
-                            Log.d("abcd","사용자가 추가 되었습니다. in userrepo")
-                            result = true
-                        }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        Log.d("abcd", "error in user repo : "+error.message)
-                    }
-                })
+            val user = User(uid,0,nickname,stateMsg,0,false,null,sOrB)
+            myRef
+                .child(uid)
+                .setValue(user)
+                .addOnSuccessListener {
+                    Log.d("abcd","사용자가 추가 되었습니다. in userrepo")
+                    result = true }
+                .addOnFailureListener{ error ->
+                    Log.d("abcd", "error in user repo : "+error.message)
+                }
             delay(500)
             this.emit(result)
         }.flowOn(Dispatchers.IO)

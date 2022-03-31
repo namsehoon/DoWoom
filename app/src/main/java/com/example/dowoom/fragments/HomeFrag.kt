@@ -1,5 +1,7 @@
 package com.example.dowoom.fragments
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.adapter.HomeAdapter
 import com.example.dowoom.viewmodel.mainViewmodel.HomeViewModel
 import com.example.dowoom.R
+import com.example.dowoom.activity.chatRoom.ChatRoomActivity
 import com.example.dowoom.databinding.HomeFragmentBinding
 import com.example.dowoom.model.User
 import com.google.firebase.auth.FirebaseUser
@@ -41,10 +44,30 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         //어뎁터
         adapter = HomeAdapter(requireActivity(),
             profileClick = { user ->
-                Log.d("abcd"," 123123"+user.uid)
+                //todo 프로필 이미지 추가
+
         },
         talkClick = { user ->
-            Log.d("abcd"," 234234"+user.uid)
+            //todo 프로필 이미지 추가
+            val alertDialog = AlertDialog.Builder(context)
+                .setTitle("대화생성")
+                .setView(binding.root)
+                .create()
+            alertDialog.show()
+
+            CoroutineScope(Dispatchers.Main).launch {
+                viewModel.insertChat(user.nickname!!, user.uid!!)
+            }
+
+            alertDialog.dismiss()
+
+            val intent = Intent(context, ChatRoomActivity::class.java)
+            intent.putExtra("fromUid",user.uid)
+            intent.putExtra("fromNickname", user.nickname)
+            context?.startActivity(intent)
+
+
+
         })
         binding.onlineRV.layoutManager = LinearLayoutManager(this.context)
         binding.onlineRV.adapter = adapter

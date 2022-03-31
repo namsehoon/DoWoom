@@ -27,7 +27,7 @@ class ComuAdapter(val context: Context) : RecyclerView.Adapter<ComuAdapter.Viewh
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComuAdapter.Viewholder {
         binding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.item_comu,parent,false)
+            R.layout.item_talk,parent,false)
         return Viewholder(binding)
 
     }
