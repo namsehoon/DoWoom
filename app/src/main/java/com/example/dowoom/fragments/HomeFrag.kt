@@ -1,19 +1,19 @@
 package com.example.dowoom.fragments
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.adapter.HomeAdapter
 import com.example.dowoom.viewmodel.mainViewmodel.HomeViewModel
 import com.example.dowoom.R
 import com.example.dowoom.activity.chatRoom.ChatRoomActivity
 import com.example.dowoom.databinding.HomeFragmentBinding
-import com.example.dowoom.model.User
+import com.example.dowoom.Util.CustomAlertDialog
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -49,24 +49,28 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         },
         talkClick = { user ->
             //todo 프로필 이미지 추가
-            val alertDialog = AlertDialog.Builder(context)
-                .setTitle("대화생성")
-                .setView(binding.root)
-                .create()
-            alertDialog.show()
-
-            CoroutineScope(Dispatchers.Main).launch {
-                viewModel.insertChat(user.nickname!!, user.uid!!)
-            }
-
-            alertDialog.dismiss()
-
-            val intent = Intent(context, ChatRoomActivity::class.java)
-            intent.putExtra("fromUid",user.uid)
-            intent.putExtra("fromNickname", user.nickname)
-            context?.startActivity(intent)
+            val alertDialog = CustomAlertDialog(this.requireActivity())
+            alertDialog.start(user.nickname.plus("님과 대화하시겠습니까?"))
+            //대화생성 ok 클릭 시,
+            alertDialog.onOkClickListener(object : CustomAlertDialog.onDialogCustomListener {
+                override fun onClicked() {
+                    CoroutineScope(Dispatchers.Main).launch {
 
 
+                        //채팅방 ac으로 이동
+                        val intent = Intent(context, ChatRoomActivity::class.java)
+                        //todo : 만약 존재하면 그 채팅방으로 가야됨
+                        viewModel.checkedChat(user)
+                        //상대방 uid
+                        intent.putExtra("toUid",user.uid)
+                        //상대방 nickname
+                        intent.putExtra("toNickname", user.nickname)
+
+                        context?.startActivity(intent)
+
+                    }
+                }
+            })
 
         })
         binding.onlineRV.layoutManager = LinearLayoutManager(this.context)
@@ -84,16 +88,13 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         //옵저버 (back key 에러를 보완하기 위해서 여기서 getlifecyclerowner로 관찰)
         observerData()
 
-        var auth = Firebase.auth
-        var firebaseUser: FirebaseUser? = auth.currentUser
-        Log.d("abcd", "firebaseuser is in homefragment : "+firebaseUser?.uid)
     }
 
 
     fun observerData() {
         //어뎁터 설정
         //observe
-        CoroutineScope(Dispatchers.Main).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.observeUser().observe(viewLifecycleOwner, Observer {
                 Log.d("abcd","it user is : "+it.toString())
                 adapter.setUser(it)

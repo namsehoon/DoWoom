@@ -54,7 +54,7 @@ class userRepo {
 
 
     /** 온라인 유저 불러오기 */ //todo : childeventlisener로 바꾸고, 이게 최선인지 고민해보기 (callback), 차단한사람 안보여야함
-     fun getData(): LiveData<MutableList<User>> {
+     suspend fun getData(): LiveData<MutableList<User>> {
         // livedata 객체 만들기
         //firebase 추가 된 데이터 이벤트 리스너
 
@@ -76,9 +76,10 @@ class userRepo {
                                     override fun onDataChange(users: DataSnapshot) {
                                         if (users.exists()) {
                                             val getData = users.child(connects.key!!).getValue(User::class.java)
-                                            if (getData?.uid == connects.key!!) {
+                                            //나는 나를 볼 수 없게.
+                                            if (getData?.uid == connects.key!! && !getData.uid.equals(auth?.uid)) {
                                                 listData.add(getData)
-                                                }
+                                            }
                                             mutableData.value = listData
                                         }
                                     }
@@ -107,6 +108,7 @@ class userRepo {
                                 listData.add(getData!!)
                             } else {
                                 listData.removeAt(index)
+//                                listData.remove(getData!!)
                             }
                             mutableData.value = listData
                         }

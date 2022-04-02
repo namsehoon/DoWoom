@@ -1,10 +1,12 @@
 package com.example.dowoom.fragments
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import com.example.dowoom.viewmodel.mainViewmodel.ComuViewModel
+import android.util.Log
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.example.dowoom.R
 import com.example.dowoom.databinding.ComuFragmentBinding
+import kotlinx.coroutines.launch
 
 class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.comu_fragment) {
 
@@ -13,15 +15,13 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         fun newInstance() = ComuFrag()
     }
 
-    private lateinit var viewModel: ComuViewModel
-
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ComuViewModel::class.java)
-        // TODO: Use the ViewModel
+
     }
+
+
 
 
 

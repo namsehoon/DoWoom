@@ -1,5 +1,6 @@
 package com.example.dowoom.activity.main
 
+import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 
@@ -11,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.dowoom.R
 import com.example.dowoom.activity.BaseActivity
+import com.example.dowoom.activity.register.RegisterActivity
 import com.example.dowoom.dataStore.DataStoreST
 import com.example.dowoom.fragments.*
 import com.example.dowoom.databinding.ActivityMainBinding
@@ -95,6 +97,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
 
     //시작시에,
     fun initialized() {
+
+        //로그인 안되어있으면, 회원가입 창으로
+        val uid = auth?.uid
+        if (uid == null) {
+            val intent = Intent(this, RegisterActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
 
         //프레그먼트
         homeFrag = HomeFrag()

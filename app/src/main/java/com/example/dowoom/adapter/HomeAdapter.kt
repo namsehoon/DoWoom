@@ -66,10 +66,7 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
         fun bind(users:MutableList<User>, position:Int) {
             binding.userItem = users[position]
 
-
         }
-
-
 
 
     }

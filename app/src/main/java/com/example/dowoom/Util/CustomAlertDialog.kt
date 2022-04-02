@@ -1,4 +1,4 @@
-package com.example.dowoom.viewmodel
+package com.example.dowoom.Util
 
 import android.app.Dialog
 import android.content.Context
@@ -6,7 +6,6 @@ import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 import com.example.dowoom.R
-import org.w3c.dom.Text
 
 class CustomAlertDialog(context: Context) {
     private val dialog = Dialog(context)
@@ -15,6 +14,9 @@ class CustomAlertDialog(context: Context) {
     private lateinit var cancelBtn : Button
     private lateinit var onDialogCustomClicked : onDialogCustomListener
 
+    fun onOkClickListener(listener: onDialogCustomListener) {
+        onDialogCustomClicked = listener
+    }
 
     fun start(content:String) {
         //타이틀바 제거
@@ -31,14 +33,15 @@ class CustomAlertDialog(context: Context) {
         cancelBtn = dialog.findViewById(R.id.cancel)
 
         okBtn.setOnClickListener {
-
+            onDialogCustomClicked.onClicked()
             dialog.dismiss()
         }
 
         cancelBtn.setOnClickListener {
-            onDialogCustomClicked.onClicked()
             dialog.dismiss()
         }
+
+        dialog.show()
     }
     interface onDialogCustomListener{
         fun onClicked()

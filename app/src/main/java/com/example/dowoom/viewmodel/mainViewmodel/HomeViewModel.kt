@@ -1,11 +1,17 @@
 package com.example.dowoom.viewmodel.mainViewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.dowoom.model.User
 import com.example.dowoom.repo.ChatRepo
 import com.example.dowoom.repo.userRepo
 import com.example.dowoom.viewmodel.SingleLiveEvent
 import com.google.firebase.database.core.Repo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.observeOn
 import kotlinx.coroutines.launch
 
 
@@ -21,27 +27,20 @@ class HomeViewModel : ViewModel() {
     private val chatRepo = ChatRepo()
 
 
-
-
     suspend fun observeUser() : LiveData<MutableList<User>> {
         val userList =  MutableLiveData<MutableList<User>>()
-        userRepo.getData().observeForever(Observer { it ->
-                userList.value = it
+            userRepo.getData().observeForever(Observer { it ->
+            userList.value = it
+        })
 
-            })
         return userList
     }
 
-    //대화 생성
-    private val _completeChatCreated = SingleLiveEvent<Unit>()
-    val compeleteChatCreated:LiveData<Unit> get() = _completeChatCreated
-
 
     //대화 생성완료
-    suspend fun insertChat(nickname:String,toUid:String) {
+    suspend fun checkedChat(user:User) {
         viewModelScope.launch {
-            chatRepo.insertNewChat(nickname,toUid)
-            _completeChatCreated.call()
+            chatRepo.checkedChat(user)
         }
     }
 

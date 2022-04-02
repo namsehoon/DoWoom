@@ -1,7 +1,8 @@
 package com.example.dowoom.repo
 
 import android.util.Log
-import com.example.dowoom.model.ChatMember
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.dowoom.model.ChatRoom
 import com.example.dowoom.model.Message
 import com.example.dowoom.model.User
@@ -15,43 +16,116 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import java.lang.reflect.Member
 
 class ChatRepo : repo{
 
 
     //채팅 fragment
-    val talkRef = rootRef.child("Talks")
+    val talkRef = rootRef.child("ChatRoom")
     //채팅방 내 메세지
-    val messageRef = rootRef.child("Messages")
+    val messageRef = rootRef.child("Message")
     //채팅방 내 유저
-    val memberRef = rootRef.child("Members")
+    val memberRef = rootRef.child("Member")
+
+
+    suspend fun getChatData() : LiveData<MutableList<ChatRoom>> {
+
+        val mutableData = MutableLiveData<MutableList<ChatRoom>>()
+        val listData: MutableList<ChatRoom> = mutableListOf<ChatRoom>()
+
+
+        talkRef.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(chatRooms: DataSnapshot, previousChildName: String?) {
+                if (chatRooms.exists()) {
+                    Log.d("abcd","chatRooms : "+chatRooms.ref)
+                    Log.d("abcd","chatrooms value : "+chatRooms.value)
+                } else {
+                    Log.d("abcd","chatRooms이 없음 ")
+                }
+            }
+
+            override fun onChildChanged(chatRooms: DataSnapshot, previousChildName: String?) {
+                Log.d("abcd","chatRooms : "+chatRooms.value)
+            }
+
+            override fun onChildRemoved(chatRooms: DataSnapshot) {
+                Log.d("abcd","chatRooms : "+chatRooms.value)
+            }
+
+            override fun onChildMoved(chatRooms: DataSnapshot, previousChildName: String?) {
+                Log.d("abcd","chatRooms : "+chatRooms.value)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("abcd","error in ChatRepo at getChatData : "+error.message)
+            }
+
+        })
+
+        return mutableData
+
+    }
 
     /** insert new Chat */ // todo fromUid: 나, toUid : 상대방
-    suspend fun insertNewChat(nickname:String,toUid:String) {
+    suspend fun checkedChat(user: User) {
+
         withContext(Dispatchers.IO) {
+            val otherUid = user.uid
+            val myUid = auth.uid
 
-            val pushChatPush = talkRef.push()
-            val chatId = pushChatPush.key
-            val messagePush = messageRef.push()
-            val messageId = messagePush.key
-            val memberPush = memberRef.push()
-            val memberId = memberPush.key
+            Log.d("abcd","상대방 uid : "+otherUid)
+            Log.d("abcd","내 uid : "+myUid)
 
-            val chatRoom = ChatRoom(chatId, nickname, null, null, 0, false)
-            val message = Message(chatId, messageId, null, null, 0, false)
-            val chatMember = ChatMember(chatId, toUid, auth.uid, nickname)
+            memberRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(members: DataSnapshot) {
+                    Log.d("abcd","snapshot is : "+members.value)
 
-            pushChatPush.child(chatId!!).setValue(chatRoom)
-                .addOnCompleteListener { Log.d("abcd", "chat 성공") }
-                .addOnFailureListener { Log.d("abcd", "chat 실패") }
-            messagePush.child(chatId).child(messageId!!).setValue(message)
-                .addOnCompleteListener { Log.d("abcd", "message 성공") }
-                .addOnFailureListener { Log.d("abcd", "message 실패 ") }
-            memberPush.child(chatId).setValue(chatMember)
-                .addOnCompleteListener { Log.d("abcd", "member 성공") }
-                .addOnFailureListener { Log.d("abcd", "member 실패") }
+                    if (members.exists()) {
+                        for (member in members.children) {
+                            Log.d("abcd","member.value is : "+member.value)
+                            val getMember = member.getValue(com.example.dowoom.model.Member::class.java)
+                            //똑같은 멤버로 구성된 채팅방이 있는지 보기
+                            if(getMember?.otherUid == otherUid && getMember?.myUid == myUid) {
+                                //todo : 있는 곳으로 가야 됨
+                            } else {
+                                //똑같은 멤버로 구성된 채팅방이 없음
+                                val pushChatPush = talkRef.push()
+                                val chatId = pushChatPush.key
+                                val messageId = messageRef.push().key
 
+                                val chatRoom = ChatRoom(chatId, user.nickname, myUid, user.uid,null, null, 0, false)
+                                val message = Message(chatId, messageId, null, null, 0, false)
+                                val chatMember = com.example.dowoom.model.Member(chatId,user.uid, user.nickname, auth.uid)
+
+
+                                talkRef.child(chatId!!).setValue(chatRoom)
+                                    .addOnCompleteListener { Log.d("abcd", "chat 성공") }
+                                    .addOnFailureListener { Log.d("abcd", "chat 실패") }
+                                messageRef.child(chatId).child(messageId!!).setValue(message)
+                                    .addOnCompleteListener { Log.d("abcd", "message 성공") }
+                                    .addOnFailureListener { Log.d("abcd", "message 실패 ") }
+                                memberRef.child(chatId).setValue(chatMember)
+                                    .addOnCompleteListener { Log.d("abcd", "member 성공") }
+                                    .addOnFailureListener { Log.d("abcd", "member 실패") }
+
+                            }
+                        }
+                    }
+
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d("abcd","fuck away from me in ChatRepo : "+error.message)
+                }
+
+
+            })
         }
+
     }
+
+    /** 이미 */
 
 }
