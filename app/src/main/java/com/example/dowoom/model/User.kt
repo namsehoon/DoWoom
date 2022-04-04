@@ -13,6 +13,7 @@ data class User(
     var status: Boolean? = false,
     var email: String? = null,
     var sOrB: Boolean? = true,
+    var profileImg:String? = null
 
 
 

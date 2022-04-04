@@ -13,7 +13,7 @@ class TalkViewModel : ViewModel() {
 
     suspend fun observeChat(): LiveData<MutableList<ChatRoom>> {
         val chatList = MutableLiveData<MutableList<ChatRoom>>()
-        chatRepo.getChatData().observeForever(Observer { it ->
+        chatRepo.getChatRoomData().observeForever(Observer { it ->
             chatList.value = it
         })
 

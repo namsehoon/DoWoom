@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DoWoom">
         <activity
-            android:name=".activity.chatRoom.ChatRoomActivity"
+            android:name=".activity.chat.ChatActivity"
             android:exported="false" />
         <activity
             android:name=".activity.login.LoadingActivity"

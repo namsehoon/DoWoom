@@ -28,8 +28,17 @@ class ChatRepo : repo{
     //채팅방 내 유저
     val memberRef = rootRef.child("Member")
 
+    suspend fun getMessageData() : LiveData<MutableList<Message>> {
+        val mutableData = MutableLiveData<MutableList<Message>>()
+        val listData: MutableList<Message> = mutableListOf<Message>()
 
-    suspend fun getChatData() : LiveData<MutableList<ChatRoom>> {
+
+
+        return mutableData
+    }
+
+
+    suspend fun getChatRoomData() : LiveData<MutableList<ChatRoom>> {
 
         val mutableData = MutableLiveData<MutableList<ChatRoom>>()
         val listData: MutableList<ChatRoom> = mutableListOf<ChatRoom>()
@@ -51,7 +60,16 @@ class ChatRepo : repo{
             }
 
             override fun onChildChanged(chatRooms: DataSnapshot, previousChildName: String?) {
-                Log.d("abcd","chatRooms : "+chatRooms.value)
+                if (chatRooms.exists()) {
+                    for(chatRoom in chatRooms.children) {
+                        val getChatRoom = chatRoom.getValue(ChatRoom::class.java)
+                        //todo : lastmessage 및 timpstamp가 변경될 수 있음
+                        listData.add(getChatRoom!!)
+                    }
+                    mutableData.value = listData
+                } else {
+                    Log.d("abcd","chatRooms이 없음 ")
+                }
             }
 
             override fun onChildRemoved(chatRooms: DataSnapshot) {
@@ -72,6 +90,7 @@ class ChatRepo : repo{
 
     }
 
+
     /** insert new Chat */ // todo fromUid: 나, toUid : 상대방
     suspend fun checkedChat(user: User) {
 
@@ -82,8 +101,6 @@ class ChatRepo : repo{
             Log.d("abcd","상대방 uid : "+otherUid)
             Log.d("abcd","내 uid : "+myUid)
 
-
-
             memberRef.child(myUid).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(members: DataSnapshot) {
                     Log.d("abcd","snapshot is : "+members.value)
@@ -93,17 +110,19 @@ class ChatRepo : repo{
                             Log.d("abcd","member.value is : "+member.value)
                             val getMember = member.getValue(com.example.dowoom.model.Member::class.java)
                             //똑같은 멤버로 구성된 채팅방이 있는지 보기
-                            Log.d("abcd","other : "+ getMember?.otherUid +" : "+ otherUid)
-                            Log.d("abcd","other : "+ getMember?.myUid +" : "+ myUid)
                             if(getMember?.otherUid == otherUid && getMember?.myUid == myUid) {
                                 //todo : 있는 곳으로 가야 됨
+                                Log.d("abcd","other 같음 : "+ getMember?.otherUid +" : "+ otherUid)
+                                Log.d("abcd","myuid 같음 : "+ getMember?.myUid +" : "+ myUid)
                             } else {
                                 //똑같은 멤버로 구성된 채팅방이 없음
+                                Log.d("abcd","other 다름 : "+ getMember?.otherUid +" : "+ otherUid)
+                                Log.d("abcd","myuid 다름 : "+ getMember?.myUid +" : "+ myUid)
                                 val pushChatPush = talkRef.push()
                                 val chatId = pushChatPush.key
                                 val messageId = messageRef.push().key
 
-                                val chatRoom = ChatRoom(chatId,  myUid, otherUid ,user.nickname,null, null, 0, false)
+                                val chatRoom = ChatRoom(chatId,otherUid ,user.nickname, null, 0, false)
                                 val message = Message(chatId, messageId, null, null, 0, false)
                                 val chatMember = com.example.dowoom.model.Member(chatId,myUid, user.nickname, otherUid)
 

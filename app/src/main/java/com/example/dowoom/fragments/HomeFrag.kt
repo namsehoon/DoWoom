@@ -2,7 +2,6 @@ package com.example.dowoom.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -11,12 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.adapter.HomeAdapter
 import com.example.dowoom.viewmodel.mainViewmodel.HomeViewModel
 import com.example.dowoom.R
-import com.example.dowoom.activity.chatRoom.ChatRoomActivity
+import com.example.dowoom.activity.chat.ChatActivity
 import com.example.dowoom.databinding.HomeFragmentBinding
 import com.example.dowoom.Util.CustomAlertDialog
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -58,14 +54,14 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
 
 
                         //채팅방 ac으로 이동
-                        val intent = Intent(context, ChatRoomActivity::class.java)
+                        val intent = Intent(context, ChatActivity::class.java)
                         //todo : 만약 존재하면 그 채팅방으로 가야됨
                         viewModel.checkedChat(user)
                         //상대방 uid
-                        intent.putExtra("toUid",user.uid)
+                        intent.putExtra("otherUid",user.uid)
                         //상대방 nickname
-                        intent.putExtra("toNickname", user.nickname)
-
+                        intent.putExtra("otherNickname", user.nickname)
+                        intent.putExtra("profileImg", user.profileImg)
                         context?.startActivity(intent)
 
                     }
