@@ -96,7 +96,6 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         //observe
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.observeUser().observe(viewLifecycleOwner, Observer {
-                Log.d("abcd","it user is : "+it.toString())
                 adapter.setUser(it)
             })
 

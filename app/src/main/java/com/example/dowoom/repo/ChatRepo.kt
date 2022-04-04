@@ -34,12 +34,17 @@ class ChatRepo : repo{
         val mutableData = MutableLiveData<MutableList<ChatRoom>>()
         val listData: MutableList<ChatRoom> = mutableListOf<ChatRoom>()
 
+        val myUid = auth.uid
 
-        talkRef.addChildEventListener(object : ChildEventListener {
+        //내 대화룸
+        talkRef.orderByChild(myUid).addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(chatRooms: DataSnapshot, previousChildName: String?) {
                 if (chatRooms.exists()) {
-                    Log.d("abcd","chatRooms : "+chatRooms.ref)
-                    Log.d("abcd","chatrooms value : "+chatRooms.value)
+                    for(chatRoom in chatRooms.children) {
+                        val getChatRoom = chatRoom.getValue(ChatRoom::class.java)
+                        listData.add(getChatRoom!!)
+                    }
+                    mutableData.value = listData
                 } else {
                     Log.d("abcd","chatRooms이 없음 ")
                 }
@@ -77,7 +82,9 @@ class ChatRepo : repo{
             Log.d("abcd","상대방 uid : "+otherUid)
             Log.d("abcd","내 uid : "+myUid)
 
-            memberRef.addListenerForSingleValueEvent(object : ValueEventListener {
+
+
+            memberRef.child(myUid).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(members: DataSnapshot) {
                     Log.d("abcd","snapshot is : "+members.value)
 
@@ -86,6 +93,8 @@ class ChatRepo : repo{
                             Log.d("abcd","member.value is : "+member.value)
                             val getMember = member.getValue(com.example.dowoom.model.Member::class.java)
                             //똑같은 멤버로 구성된 채팅방이 있는지 보기
+                            Log.d("abcd","other : "+ getMember?.otherUid +" : "+ otherUid)
+                            Log.d("abcd","other : "+ getMember?.myUid +" : "+ myUid)
                             if(getMember?.otherUid == otherUid && getMember?.myUid == myUid) {
                                 //todo : 있는 곳으로 가야 됨
                             } else {
@@ -94,18 +103,18 @@ class ChatRepo : repo{
                                 val chatId = pushChatPush.key
                                 val messageId = messageRef.push().key
 
-                                val chatRoom = ChatRoom(chatId, user.nickname, myUid, user.uid,null, null, 0, false)
+                                val chatRoom = ChatRoom(chatId,  myUid, otherUid ,user.nickname,null, null, 0, false)
                                 val message = Message(chatId, messageId, null, null, 0, false)
-                                val chatMember = com.example.dowoom.model.Member(chatId,user.uid, user.nickname, auth.uid)
+                                val chatMember = com.example.dowoom.model.Member(chatId,myUid, user.nickname, otherUid)
 
 
-                                talkRef.child(chatId!!).setValue(chatRoom)
+                                talkRef.child(myUid).child(chatId!!).setValue(chatRoom)
                                     .addOnCompleteListener { Log.d("abcd", "chat 성공") }
                                     .addOnFailureListener { Log.d("abcd", "chat 실패") }
-                                messageRef.child(chatId).child(messageId!!).setValue(message)
+                                messageRef.child(myUid).child(chatId).child(messageId!!).setValue(message)
                                     .addOnCompleteListener { Log.d("abcd", "message 성공") }
                                     .addOnFailureListener { Log.d("abcd", "message 실패 ") }
-                                memberRef.child(chatId).setValue(chatMember)
+                                memberRef.child(myUid).child(chatId).setValue(chatMember)
                                     .addOnCompleteListener { Log.d("abcd", "member 성공") }
                                     .addOnFailureListener { Log.d("abcd", "member 실패") }
 

@@ -63,15 +63,14 @@ class userRepo {
         var index = 0
 
         //자식 추가 ()
-        rootRef.child("Connect").addChildEventListener(object : ChildEventListener {
+        rootRef.child("Connect").orderByChild("connected/").equalTo(true).addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(connects: DataSnapshot, previousChildName: String?) {
+                Log.d("abcd","connects is : "+connects)
                 if (connects.exists()) {
                         //유저
                         Log.d("abcd"," connects.child : "+connects.ref)
 
                         connects.children.forEach { child ->
-                            if (child.value == true) {
-                                Log.d("abcd", "child.key is : " + connects.key)
                                 myRef.addListenerForSingleValueEvent(object : ValueEventListener {
                                     override fun onDataChange(users: DataSnapshot) {
                                         if (users.exists()) {
@@ -89,12 +88,15 @@ class userRepo {
                                     }
 
                                 })
-                            }
+
                         }
+
 
                 } else {
                     Log.d("abcd","snap이 존재하지 않음")
                 }
+
+
             }
             //자식 변경 (온라인 오프라인)
             override fun onChildChanged(connects: DataSnapshot, previousChildName: String?) {
@@ -110,7 +112,7 @@ class userRepo {
                                 listData.removeAt(index)
 //                                listData.remove(getData!!)
                             }
-                            mutableData.value = listData
+
                         }
 
                         override fun onCancelled(error: DatabaseError) {
@@ -122,6 +124,7 @@ class userRepo {
                 } else {
                     Log.d("abcd","snap이 존재하지 않음")
                 }
+                mutableData.value = listData
             }
             //자식 제거 (..계정 삭제?)
             override fun onChildRemoved(snapshot: DataSnapshot) {

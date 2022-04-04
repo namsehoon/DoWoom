@@ -20,7 +20,7 @@ class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Uni
 
     //onclicklistener은 view에서 구현하는것이 바람직하다고 합니다.(viewModel 사용 또는 fragment간 화면전환 )
     interface OnItemClickListener {
-        fun onItemClick(user:User)
+        fun onItemClick(chatRoom: ChatRoom)
     }
 
 
@@ -28,6 +28,7 @@ class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Uni
         Log.d("abcd","chatrooms is :"+chatrooms.toString())
         chatRooms.clear()
         chatRooms.addAll(chatrooms)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatRoomAdapter.Viewholder {
