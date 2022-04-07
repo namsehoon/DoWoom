@@ -24,7 +24,6 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
         fun onItemClick(user:User)
     }
 
-
     //유저 셋
     fun setUser(user:MutableList<User>) {
         //유저 데이터를 불러 올 때, 데이터가 바뀌면 before데이터랑 after 데이터를 다불러와서

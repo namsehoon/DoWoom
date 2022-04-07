@@ -28,11 +28,37 @@ class ChatRepo : repo{
     //채팅방 내 유저
     val memberRef = rootRef.child("Member")
 
-    suspend fun getMessageData() : LiveData<MutableList<Message>> {
+    //개인 채팅방
+    suspend fun getMessageData(otherUid:String,chatId:String) : LiveData<MutableList<Message>> {
+
         val mutableData = MutableLiveData<MutableList<Message>>()
         val listData: MutableList<Message> = mutableListOf<Message>()
 
+        val myUid = auth.uid
 
+        //내 모든 대화방의 메시지들 -> 각 대화방의 멤버를 찾아서 넣어줌
+        messageRef.child(myUid).child(chatId).addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.d("abcd","snapshot is : "+snapshot)
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.d("abcd","snapshot is : "+snapshot)
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                Log.d("abcd","snapshot is : "+snapshot)
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.d("abcd","snapshot is : "+snapshot)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("abcd","error in getMessage  is : "+error.message)
+            }
+
+        })
 
         return mutableData
     }
@@ -101,6 +127,11 @@ class ChatRepo : repo{
             Log.d("abcd","상대방 uid : "+otherUid)
             Log.d("abcd","내 uid : "+myUid)
 
+            val pushChatPush = talkRef.push()
+            val chatId = pushChatPush.key
+            val messageId = messageRef.push().key
+
+
             memberRef.child(myUid).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(members: DataSnapshot) {
                     Log.d("abcd","snapshot is : "+members.value)
@@ -118,24 +149,19 @@ class ChatRepo : repo{
                                 //똑같은 멤버로 구성된 채팅방이 없음
                                 Log.d("abcd","other 다름 : "+ getMember?.otherUid +" : "+ otherUid)
                                 Log.d("abcd","myuid 다름 : "+ getMember?.myUid +" : "+ myUid)
-                                val pushChatPush = talkRef.push()
-                                val chatId = pushChatPush.key
-                                val messageId = messageRef.push().key
 
                                 val chatRoom = ChatRoom(chatId,otherUid ,user.nickname, null, 0, false)
                                 val message = Message(chatId, messageId, null, null, 0, false)
                                 val chatMember = com.example.dowoom.model.Member(chatId,myUid, user.nickname, otherUid)
 
-
                                 talkRef.child(myUid).child(chatId!!).setValue(chatRoom)
                                     .addOnCompleteListener { Log.d("abcd", "chat 성공") }
                                     .addOnFailureListener { Log.d("abcd", "chat 실패") }
-                                messageRef.child(myUid).child(chatId).child(messageId!!).setValue(message)
-                                    .addOnCompleteListener { Log.d("abcd", "message 성공") }
-                                    .addOnFailureListener { Log.d("abcd", "message 실패 ") }
                                 memberRef.child(myUid).child(chatId).setValue(chatMember)
                                     .addOnCompleteListener { Log.d("abcd", "member 성공") }
                                     .addOnFailureListener { Log.d("abcd", "member 실패") }
+                                messageRef.child(myUid).child(chatId).child(messageId!!).setValue(message)
+
 
                             }
                         }

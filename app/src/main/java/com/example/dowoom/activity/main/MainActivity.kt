@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.dowoom.R
 import com.example.dowoom.activity.BaseActivity
+import com.example.dowoom.activity.login.StartActivity
 import com.example.dowoom.activity.register.RegisterActivity
 import com.example.dowoom.dataStore.DataStoreST
 import com.example.dowoom.fragments.*
@@ -36,7 +37,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
     var database: FirebaseDatabase? = null
     var auth: FirebaseUser? = null
 
-
+    override fun onStart() {
+        super.onStart()
+        if (auth == null) {
+            startNextActivity(StartActivity::class.java)
+            finish()
+        }
+    }
 
     override fun onStop() {
         super.onStop()

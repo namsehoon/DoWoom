@@ -22,12 +22,12 @@
             android:layout_gravity="start">
 
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="100sp"
-                android:src="@{chatItem.profileImg}"
-                android:layout_height="wrap_content"
-                tools:srcCompat="@tools:sample/avatars" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imageView"-->
+<!--                android:layout_width="100sp"-->
+<!--                android:src="@{chatItem.profileImg}"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                tools:srcCompat="@tools:sample/avatars" />-->
 
         </LinearLayout>
 
