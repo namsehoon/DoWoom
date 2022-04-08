@@ -33,7 +33,6 @@ class RegisterViewmodel : ViewModel() {
     private val _authComplete = SingleLiveEvent<Unit>()
 
     // 이건 view(activity, fragment) 에서 사용
-    val insertComplete:LiveData<Boolean> get() = _insertComplete
     val requestAuth:LiveData<Boolean> get() = _requestAuth
     val requestResendPhoneAuth:LiveData<Boolean> get() =  _requestResendPhoneAuth
     val authComplete:LiveData<Unit> get() = _authComplete
@@ -59,9 +58,9 @@ class RegisterViewmodel : ViewModel() {
 
 
     //todo = 사용자가 이미 존재해도 데이터 업데이트 됨.
-    fun userInsert(uid:String, nickname:String,statusMsg:String,sOrB:Boolean) {
+    fun userInsert(uid:String, phoneNum:String,nickname:String,statusMsg:String,sOrB:Boolean) {
         viewModelScope.launch {
-            repo.insertNewUser(uid,etPhoneNum.value.toString(),nickname,statusMsg,sOrB)
+            repo.insertNewUser(uid,phoneNum,nickname,statusMsg,sOrB)
                 .catch {  e ->
                     Log.d("abcd", "error in reguster viewmodel is :" + e.message)
                 }.collect {

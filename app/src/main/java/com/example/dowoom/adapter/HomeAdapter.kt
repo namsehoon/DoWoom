@@ -56,6 +56,10 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
         holder.binding.executePendingBindings()
 
     }
+    //todo : 여기부터
+    //todo : 왜 메세지를 두번 불러옴? 한번 불러올 땐, 잘 부르는데
+    //todo : 두번재 부를때는 빈 []임..
+    //todo : 그리고 왜 메세지 왜 표시 안됨 ?
 
     override fun getItemCount(): Int {
        return users.size

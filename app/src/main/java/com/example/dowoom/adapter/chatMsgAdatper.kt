@@ -33,6 +33,7 @@ class chatMsgAdatper(val context: Context,
 
     //메세지 set
     fun setMessage(messages: MutableList<Message>) {
+        Log.d("abcd","messages is in adapter is : ${messages.toString()}")
         messages.clear()
         messages.addAll(messages)
         notifyDataSetChanged()
@@ -59,7 +60,8 @@ class chatMsgAdatper(val context: Context,
     override fun getItemViewType(position: Int): Int {
         val message = messages[position]
         //만약 내 uid와 message sender의 uid가 동일하다면 ITEM_SENT
-        return if (FirebaseAuth.getInstance().uid == message.sender) {
+        Log.d("abcd","message sender is : ${message.sender}")
+        return if (myUid == message.sender) {
             ITEM_SENT
         } else {
             ITEM_RECEIVE
@@ -68,21 +70,11 @@ class chatMsgAdatper(val context: Context,
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val message = messages[position]
-
+        //todo : 이미지 처리
         //보내는이
         if (holder.javaClass == SendMsgHolder::class.java) {
             val viewHolder = holder as SendMsgHolder
-            //이미지
-            if (message.message.equals("photo")) {
-                //메세지 뷰
-                viewHolder.sendBinding.msgSend.visibility = View.GONE
-                //메세지 레이아웃
-                viewHolder.sendBinding.llMsgSend.visibility = View.GONE
-                //이미지 레이아웃
-                viewHolder.sendBinding.llImgSend.visibility = View.VISIBLE
-                //이미지 뷰
-                viewHolder.sendBinding.imgSend.visibility = View.VISIBLE
-            }
+
             //일반
             viewHolder.sendBinding.msgSend.text = message.message
             //메세지 삭제
@@ -99,8 +91,13 @@ class chatMsgAdatper(val context: Context,
 
                }
             }
+            Log.d("abcd","gdgdgdgdg")
+            viewHolder.sendBinding.executePendingBindings()
         } else {
             //받는이
+            val viewHolder = holder as receiveMsgHolder
+
+            viewHolder.receiveBinding.executePendingBindings()
         }
     }
 

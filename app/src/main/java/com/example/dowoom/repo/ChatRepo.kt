@@ -10,12 +10,10 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
 import java.lang.reflect.Member
 
 class ChatRepo : repo{
@@ -28,6 +26,19 @@ class ChatRepo : repo{
     //채팅방 내 유저
     val memberRef = rootRef.child("Member")
 
+    suspend fun insertMessage(chatId: String,sender:String,otherUid: String,imageUrl:String? = null,newMessage:String? = null,timestamp:Long) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+            //삭제할 때 필요함
+            val messageId = messageRef.push().key
+            val message = Message(chatId,sender,otherUid,imageUrl,newMessage, messageId,timestamp,false)
+
+            messageRef.child(auth.uid).child(chatId).child(messageId!!).setValue(message)
+                .addOnCompleteListener { Log.d("Abcd","메세지 보내기 성공 : ${messageId} ") }
+                .addOnFailureListener { Log.d("Abcd","메세지 보내기 실패 : ${messageId} ") }
+        }
+    }
+
     //개인 채팅방
     suspend fun getMessageData(otherUid:String,chatId:String) : LiveData<MutableList<Message>> {
 
@@ -35,15 +46,31 @@ class ChatRepo : repo{
         val listData: MutableList<Message> = mutableListOf<Message>()
 
         val myUid = auth.uid
+        val other = otherUid
+        val chat = chatId
 
-        //내 모든 대화방의 메시지들 -> 각 대화방의 멤버를 찾아서 넣어줌
-        messageRef.child(myUid).child(chatId).addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d("abcd","snapshot is : "+snapshot)
+        //대화방 메시지 -> 각 대화방의 멤버를 찾아서 넣어줌
+        messageRef.child(myUid).orderByChild(chat).addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(messages: DataSnapshot, previousChildName: String?) {
+                if (messages.exists()) {
+                    for (message in messages.children) {
+                        val getData = message.getValue(Message::class.java)
+                        //멤버의 상대방과 메세지의 상대방이 일치할 시,
+                        if (other == getData?.otherUid) {
+                            listData.add(getData)
+                        }
+                    }
+                    mutableData.value = listData
+
+                }
             }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d("abcd","snapshot is : "+snapshot)
+            override fun onChildChanged(messages: DataSnapshot, previousChildName: String?) {
+                if (messages.exists()) {
+                    Log.d("abcd","messsages changed is ${messages.ref}")
+                }
+
+
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
@@ -151,7 +178,7 @@ class ChatRepo : repo{
                                 Log.d("abcd","myuid 다름 : "+ getMember?.myUid +" : "+ myUid)
 
                                 val chatRoom = ChatRoom(chatId,otherUid ,user.nickname, null, 0, false)
-                                val message = Message(chatId, messageId, null, null, 0, false)
+                                val message = Message(chatId, myUid, otherUid, null, null,messageId,0, false)
                                 val chatMember = com.example.dowoom.model.Member(chatId,myUid, user.nickname, otherUid)
 
                                 talkRef.child(myUid).child(chatId!!).setValue(chatRoom)

@@ -7,6 +7,7 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
 import com.example.dowoom.Util.CustomAlertDialog
 import com.example.dowoom.activity.BaseActivity
@@ -14,6 +15,7 @@ import com.example.dowoom.adapter.ChatRoomAdapter
 import com.example.dowoom.adapter.chatMsgAdatper
 
 import com.example.dowoom.databinding.ActivityChatBinding
+import com.example.dowoom.generated.callback.OnClickListener
 import com.example.dowoom.viewmodel.chatviewmodel.ChatViewmodel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ktx.database
@@ -39,19 +41,29 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
-        //todo : 1. 어차피 메세지 들은 db에서 가져온다.
-        //todo : 2. adapter를 사용하여 button 클릭시, 메세지 추가해준다.
-        //todo : 3. 어떻게 상대방인지 아냐? :
-        //todo : 4.
 
         initialized()
         initialViewModel()
+
+
+
+        binding.ivSendMsg.setOnClickListener {
+            Log.d("abcd","버튼 클릭됨")
+            lifecycleScope.launchWhenResumed {
+                val message = viewModel.etMessage.value.toString()
+                Log.d("abcd","message in chatAC is : ${message}")
+                if (!message.isNullOrEmpty()) {
+                 viewModel.insertMessage(chatUid!!,message,myUid!!,otherUid!!)
+                }
+            }
+        }
     }
 
     fun initialViewModel() {
-        lifecycleScope.launch {
-            viewModel.observeMessage(otherUid!!,chatUid!!).observe(this@ChatActivity ,Observer {
+        CoroutineScope(Dispatchers.Main).launch {
+            viewModel.observeMessage(otherUid!!,chatUid!!).observe(this@ChatActivity , Observer { it ->
                 Log.d("Abcd"," it value in chatAC is : $it")
+                adapter.setMessage(it)
             })
         }
     }
@@ -72,7 +84,10 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         if (i.hasExtra("profileImg")) {
             profileImg = i.getStringExtra("profileImg")
         }
+        Log.d("abcd","chatUid in ChatAC is : ${chatUid}")
 
+
+        //어뎁터 설정
         adapter = chatMsgAdatper(this@ChatActivity, chatUid!!, myUid!!, msgClicked =  { message ->
             //클릭시 삭제
             val dialog = CustomAlertDialog(this@ChatActivity)
@@ -80,11 +95,14 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
             dialog.onOkClickListener(object : CustomAlertDialog.onDialogCustomListener {
                 override fun onClicked() {
                     Log.d("abcd","삭제 확인 누름")
-                    //todo : 삭제
+                    //todo : 삭제 (message id를 사용)
                 }
             })
         })
-
+        binding.rvChatRoom.layoutManager = LinearLayoutManager(this@ChatActivity)
+        binding.rvChatRoom.adapter = adapter
 
     }
+
+
 }

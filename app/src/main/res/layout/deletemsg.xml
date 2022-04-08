@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:ignore="NamespaceTypo"
-    android:orientation="vertical"
-    android:layout_gravity="end">
-
-    <TextView
-        android:id="@+id/deleteEveryone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="메세지 지우기"
-        android:textStyle="bold|normal"
-        android:textColor="@color/black"
-        android:textAlignment="textEnd"/>
+    >
 
 
-    <TextView
-        android:id="@+id/deleteCancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="취소"
-        android:textStyle="bold|normal"
-        android:textColor="@color/black"
-        android:textAlignment="textEnd"/>
+    <LinearLayout
+              android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="NamespaceTypo"
+        android:orientation="vertical"
+        android:layout_gravity="end">
+
+        <TextView
+            android:id="@+id/deleteEveryone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="메세지 지우기"
+            android:textStyle="bold|normal"
+            android:textColor="@color/black"
+            android:textAlignment="textEnd"/>
 
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/deleteCancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textSize="20sp"
+            android:text="취소"
+            android:textStyle="bold|normal"
+            android:textColor="@color/black"
+            android:textAlignment="textEnd"/>
+
+    </LinearLayout>
+</layout>

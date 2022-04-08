@@ -172,6 +172,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
 
     //이미 있는 유저라면, 로그인으로 처리
     private fun ifUserExist() {
+        //todo : 왜 바인딩으로 처리함 ? viewmodel로 하지 않고 ?
         phoneNum = binding.etPhoneNumber.text.toString()
         if (phoneNum == binding.etPhoneNumber.text.toString() && authNum == binding.etAuthNumber.text.toString())
         { // 이전에  인증한 번호와 인증번호인 경우
@@ -217,7 +218,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
                       datastore.storeData("number", newUser.phoneNumber!!)
                   }
                   job.isCompleted.let {
-                      viewModel.userInsert(newUser?.uid!! ,nickname!!,stateMsg!!,sOrB!!)
+                      viewModel.userInsert(newUser?.uid!!,newUser.phoneNumber!!,nickname!!,stateMsg!!,sOrB!!)
                       startActivity(intent)
                   }
 

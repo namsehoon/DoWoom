@@ -54,6 +54,7 @@
                         android:paddingStart="5dp"
                         android:paddingEnd="1dp"
                         android:textSize="15dp"
+                        android:text="@={vm.etMessage}"
                         android:textStyle="bold" />
 
                 </LinearLayout>

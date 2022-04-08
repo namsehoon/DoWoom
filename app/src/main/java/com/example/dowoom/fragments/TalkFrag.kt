@@ -42,8 +42,8 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                 context?.startActivity(intent)
             })
 
-        binding.llChatroom.layoutManager = LinearLayoutManager(this.context)
-        binding.llChatroom.adapter = adapter
+        binding.rvChatroom.layoutManager = LinearLayoutManager(this.context)
+        binding.rvChatroom.adapter = adapter
     }
 
 
