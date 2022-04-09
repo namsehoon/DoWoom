@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.datastore.preferences.protobuf.StructOrBuilder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import com.example.dowoom.model.Connect
 import com.example.dowoom.model.User
 import com.example.dowoom.viewmodel.registervm.LoadingViewmodel
@@ -58,8 +59,8 @@ class userRepo {
         // livedata 객체 만들기
         //firebase 추가 된 데이터 이벤트 리스너
 
-        val mutableData = MutableLiveData<MutableList<User>>()
         val listData: MutableList<User> = mutableListOf<User>()
+        val mutableData = MutableLiveData<MutableList<User>>()
         var index = 0
 
         //자식 추가 ()

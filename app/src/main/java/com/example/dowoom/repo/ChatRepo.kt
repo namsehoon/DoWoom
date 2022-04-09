@@ -42,22 +42,23 @@ class ChatRepo : repo{
     //개인 채팅방
     suspend fun getMessageData(otherUid:String,chatId:String) : LiveData<MutableList<Message>> {
 
-        val mutableData = MutableLiveData<MutableList<Message>>()
         val listData: MutableList<Message> = mutableListOf<Message>()
+        val mutableData = MutableLiveData<MutableList<Message>>()
 
-        val myUid = auth.uid
-        val other = otherUid
-        val chat = chatId
+
 
         //대화방 메시지 -> 각 대화방의 멤버를 찾아서 넣어줌
-        messageRef.child(myUid).orderByChild(chat).addChildEventListener(object : ChildEventListener {
+        messageRef.child(auth.uid).orderByChild(chatId).addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(messages: DataSnapshot, previousChildName: String?) {
                 if (messages.exists()) {
                     for (message in messages.children) {
                         val getData = message.getValue(Message::class.java)
                         //멤버의 상대방과 메세지의 상대방이 일치할 시,
-                        if (other == getData?.otherUid) {
+                        Log.d("abcd","otherUid is : ${otherUid} and getData otheruid is : ${getData?.otherUid}")
+                        if (otherUid == getData?.otherUid) {
                             listData.add(getData)
+                        } else {
+                            Log.d("abcd","일치하지 않습니다 in ChatRepo")
                         }
                     }
                     mutableData.value = listData

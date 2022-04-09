@@ -26,10 +26,22 @@ class HomeViewModel : ViewModel() {
     private val userRepo = userRepo()
     private val chatRepo = ChatRepo()
 
+//    private val _value: MutableLiveData<MutableList<User>> = MutableLiveData()
+//    //distinctUntilChanged : 중복은 무시하고, 실제 데이터의 변경이 있을 때만 업데이트 이벤트를 전달
+//    val value: LiveData<MutableList<User>> = Transformations.distinctUntilChanged(_value)
+//
+//
+//    init {
+//       viewModelScope.launch {
+//           userRepo.getData().observeForever(Observer { it ->
+//               _value.postValue(it)
+//           })
+//       }
+//    }
 
     suspend fun observeUser() : LiveData<MutableList<User>> {
         val userList =  MutableLiveData<MutableList<User>>()
-            userRepo.getData().observeForever(Observer { it ->
+        userRepo.getData().observeForever(Observer { it ->
             userList.value = it
         })
 

@@ -2,6 +2,7 @@ package com.example.dowoom.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -92,6 +93,7 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         //observe
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.observeUser().observe(viewLifecycleOwner, Observer {
+                Log.d("Abcd","it is : ${it.toString()}")
                 adapter.setUser(it)
             })
 
