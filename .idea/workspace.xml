@@ -12,7 +12,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="채팅 fragment&#10;1. 유저 채팅목록 클릭 시,, ChatActivity.kt로">
+    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="채팅 fragment&#10;에러&#10;1. 왜 메세지를 두번 불러옴(livedata)? 한번 불러올 땐, 잘 부르는데&#10;2. 두번재 부를때는 빈 []임..">
       <change afterPath="$PROJECT_DIR$/google-services.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" afterDir="false" />
@@ -30,15 +30,7 @@
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/chat/ChatActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/chat/ChatActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/main/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/adapter/HomeAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/adapter/HomeAdapter.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/adapter/chatMsgAdatper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/adapter/chatMsgAdatper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/Message.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/Message.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/repo/ChatRepo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/repo/ChatRepo.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/chatviewmodel/ChatViewmodel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/chatviewmodel/ChatViewmodel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_chat.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_chat.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/deletemsg.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/deletemsg.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_talk.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_talk.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/receivemsg_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/receivemsg_item.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/sendmsg_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/sendmsg_item.xml" afterDir="false" />
     </list>
@@ -514,7 +506,28 @@
       <option name="project" value="LOCAL" />
       <updated>1649057494505</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="채팅 fragment&#10;1. 유저 채팅목록 클릭 시,, ChatActivity.kt로">
+      <created>1649331527602</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1649331527603</updated>
+    </task>
+    <task id="LOCAL-00035" summary="채팅 fragment&#10;에러&#10;1. 왜 메세지를 두번 불러옴(livedata)? 한번 불러올 땐, 잘 부르는데&#10;2. 두번재 부를때는 빈 []임..">
+      <created>1649404158643</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1649404158643</updated>
+    </task>
+    <task id="LOCAL-00036" summary="일단 메세지는 로드 됨.&#10;문제&#10;1. livedata loaded twice (problem) &#10;2. message recyclerview data load (problem)">
+      <created>1649469549268</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1649469549268</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -522,7 +535,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -531,9 +556,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="baseActivity() 구성" />
-    <MESSAGE value="생명주기 (액티비티, 프레그먼트)" />
-    <MESSAGE value="toolbar 작업중" />
     <MESSAGE value="툴바 생성 및 컨트롤 : 액티비티&#10;툴바 visible : 프래그먼트" />
     <MESSAGE value="?" />
     <MESSAGE value="baseFragment, baseActivity 설정" />
@@ -556,6 +578,9 @@
     <MESSAGE value="채팅 fragment&#10;1. 채팅이 없으면 새로 만듬&#10;2. chatroom join 연구중" />
     <MESSAGE value="채팅 fragment&#10;1. 유저 채팅목록 구현" />
     <MESSAGE value="채팅 fragment&#10;1. 유저 채팅목록 클릭 시,, ChatActivity.kt로" />
-    <option name="LAST_COMMIT_MESSAGE" value="채팅 fragment&#10;1. 유저 채팅목록 클릭 시,, ChatActivity.kt로" />
+    <MESSAGE value="채팅 fragment&#10;에러&#10;왜 메세지를 두번 불러옴(livedata)? 한번 불러올 땐, 잘 부르는데&#10;    //todo : 두번재 부를때는 빈 []임.." />
+    <MESSAGE value="채팅 fragment&#10;에러&#10;1. 왜 메세지를 두번 불러옴(livedata)? 한번 불러올 땐, 잘 부르는데&#10;2. 두번재 부를때는 빈 []임.." />
+    <MESSAGE value="일단 메세지는 로드 됨.&#10;문제&#10;1. livedata loaded twice (problem) &#10;2. message recyclerview data load (problem)" />
+    <option name="LAST_COMMIT_MESSAGE" value="일단 메세지는 로드 됨.&#10;문제&#10;1. livedata loaded twice (problem) &#10;2. message recyclerview data load (problem)" />
   </component>
 </project>

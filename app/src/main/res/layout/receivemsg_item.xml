@@ -29,7 +29,7 @@
             android:id="@+id/msgReceive"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="안녕하세요"
+            android:text="@{item.message}"
             android:textAlignment="textStart"
             android:textSize="20dp" />
     </LinearLayout>
@@ -37,7 +37,6 @@
     <LinearLayout
         android:id="@+id/llImgReceive"
         android:orientation="horizontal"
-        android:visibility="gone"
         android:padding="15dp"
         android:layout_margin="20sp"
         android:layout_width="wrap_content"
@@ -50,8 +49,7 @@
             android:layout_width="200sp"
             android:layout_height="130dp"
             android:src="@drawable/ic_baseline_attach_file_24"/>
-            android:scaleType="centerCrop"
-            android:layout_margin="5sp"
+
     </LinearLayout>
 </LinearLayout>
 </layout>

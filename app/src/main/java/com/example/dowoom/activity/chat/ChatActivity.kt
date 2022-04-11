@@ -84,7 +84,8 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         if (i.hasExtra("profileImg")) {
             profileImg = i.getStringExtra("profileImg")
         }
-        Log.d("abcd","chatUid in ChatAC is : ${chatUid}")
+        Log.d("abcd","chatUid in ChatAC is : ${chatUid} and myuid is : ${myUid}")
+
 
 
         //어뎁터 설정

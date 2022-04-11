@@ -32,10 +32,10 @@ class chatMsgAdatper(val context: Context,
     var messages = mutableListOf<Message>()
 
     //메세지 set
-    fun setMessage(messages: MutableList<Message>) {
-        Log.d("abcd","messages is in adapter is : ${messages.toString()}")
+    fun setMessage(message: MutableList<Message>) {
+        Log.d("abcd","messages is in adapter is : ${message.toString()}")
         messages.clear()
-        messages.addAll(messages)
+        messages.addAll(message)
         notifyDataSetChanged()
     }
 
@@ -60,7 +60,6 @@ class chatMsgAdatper(val context: Context,
     override fun getItemViewType(position: Int): Int {
         val message = messages[position]
         //만약 내 uid와 message sender의 uid가 동일하다면 ITEM_SENT
-        Log.d("abcd","message sender is : ${message.sender}")
         return if (myUid == message.sender) {
             ITEM_SENT
         } else {
@@ -83,20 +82,18 @@ class chatMsgAdatper(val context: Context,
                 msgClicked(message)
                 false
             }
-            // todo : what is it for?
-            message.chatUid.let { it1 ->
-               if (it1 != null) {
-                   FirebaseDatabase.getInstance().reference.child("Message")
-                       .child(myUid).child(chatId).child(it1).setValue(message)
-
-               }
-            }
-            Log.d("abcd","gdgdgdgdg")
             viewHolder.sendBinding.executePendingBindings()
+
         } else {
             //받는이
             val viewHolder = holder as receiveMsgHolder
-
+            //일반
+            viewHolder.receiveBinding.msgReceive.text = message.message
+            //메세지 삭제
+            viewHolder.itemView.setOnLongClickListener {
+                msgClicked(message)
+                false
+            }
             viewHolder.receiveBinding.executePendingBindings()
         }
     }
