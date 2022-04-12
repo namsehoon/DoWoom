@@ -3,26 +3,22 @@ package com.example.dowoom.activity.chat
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
-import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.withCreated
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
 import com.example.dowoom.Util.CustomAlertDialog
 import com.example.dowoom.activity.BaseActivity
-import com.example.dowoom.adapter.ChatRoomAdapter
 import com.example.dowoom.adapter.chatMsgAdatper
 
 import com.example.dowoom.databinding.ActivityChatBinding
-import com.example.dowoom.generated.callback.OnClickListener
 import com.example.dowoom.viewmodel.chatviewmodel.ChatViewmodel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layout.activity_chat) {
 
@@ -96,7 +92,12 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
             dialog.onOkClickListener(object : CustomAlertDialog.onDialogCustomListener {
                 override fun onClicked() {
                     Log.d("abcd","삭제 확인 누름")
-                    //todo : 삭제 (message id를 사용)
+                   CoroutineScope(Dispatchers.IO).launch {
+                       viewModel.deleteMessage(chatUid!!,message.messageId!!,message.otherUid!!,message.timeStamp!!,message.sender!!)
+                       withContext(Dispatchers.Main) {
+                       }
+                   }
+
                 }
             })
         })

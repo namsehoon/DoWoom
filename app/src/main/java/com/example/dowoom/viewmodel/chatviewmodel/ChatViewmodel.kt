@@ -1,14 +1,8 @@
 package com.example.dowoom.viewmodel.chatviewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
-import com.example.dowoom.model.ChatRoom
 import com.example.dowoom.model.Message
-import com.example.dowoom.model.User
 import com.example.dowoom.repo.ChatRepo
-import com.example.dowoom.repo.repo
-import com.example.dowoom.viewmodel.SingleLiveEvent
-import com.google.firebase.database.ServerValue
 import kotlinx.coroutines.launch
 
 class ChatViewmodel : ViewModel() {
@@ -26,6 +20,17 @@ class ChatViewmodel : ViewModel() {
         }
     }
 
+    suspend fun deleteMessage(
+        chatId: String,
+        messageId: String,
+        otherUid: String,
+        timeStamp: Long,
+        sender: String
+    ) {
+        viewModelScope.launch {
+            chatRepo.deleteMessage(chatId,messageId,otherUid,timeStamp,sender)
+        }
+    }
 
     suspend fun observeMessage(otherUid: String, chatId: String): LiveData<MutableList<Message>> {
         val messages = MutableLiveData<MutableList<Message>>()

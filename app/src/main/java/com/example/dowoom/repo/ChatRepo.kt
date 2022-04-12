@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import java.lang.reflect.Member
+import java.util.*
+import kotlin.collections.HashMap
 
 class ChatRepo : repo{
 
@@ -25,6 +27,21 @@ class ChatRepo : repo{
     val messageRef = rootRef.child("Message")
     //채팅방 내 유저
     val memberRef = rootRef.child("Member")
+
+    //메세지 삭제
+    suspend fun deleteMessage(chatId: String, messageId: String, otherUid: String, timeStamp: Long, sender: String) {
+
+        val message = Message(chatId,sender,otherUid,null,"삭제되었습니다.",messageId,timeStamp,true)
+        val messageValue = message.toMap()
+        val childUpdates = hashMapOf<String,Any>(
+            "/Message/$sender/$chatId/$messageId" to messageValue
+        )
+        database.reference.updateChildren(childUpdates)
+            .addOnCompleteListener { Log.d("abcd","메세지 업데이트 성공.")}
+            .addOnFailureListener { Log.d("abcd","메세지 업데이트 실패.") }
+
+    }
+
 
     suspend fun insertMessage(chatId: String,sender:String,otherUid: String,imageUrl:String? = null,newMessage:String? = null,timestamp:Long) {
 
@@ -66,9 +83,10 @@ class ChatRepo : repo{
                 }
             }
 
+            //메세지가 새로 추가되거나, 메세지 삭제버튼을 눌러서 "message text 변경"
             override fun onChildChanged(messages: DataSnapshot, previousChildName: String?) {
                 if (messages.exists()) {
-                    Log.d("abcd","messsages changed is ${messages.ref}")
+                    Log.d("abcd","previousChildName is : ")
                 }
 
 

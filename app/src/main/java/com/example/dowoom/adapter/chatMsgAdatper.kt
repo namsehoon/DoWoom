@@ -80,6 +80,7 @@ class chatMsgAdatper(val context: Context,
             viewHolder.itemView.setOnLongClickListener {
 
                 msgClicked(message)
+                notifyDataSetChanged()
                 false
             }
             viewHolder.sendBinding.executePendingBindings()
@@ -89,11 +90,7 @@ class chatMsgAdatper(val context: Context,
             val viewHolder = holder as receiveMsgHolder
             //일반
             viewHolder.receiveBinding.msgReceive.text = message.message
-            //메세지 삭제
-            viewHolder.itemView.setOnLongClickListener {
-                msgClicked(message)
-                false
-            }
+
             viewHolder.receiveBinding.executePendingBindings()
         }
     }
