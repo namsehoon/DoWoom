@@ -23,7 +23,7 @@ import kotlin.system.measureTimeMillis
 class chatMsgAdatper(val context: Context,
                      val chatId:String,
                      val myUid:String,
-                     val msgClicked:(Message) -> Unit
+                     val msgClicked:(Message, position:Int) -> Unit
 ): RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
 
     /** 변수 */
@@ -38,6 +38,12 @@ class chatMsgAdatper(val context: Context,
         messages.addAll(message)
         notifyDataSetChanged()
     }
+
+    fun addMessage(message: Message) {
+        messages.add(message)
+        notifyItemInserted(messages.size)
+    }
+
 
     val ITEM_SENT = 1
     val ITEM_RECEIVE = 2
@@ -79,8 +85,8 @@ class chatMsgAdatper(val context: Context,
             //메세지 삭제
             viewHolder.itemView.setOnLongClickListener {
 
-                msgClicked(message)
-                notifyDataSetChanged()
+                msgClicked(message, position)
+
                 false
             }
             viewHolder.sendBinding.executePendingBindings()

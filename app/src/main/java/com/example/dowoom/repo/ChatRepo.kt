@@ -11,7 +11,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import java.lang.reflect.Member
@@ -43,9 +45,9 @@ class ChatRepo : repo{
     }
 
 
-    suspend fun insertMessage(chatId: String,sender:String,otherUid: String,imageUrl:String? = null,newMessage:String? = null,timestamp:Long) {
+    suspend fun insertMessage(chatId: String,sender:String,otherUid: String,imageUrl:String? = null,newMessage:String? = null,timestamp:Long) : Flow<Message> {
 
-        CoroutineScope(Dispatchers.IO).launch {
+        return flow<Message> {
             //삭제할 때 필요함
             val messageId = messageRef.push().key
             val message = Message(chatId,sender,otherUid,imageUrl,newMessage, messageId,timestamp,false)
@@ -53,6 +55,8 @@ class ChatRepo : repo{
             messageRef.child(auth.uid).child(chatId).child(messageId!!).setValue(message)
                 .addOnCompleteListener { Log.d("Abcd","메세지 보내기 성공 : ${messageId} ") }
                 .addOnFailureListener { Log.d("Abcd","메세지 보내기 실패 : ${messageId} ") }
+
+            emit(message)
         }
     }
 
