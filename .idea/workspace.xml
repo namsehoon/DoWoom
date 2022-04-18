@@ -12,9 +12,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="채팅 fragment&#10;&#10;- 휴대폰인증(register) 후에 CheckActivity.kt로 넘어감">
+    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="CheckActivity.kt&#10;&#10;- 프로필 이미지 업데이트">
       <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Util/CustomProgressDialog.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Util/HandleImage.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/progress_img.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/progress.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/google-services.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" afterDir="false" />
@@ -31,8 +32,12 @@
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Util/CustomAlertDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Util/CustomAlertDialog.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/register/CheckActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/register/CheckActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,12 +101,12 @@
       <list>
         <option value="valueResourceFile" />
         <option value="Class" />
-        <option value="resourceFile" />
         <option value="Kotlin Object" />
         <option value="Kotlin File" />
         <option value="Kotlin Interface" />
-        <option value="layoutResourceFile" />
         <option value="Kotlin Class" />
+        <option value="resourceFile" />
+        <option value="layoutResourceFile" />
       </list>
     </option>
   </component>
@@ -555,7 +560,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650249186604</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="CheckActivity.kt&#10;&#10;- 프로필 이미지 업데이트">
+      <created>1650266182966</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1650266182966</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -584,7 +596,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="datastore" />
     <MESSAGE value="ㅌㅌ" />
     <MESSAGE value="check activity viewmodel, repo, get query" />
     <MESSAGE value="check activity 끝, register 및 로그인 ac 시작" />
@@ -609,6 +620,7 @@
     <MESSAGE value="채팅 fragment&#10;완료&#10;&#10;1. 메세지 update 처리&#10;&#10;문제 4/12&#10;1. 메세지 삭제 처리 및 신규메세지 처&#10;2. image 처리" />
     <MESSAGE value="채팅 fragment&#10;&#10;- 채팅 메세지 보내기" />
     <MESSAGE value="채팅 fragment&#10;&#10;- 휴대폰인증(register) 후에 CheckActivity.kt로 넘어감" />
-    <option name="LAST_COMMIT_MESSAGE" value="채팅 fragment&#10;&#10;- 휴대폰인증(register) 후에 CheckActivity.kt로 넘어감" />
+    <MESSAGE value="CheckActivity.kt&#10;&#10;- 프로필 이미지 업데이트" />
+    <option name="LAST_COMMIT_MESSAGE" value="CheckActivity.kt&#10;&#10;- 프로필 이미지 업데이트" />
   </component>
 </project>

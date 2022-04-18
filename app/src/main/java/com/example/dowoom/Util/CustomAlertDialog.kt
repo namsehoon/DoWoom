@@ -2,6 +2,8 @@ package com.example.dowoom.Util
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
@@ -23,6 +25,7 @@ class CustomAlertDialog(context: Context) {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         //xml 파일
         dialog.setContentView(R.layout.my_dialog)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         // dialog창 외의 화면을 눌렀을떄도 닫히지 않음
         dialog.setCancelable(false)
 

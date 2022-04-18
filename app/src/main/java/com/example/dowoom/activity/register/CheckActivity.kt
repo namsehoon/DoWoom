@@ -1,6 +1,7 @@
 package com.example.dowoom.activity.register
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -35,6 +36,7 @@ import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
 
 import android.os.Build
+import com.example.dowoom.Util.CustomProgressDialog
 import com.example.dowoom.Util.HandleImage
 import java.io.IOException
 
@@ -48,6 +50,8 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
     var nickname:String? = null
     var statusMsg:String? = null
     var spinnerText:String? = null
+
+    lateinit var progressDialog:CustomProgressDialog
     
     var currentUser = FirebaseAuth.getInstance()
 
@@ -95,7 +99,10 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
                 requestPermissions(permissionList, 0) //권한 검사 필요한 것들만 남는다.
                 break
             }
+
+
         }
+
     }
 
     private fun initializedViewmodel() {
@@ -179,6 +186,11 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
         if (requestCode == TAKE_IMAGE_CODE) {
             when(resultCode) {
                 RESULT_OK -> {
+                    //progress 다이어로그
+                    val context = this@CheckActivity
+                    progressDialog = CustomProgressDialog(context)
+                    progressDialog.start()
+
                     //프로필 사진 설정
                     var bitmap:Bitmap? = null
                     val uri:Uri = data?.data!!
@@ -192,8 +204,8 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
                         e.printStackTrace()
                     }
                     binding.ivProfile.setImageBitmap(bitmap!!)
-                    HandleImage(application,bitmap)
-
+                    HandleImage(context,bitmap)
+                        .let { progressDialog.dismiss() }
                 }
 
             }
