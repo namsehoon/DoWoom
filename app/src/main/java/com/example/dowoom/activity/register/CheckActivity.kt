@@ -32,10 +32,11 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.net.URI
 import android.content.pm.PackageManager
+import android.graphics.ImageDecoder
 
 import android.os.Build
-
-
+import com.example.dowoom.Util.HandleImage
+import java.io.IOException
 
 
 class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", R.layout.activity_check), View.OnClickListener, AdapterView.OnItemSelectedListener {
@@ -65,21 +66,19 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
         initialized()
         initializedViewmodel()
 
-        //이미지 선택 버튼 imageView
+        //  갤러리
         binding.ivProfile.setOnClickListener {
+            //권한 획득
             checkPermission()
 
             Log.d("abcd","클릭 됨")
             // 모든 사진에 사용하는 공통 위치, 모든 음악과 오디오 파일에 사용하는 또 다른 공통 위치 등이 있습니다.
             // 앱은 플랫폼의 MediaStore API를 사용하여 이 콘텐츠에 액세스할 수 있습니다."
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
 
             //startActivity(intent) 를 실행하기 전 해당 intent를 실행시킬 수 있는지 체크할 필요가 있습니다.
             // 만일 기기에 인텐트를 처리할 수 있는 앱이 존재하지 않으면 비정상 종료되기 때문입니다.
-            if(intent.resolveActivity(packageManager) != null) {
-                startActivityForResult(intent, TAKE_IMAGE_CODE)
-            }
-
+            startActivityForResult(intent, TAKE_IMAGE_CODE)
         }
     }
 
@@ -181,62 +180,27 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
             when(resultCode) {
                 RESULT_OK -> {
                     //프로필 사진 설정
-                    val bitmap:Bitmap = data?.extras?.get("data") as Bitmap
-                    binding.ivProfile.setImageBitmap(bitmap)
-                    handleUpload(bitmap)
+                    var bitmap:Bitmap? = null
+                    val uri:Uri = data?.data!!
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver,uri))
+                        } else {
+                            bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                        }
+                    } catch (e:IOException) {
+                        e.printStackTrace()
+                    }
+                    binding.ivProfile.setImageBitmap(bitmap!!)
+                    HandleImage(application,bitmap)
+
                 }
 
             }
         }
     }
 
-    fun handleUpload(bitmap: Bitmap) {
-        //압축하기
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
 
-        //로그인한 유저 uid
-        val uid = FirebaseAuth.getInstance().currentUser?.uid
-
-        //사진 업로드 and 위치 기억
-        val storage = Firebase.storage.reference
-            .child("profileImages")
-            .child(uid?.plus(".jpeg")!!)
-
-        storage.putBytes(stream.toByteArray())
-            .addOnSuccessListener {
-                //내 프로필 참조 위치 저장
-                getDownloadUrl(storage)
-            }
-            .addOnFailureListener { error ->
-                Log.d("abcd","프로필사진 업데이트 실패 : ${error.message}")
-            }
-    }
-
-    fun getDownloadUrl(reference: StorageReference) {
-        //downloadUrl : 객체를 다운로드하는 데 사용할 수 있는 URL
-        reference.downloadUrl
-            .addOnSuccessListener(OnSuccessListener {  uri ->
-                Log.d("abcd","프로필사진 uri is : ${uri}")
-                setUserProfileurl(uri)
-            })
-    }
-
-    fun setUserProfileurl(uri: Uri) {
-        val user = FirebaseAuth.getInstance().currentUser
-
-        val request = UserProfileChangeRequest.Builder()
-            .setPhotoUri(uri)
-            .build()
-
-        user!!.updateProfile(request)
-            .addOnSuccessListener(OnSuccessListener {
-                Log.d("abcd","프로필 업데이트 성공")
-            })
-            .addOnFailureListener { error ->
-                Log.d("abcd","프로필 업데이트 실패 : ${error.message}")
-            }
-    }
 
 
 }
