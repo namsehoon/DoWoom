@@ -42,6 +42,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
         if (auth == null) {
             startNextActivity(StartActivity::class.java)
             finish()
+        } else {
+            //로그아웃
+            Firebase.auth.signOut()
+            startNextActivity(StartActivity::class.java)
+            finish()
         }
     }
 
@@ -107,6 +112,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
 
         //로그인 안되어있으면, 회원가입 창으로
         val uid = auth?.uid
+
         if (uid == null) {
             val intent = Intent(this, RegisterActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -130,7 +136,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
         }
 
          database = Firebase.database
-         auth = Firebase.auth.currentUser
+
+        auth = Firebase.auth.currentUser
 
         val dataStore = DataStoreST.getInstance(this)
         lifecycleScope.launch {

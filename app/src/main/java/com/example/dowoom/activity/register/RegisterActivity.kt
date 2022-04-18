@@ -195,7 +195,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
             sOrB = sb.equals("서포터")
         }
 
-        val intent = Intent(this,MainActivity::class.java)
+        val intent = Intent(this,CheckActivity::class.java)
         //task내에 해당 속성이 적용된 activity부터 top activity까지 모두 제거한 뒤 해당 activity를 활성화하여 top이 되도록 함
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
@@ -211,16 +211,10 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
                   binding.etAuthNumber.isEnabled = true
 
                   val newUser = task.result?.user
-                  val job = CoroutineScope(Dispatchers.IO).launch {
-                      //유저 정보
 
-                      datastore.storeData("uid",newUser?.uid!!)
-                      datastore.storeData("number", newUser.phoneNumber!!)
-                  }
-                  job.isCompleted.let {
-                      viewModel.userInsert(newUser?.uid!!,newUser.phoneNumber!!,nickname!!,stateMsg!!,sOrB!!)
-                      startActivity(intent)
-                  }
+                  viewModel.userInsert(newUser?.uid!!,newUser.phoneNumber!!,nickname!!,stateMsg!!,sOrB!!)
+                  startActivity(intent)
+
 
                   //edit text auth number input enabled true
               } else {

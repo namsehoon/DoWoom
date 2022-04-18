@@ -12,7 +12,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="채팅 fragment&#10;완료&#10;&#10;1. 메세지 update 처리&#10;&#10;문제 4/12&#10;1. 메세지 삭제 처리 및 신규메세지 처&#10;2. image 처리">
+    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="채팅 fragment&#10;&#10;- 채팅 메세지 보내기">
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_image_not_supported_24.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_person_24.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_baseline_placeholder_24.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/google-services.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" afterDir="false" />
@@ -28,13 +31,16 @@
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/chat/ChatActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/chat/ChatActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/login/StartActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/login/StartActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/main/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/main/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/register/CheckActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/register/CheckActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/register/RegisterActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/register/RegisterActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/adapter/chatMsgAdatper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/adapter/chatMsgAdatper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/repo/ChatRepo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/repo/ChatRepo.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/chatviewmodel/ChatViewmodel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/chatviewmodel/ChatViewmodel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_check.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_check.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/receivemsg_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/receivemsg_item.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/sendmsg_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/sendmsg_item.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -544,7 +550,14 @@
       <option name="project" value="LOCAL" />
       <updated>1649731099443</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="채팅 fragment&#10;&#10;- 채팅 메세지 보내기">
+      <created>1650158888763</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1650158888763</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -573,7 +586,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="login viewmodel 생성" />
     <MESSAGE value="firebase, homefragment, recyclerview" />
     <MESSAGE value="datastore" />
     <MESSAGE value="ㅌㅌ" />
@@ -598,6 +610,7 @@
     <MESSAGE value="채팅 fragment&#10;메세지 완료." />
     <MESSAGE value="채팅 fragment&#10;문제 4/12&#10;1. 메세지 삭제 처리 및 신규메세지 처리&#10;2. image 처리" />
     <MESSAGE value="채팅 fragment&#10;완료&#10;&#10;1. 메세지 update 처리&#10;&#10;문제 4/12&#10;1. 메세지 삭제 처리 및 신규메세지 처&#10;2. image 처리" />
-    <option name="LAST_COMMIT_MESSAGE" value="채팅 fragment&#10;완료&#10;&#10;1. 메세지 update 처리&#10;&#10;문제 4/12&#10;1. 메세지 삭제 처리 및 신규메세지 처&#10;2. image 처리" />
+    <MESSAGE value="채팅 fragment&#10;&#10;- 채팅 메세지 보내기" />
+    <option name="LAST_COMMIT_MESSAGE" value="채팅 fragment&#10;&#10;- 채팅 메세지 보내기" />
   </component>
 </project>

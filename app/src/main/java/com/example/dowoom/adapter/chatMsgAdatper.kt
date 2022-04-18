@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.dowoom.R
 import com.example.dowoom.Util.CustomAlertDialog
 import com.example.dowoom.databinding.DeletemsgBinding
@@ -75,18 +76,28 @@ class chatMsgAdatper(val context: Context,
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val message = messages[position]
-        //todo : 이미지 처리
         //보내는이
         if (holder.javaClass == SendMsgHolder::class.java) {
             val viewHolder = holder as SendMsgHolder
 
-            //일반
+            //이미지 처리
+            if (message.message.equals("photo")) {
+                viewHolder.sendBinding.llMsgSend.visibility = View.GONE
+                viewHolder.sendBinding.llImgSend.visibility = View.VISIBLE
+                viewHolder.sendBinding.imgSend.visibility = View.VISIBLE
+                Glide.with(context)
+                    .load(message.imageUrl) // 이미지를 로드
+                    .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
+                    .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
+                    .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
+                    .into(viewHolder.sendBinding.imgSend) //이미지를 보여줄 view를 지정
+            }
+
+            //메세지
             viewHolder.sendBinding.msgSend.text = message.message
             //메세지 삭제
             viewHolder.itemView.setOnLongClickListener {
-
                 msgClicked(message, position)
-
                 false
             }
             viewHolder.sendBinding.executePendingBindings()

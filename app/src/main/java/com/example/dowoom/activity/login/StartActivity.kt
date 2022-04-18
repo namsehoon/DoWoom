@@ -21,7 +21,7 @@ class StartActivity : BaseActivity<ActivityStartBinding>(TAG = "StartActivity", 
         //여기서 permission ?
 
         binding.startBtn.setOnClickListener {
-            startNextActivity(CheckActivity::class.java)
+            startNextActivity(RegisterActivity::class.java)
         }
 
         binding.loginBtn.setOnClickListener {
