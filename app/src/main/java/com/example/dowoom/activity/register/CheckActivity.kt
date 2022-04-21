@@ -36,8 +36,10 @@ import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
 
 import android.os.Build
+import androidx.lifecycle.lifecycleScope
 import com.example.dowoom.Util.CustomProgressDialog
 import com.example.dowoom.Util.HandleImage
+import kotlinx.coroutines.withContext
 import java.io.IOException
 
 
@@ -108,17 +110,24 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
     private fun initializedViewmodel() {
         with(viewModel) {
             //닉네임 확인 버튼 클릭 시
-            requestOkOrNot.observe(this@CheckActivity, Observer {
-                if (it) {
-                    Log.d("abcd","사용할 수 있습니다.")
-                    binding.nextBtn.visibility = View.VISIBLE
-                    showToast("사용할 수 있습니다.")
+            requestOkOrNot.observe(this@CheckActivity, Observer { result ->
+                if (result != null) {
+                    if (result) {
+                        //false = 사용중인 유저 없음
+                        Log.d("abcd","사용할 수 없습니다.")
+                        binding.nextBtn.visibility = View.INVISIBLE
+                        showToast("사용할 수 없습니다.")
+                    } else {
+                        //true = 사용중인 유저 있음
+                        Log.d("abcd","사용할 수 있습니다.")
+                        binding.nextBtn.visibility = View.VISIBLE
+                        showToast("사용할 수 있습니다.")
+                    }
                 } else {
-                    Log.d("abcd","사용할 수 없습니다.")
-                    binding.nextBtn.visibility = View.INVISIBLE
-                    showToast("사용할 수 없습니다.")
+                    Log.d("abcd","버튼을 다시 클릭해주세요.")
                 }
             })
+
         }
     }
 
@@ -143,33 +152,61 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
 
     //리스너
     override fun onClick(v: View?) {
-        statusMsg = binding.etStatusMsg.text.toString()
+        statusMsg = binding.etStatusMsg.text.toString() ?: " "
         spinnerText = binding.checkSpinner.selectedItem.toString()
 
 
         //todo 물음표 설명란 만들어야 함.
         when(v) {
+            binding.checkBtn -> {
+                lifecycleScope.launchWhenResumed {
+                   viewModel.nicknameAvailable()
+                }
+            }
             //다음으로 넘어감
             binding.nextBtn ->  {
                 //DataStore 저장
-                saveData(statusMsg!!,spinnerText!!)
-                //회원가입 액티비티로
-                startNextActivity(MainActivity::class.java)
+                val progressDialog = CustomProgressDialog(this@CheckActivity)
+                progressDialog.start()
+//                saveData(statusMsg!!,spinnerText!!)
+
+                //task내에 해당 속성이 적용된 activity부터 top activity까지 모두 제거한 뒤 해당 activity를 활성화하여 top이 되도록 함
+                val intent = Intent(this,MainActivity::class.java).apply { Intent.FLAG_ACTIVITY_CLEAR_TOP }
+                //닉네임 넘겨서 닉네임 없으면 다시 로그인
+                intent.putExtra("nickname",binding.etNickname.text.toString())
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val getIntentFromRegister = getIntent()
+                    val uid = getIntentFromRegister.getStringExtra("uid")
+                    val phoneNum = getIntentFromRegister.getStringExtra("phoneNumber") ?: " "
+                    val sOrB = spinnerText.equals("서포터")
+                    val nick  = binding.etNickname.text.toString()
+                    withContext(Dispatchers.Main) {
+                        Log.d("Abcd","uid : ${uid} , phonenum : ${phoneNum} , nickname : ${nickname} , statusmsg : ${statusMsg} , sorb : ${sOrB} ")
+                        viewModel.userInsert(uid!!,phoneNum,nick, statusMsg!!,sOrB)
+                    }
+
+                }.isCompleted.let {
+                    progressDialog.dismiss()
+                    startActivity(intent)
+                    finish()
+
+                }
             }
         }
     }
 
 
-    fun saveData( statusMsg:String, spinnerText:String) {
-
-        //백그라운드에서 실행 (Default, io)
-        CoroutineScope(Dispatchers.Default).launch {
-            datastore.storeData("statusMsg", statusMsg)
-            datastore.storeData("spinner", spinnerText)
-            datastore.storeData("nickname",viewModel.etNickname.value.toString())
-
-        }
-    }
+//    fun saveData( statusMsg:String, spinnerText:String) {
+//
+//        //백그라운드에서 실행 (Default, io)
+//        CoroutineScope(Dispatchers.Default).launch {
+//            datastore.storeData("statusMsg", statusMsg)
+//            datastore.storeData("spinner", spinnerText)
+//            datastore.storeData("nickname",viewModel.etNickname.value.toString())
+//
+//        }
+//    }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
@@ -211,10 +248,6 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
             }
         }
     }
-
-
-
-
 }
 
 

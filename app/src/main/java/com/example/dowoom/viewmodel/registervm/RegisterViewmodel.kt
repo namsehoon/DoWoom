@@ -22,9 +22,6 @@ class RegisterViewmodel : ViewModel() {
     //editText 인증 번호
     val etAuthNum = MutableLiveData<String>("")
 
-    //insert
-    private val _insertComplete = MutableLiveData<Boolean>()
-
     //인증 요청 , SingleLiveEvent : viewmodel에서 view에 이벤트를 전달할 때, "값"을 전달하는 경우가 아닌 이벤트가 발생했다는 "사실"만을 전달하고 싶을 때.
     private val _requestAuth = MutableLiveData<Boolean>()
     //다시 인증 요청
@@ -57,18 +54,6 @@ class RegisterViewmodel : ViewModel() {
     }
 
 
-    //todo = 사용자가 이미 존재해도 데이터 업데이트 됨.
-    fun userInsert(uid:String, phoneNum:String,nickname:String,statusMsg:String,sOrB:Boolean) {
-        viewModelScope.launch {
-            repo.insertNewUser(uid,phoneNum,nickname,statusMsg,sOrB)
-                .catch {  e ->
-                    Log.d("abcd", "error in reguster viewmodel is :" + e.message)
-                }.collect {
-                    _insertComplete.value = it
-                }
-
-        }
-    }
 
 
 

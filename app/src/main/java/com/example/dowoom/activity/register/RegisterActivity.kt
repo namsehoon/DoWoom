@@ -44,10 +44,6 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
     var phoneNum: String? = null
 
 
-//    private val registerViewmodel by lazy {
-//        ViewModelProvider(this).get(RegisterViewmodel::class.java)
-//    }
-
     val viewModel : RegisterViewmodel by viewModels()
 
     private var resendToken:PhoneAuthProvider.ForceResendingToken? = null
@@ -187,17 +183,8 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
 
     // 사용자 로그인
     private fun verifyPhoneNumberWithCode(phoneAuthCredential: PhoneAuthCredential) {
-        //재사용
-        CoroutineScope(Dispatchers.IO).launch {
-            nickname = datastore.readData("nickname")
-            stateMsg = datastore.readData("statusMsg")
-            val sb = datastore.readData("spinner")
-            sOrB = sb.equals("서포터")
-        }
 
         val intent = Intent(this,CheckActivity::class.java)
-        //task내에 해당 속성이 적용된 activity부터 top activity까지 모두 제거한 뒤 해당 activity를 활성화하여 top이 되도록 함
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         //이미 있는 유저라면,
         ifUserExist()
@@ -212,7 +199,9 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
 
                   val newUser = task.result?.user
 
-                  viewModel.userInsert(newUser?.uid!!,newUser.phoneNumber!!,nickname!!,stateMsg!!,sOrB!!)
+                  intent.putExtra("uid", newUser?.uid.toString())
+                  intent.putExtra("phoneNumber", newUser?.phoneNumber.toString())
+
                   startActivity(intent)
 
 

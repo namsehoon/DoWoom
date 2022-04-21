@@ -5,7 +5,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 
 //채팅방 내
 @IgnoreExtraProperties
-data class Message(var chatUid:String? = null,
+data class Message(
                    var sender:String? = null,
                    var otherUid:String? = null,
                    var imageUrl:String? = null,
@@ -16,7 +16,6 @@ data class Message(var chatUid:String? = null,
     @Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(
-            "chatUid" to chatUid,
             "sender" to sender,
             "otherUid" to otherUid,
             "imageUrl" to imageUrl,

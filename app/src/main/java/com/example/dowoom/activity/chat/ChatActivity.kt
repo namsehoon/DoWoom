@@ -28,12 +28,21 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
     val viewModel: ChatViewmodel by viewModels()
     private lateinit var adapter: chatMsgAdatper
 
-
+    //todo global하게 쓰이는 변수, 클래스들 null처리 해줘야 함.
     var myUid:String? = null
-    var chatUid:String? = null
     var otherUid:String? = null
     var otherNickname:String? = null
     var profileImg:String? = null
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        myUid = null
+        otherUid = null
+        otherNickname = null
+        profileImg = null
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,35 +53,40 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         initialized()
         initialViewModel()
 
+
+        //메세지 보내기
         lifecycleScope.launchWhenResumed {
-            //메세지 보내기
             binding.ivSendMsg.setOnClickListener {
+                Log.d("abcd","클릭됨")
                 val message = viewModel.etMessage.value.toString()
                 if (!message.isNullOrEmpty()) {
                     CoroutineScope(Dispatchers.Main).launch {
-                         viewModel.insertMessage(chatUid!!,message,myUid!!,otherUid!!)
+                        viewModel.insertMessage(message,myUid!!,otherUid!!,otherNickname!!)
                     }
 
                 } else {
                     Toast.makeText(this@ChatActivity,"메세지를 입력해주세요.",Toast.LENGTH_SHORT).show()
                 }
             }
-            //이미지 보내기
-            binding.ivSendMsg.setOnClickListener {
-
-            }
 
         }
+        //todo 이미지 보내기
+        binding.ivSendMsg.setOnClickListener {
+
+        }
+
     }
 
     fun initialViewModel() {
+        //메세지
         CoroutineScope(Dispatchers.Main).launch {
-            viewModel.observeMessage(otherUid!!,chatUid!!).observe(this@ChatActivity , Observer { it ->
+            viewModel.observeMessage(otherUid!!).observe(this@ChatActivity , Observer { it ->
                 Log.d("Abcd"," it value in chatAC is : $it")
                 adapter.setMessage(it)
 
             })
 
+            //메세지 추가
             viewModel.message.observe(this@ChatActivity, Observer { result ->
                 Log.d("abcd","result is ${result}")
                 adapter.addMessage(result)
@@ -84,24 +98,19 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
     fun initialized() {
         val i = intent
 
-        if (FirebaseAuth.getInstance().currentUser != null) {
-            myUid = FirebaseAuth.getInstance().currentUser?.uid
-        }
+        //내 uid
+        myUid = FirebaseAuth.getInstance().currentUser?.uid
+        //상대방 uid
         otherUid = i.getStringExtra("otherUid")
+        //상대방 닉네임
         otherNickname = i.getStringExtra("otherNickname")
-
-        if (i.hasExtra("chatUid")) {
-            chatUid = i.getStringExtra("chatUid")
-        }
-        if (i.hasExtra("profileImg")) {
-            profileImg = i.getStringExtra("profileImg")
-        }
-        Log.d("abcd","chatUid in ChatAC is : ${chatUid} and myuid is : ${myUid}")
+        //상대방 img
+        profileImg = i.getStringExtra("profileImg")
 
 
 
         //어뎁터 설정
-        adapter = chatMsgAdatper(this@ChatActivity, chatUid!!, myUid!!, msgClicked =  { message, position ->
+        adapter = chatMsgAdatper(this@ChatActivity, myUid!!, msgClicked =  { message, position ->
             //메세지 삭제
             val dialog = CustomAlertDialog(this@ChatActivity)
             dialog.start("삭제하시겠습니까? (상대방에게서도 삭제됨)")
@@ -109,7 +118,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
                 override fun onClicked() {
                     Log.d("abcd","삭제 확인 누름")
                    CoroutineScope(Dispatchers.IO).launch {
-                       viewModel.deleteMessage(chatUid!!,message.messageId!!,message.otherUid!!,message.timeStamp!!,message.sender!!)
+                       viewModel.deleteMessage(message.messageId!!,message.otherUid!!,message.timeStamp!!,message.sender!!)
                        withContext(Dispatchers.Main) {
                            message.message = "삭제되었습니다."
                            adapter.notifyItemChanged(position)

@@ -25,7 +25,6 @@ class CustomAlertDialog(context: Context) {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         //xml 파일
         dialog.setContentView(R.layout.my_dialog)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         // dialog창 외의 화면을 눌렀을떄도 닫히지 않음
         dialog.setCancelable(false)
 

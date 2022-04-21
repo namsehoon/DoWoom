@@ -19,11 +19,11 @@ class ChatViewmodel : ViewModel() {
     val message : LiveData<Message> get() = _message
 
     //channelFlow : 쓰레드 안전, cold(동기), 파이프라인,
-    suspend fun insertMessage(chatId: String, message:String, sender:String, otherUid: String)  {
+    suspend fun insertMessage(message:String, sender:String, otherUid: String, otherNickname:String)  {
         viewModelScope.launch {
             //메세지 insert
             val time = System.currentTimeMillis()/1000
-            chatRepo.insertMessage(chatId, sender, otherUid, null, message, time)
+            chatRepo.insertMessage(sender, otherUid, null, message, time, otherNickname)
                 .catch { error ->
                     Log.d("abcd","insert message error is :${error.message}") }
                 .collect { result ->
@@ -34,21 +34,20 @@ class ChatViewmodel : ViewModel() {
     }
 
     suspend fun deleteMessage(
-        chatId: String,
         messageId: String,
         otherUid: String,
         timeStamp: Long,
         sender: String
     ) {
         viewModelScope.launch {
-            chatRepo.deleteMessage(chatId,messageId,otherUid,timeStamp,sender)
+            chatRepo.deleteMessage(messageId,otherUid,timeStamp,sender)
         }
     }
 
-    suspend fun observeMessage(otherUid: String, chatId: String): LiveData<MutableList<Message>> {
+    suspend fun observeMessage(otherUid: String): LiveData<MutableList<Message>> {
         val messages = MutableLiveData<MutableList<Message>>()
 
-        chatRepo.getMessageData(otherUid, chatId).observeForever(Observer { it ->
+        chatRepo.getMessageData(otherUid).observeForever(Observer { it ->
             messages.value = it
         })
         return messages

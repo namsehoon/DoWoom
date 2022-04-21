@@ -22,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase
 import kotlin.system.measureTimeMillis
 
 class chatMsgAdatper(val context: Context,
-                     val chatId:String,
                      val myUid:String,
                      val msgClicked:(Message, position:Int) -> Unit
 ): RecyclerView.Adapter<RecyclerView.ViewHolder?>() {

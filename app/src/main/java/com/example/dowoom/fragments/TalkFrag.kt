@@ -35,7 +35,6 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                 val intent = Intent(context, ChatActivity::class.java)
                 //todo : 만약 존재하면 그 채팅방으로 가야됨
                 //채팅방 uid
-                intent.putExtra("chatUid",chatRoom.chatUid)
                 intent.putExtra("otherUid", chatRoom.otherUid)
                 intent.putExtra("otherNickname", chatRoom.nickname)
 

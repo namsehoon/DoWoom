@@ -8,14 +8,13 @@ import android.view.ViewGroup
 import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.dowoom.model.User
 import com.example.dowoom.R
 import com.example.dowoom.databinding.ItemRecyclerBinding
 //private val itemClickListener:(User) -> Unit
-class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talkClick:(User) -> Unit) : RecyclerView.Adapter<HomeAdapter.Viewholder>() {
+class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talkClick:(User) -> Unit) : RecyclerView.Adapter<HomeAdapter.UserHolder>() {
 
-    //바인딩
-    private lateinit var binding: ItemRecyclerBinding
     //유저
     var users = mutableListOf<User>()
 
@@ -32,46 +31,63 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeAdapter.Viewholder {
-        binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),R.layout.item_recycler,parent,false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeAdapter.UserHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recycler,parent,false)
 
-        return Viewholder(binding)
+        return UserHolder(view)
 
     }
 
-    override fun onBindViewHolder(holder: HomeAdapter.Viewholder, position: Int) {
+    override fun onBindViewHolder(holder: HomeAdapter.UserHolder, position: Int) {
        //databinding한 useritem에 users의 positoin에 맞게 뿌려줌
-        holder.bind(users,position)
+        val user = users[position]
+        val viewHolder = holder as UserHolder
+
+        if (user.profileImg != null) {
+            Glide.with(context)
+                .load(user.profileImg) // 이미지를 로드
+                .thumbnail(1f)
+                .override(100,100)
+                .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
+                .error(R.drawable.ic_baseline_person_24) // 불러오다가 에러발생
+                .into(viewHolder.binding.imageView) //이미지를 보여줄 view를 지정
+        } else {
+            Glide.with(context)
+                .load(user.profileImg) // 이미지를 로드
+                .override(100,100)
+                .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
+                .error(R.drawable.ic_baseline_person_24) // 불러오다가 에러발생
+                .fallback(R.drawable.ic_baseline_person_24) // 이미지가 null
+                .into(viewHolder.binding.imageView) //이미지를 보여줄 view를 지정
+        }
+        viewHolder.binding.tvAge.text = user.age.toString()
+        viewHolder.binding.tvNickname.text = user.nickname
+        viewHolder.binding.tvState.text = user.stateMsg
+        viewHolder.binding.tvPopularity.text = user.popularity.toString() ?: "0"
+
+
 
         //대화 시작
-        holder.binding.llHomeChat.setOnClickListener {
-            talkClick(users[position])
+        viewHolder.binding.llHomeChat.setOnClickListener {
+            talkClick(user)
         }
         // 프로필
-        holder.binding.llImage.setOnClickListener {
-            profileClick(users[position])
+        viewHolder.binding.llImage.setOnClickListener {
+            profileClick(user)
         }
 
         //This is to force bindings to execute right away
-        holder.binding.executePendingBindings()
+        viewHolder.binding.executePendingBindings()
 
     }
-    //todo : 여기부터
-    //todo : 왜 메세지를 두번 불러옴? 한번 불러올 땐, 잘 부르는데
-    //todo : 두번재 부를때는 빈 []임..
-    //todo : 그리고 왜 메세지 왜 표시 안됨 ?
+
 
     override fun getItemCount(): Int {
        return users.size
     }
 
-    inner class Viewholder(val binding: ItemRecyclerBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(users:MutableList<User>, position:Int) {
-            binding.userItem = users[position]
-
-        }
-
-
+    inner class UserHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
+        var binding:ItemRecyclerBinding = ItemRecyclerBinding.bind(itemView)
     }
 
 }

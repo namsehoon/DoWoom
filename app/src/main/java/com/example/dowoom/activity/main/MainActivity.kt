@@ -39,12 +39,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
 
     override fun onStart() {
         super.onStart()
-        if (auth == null) {
-            startNextActivity(StartActivity::class.java)
-            finish()
-        } else {
-            //로그아웃
-            Firebase.auth.signOut()
+        val intent = intent
+        if (auth == null && intent.getStringExtra("nickname") == null) {
             startNextActivity(StartActivity::class.java)
             finish()
         }

@@ -83,7 +83,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="40dp"
-            android:onClick="@{() -> vm.requestOkOrNotFun()}"
             android:text="확인"
             app:layout_constraintBottom_toBottomOf="@+id/etNickname"
             app:layout_constraintEnd_toEndOf="parent"

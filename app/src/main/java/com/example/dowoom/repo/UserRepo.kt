@@ -5,6 +5,7 @@ import androidx.datastore.preferences.protobuf.StructOrBuilder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
+import com.example.dowoom.activity.main.MainActivity
 import com.example.dowoom.model.Connect
 import com.example.dowoom.model.User
 import com.example.dowoom.viewmodel.registervm.LoadingViewmodel
@@ -16,6 +17,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlin.coroutines.suspendCoroutine
 
 
 /**
@@ -58,97 +60,100 @@ class userRepo {
      suspend fun getData(): LiveData<MutableList<User>> {
         // livedata 객체 만들기
         //firebase 추가 된 데이터 이벤트 리스너
-
         val listData: MutableList<User> = mutableListOf<User>()
         val mutableData = MutableLiveData<MutableList<User>>()
-        var index = 0
 
-        //자식 추가 ()
-        rootRef.child("Connect").orderByChild("connected/").equalTo(true).addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(connects: DataSnapshot, previousChildName: String?) {
-                Log.d("abcd","connects is : "+connects)
-                if (connects.exists()) {
+        CoroutineScope(Dispatchers.IO).launch {
+
+
+            rootRef.child("Connect").orderByChild("connected/").equalTo(true).addChildEventListener(object : ChildEventListener {
+
+                //온라인 유저 추가
+                override fun onChildAdded(connects: DataSnapshot, previousChildName: String?) {
+                    Log.d("abcd","connects is : "+connects)
+                    if (connects.exists()) {
                         //유저
                         Log.d("abcd"," connects.child : "+connects.ref)
 
                         connects.children.forEach { child ->
-                                myRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                                    override fun onDataChange(users: DataSnapshot) {
-                                        if (users.exists()) {
-                                            val getData = users.child(connects.key!!).getValue(User::class.java)
-                                            //나는 나를 볼 수 없게.
-                                            if (getData?.uid == connects.key!! && !getData.uid.equals(auth?.uid)) {
-                                                listData.add(getData)
-                                            }
-                                            mutableData.value = listData
+                            myRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(users: DataSnapshot) {
+                                    if (users.exists()) {
+                                        val getData = users.child(connects.key!!).getValue(User::class.java)
+                                        //나는 나를 볼 수 없게.
+                                        if (getData?.uid == connects.key!! && !getData.uid.equals(auth?.uid)) {
+                                            listData.add(getData)
                                         }
+                                        mutableData.value = listData
                                     }
+                                }
 
-                                    override fun onCancelled(error: DatabaseError) {
-                                       Log.d("abcd","error in child add is : "+error.message)
-                                    }
+                                override fun onCancelled(error: DatabaseError) {
+                                    Log.d("abcd","error in child add is : "+error.message)
+                                }
 
-                                })
+                            })
 
                         }
 
 
-                } else {
-                    Log.d("abcd","snap이 존재하지 않음")
+                    } else {
+                        Log.d("abcd","snap이 존재하지 않음")
+                    }
+
+
                 }
-
-
-            }
-            //자식 변경 (온라인 오프라인)
-            override fun onChildChanged(connects: DataSnapshot, previousChildName: String?) {
-                if (connects.exists()) {
-                    //유저
-                    myRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(users: DataSnapshot) {
-                            val getData = users.child(connects.key!!).getValue(User::class.java)
-                            index = listData.indexOf(getData)
-                            if (connects.child("connected").value == true) {
-                                listData.add(getData!!)
-                            } else {
-                                listData.removeAt(index)
+                //자식 변경 (온라인 오프라인)
+                override fun onChildChanged(connects: DataSnapshot, previousChildName: String?) {
+                    if (connects.exists()) {
+                        //유저
+                        myRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(users: DataSnapshot) {
+                                val getData = users.child(connects.key!!).getValue(User::class.java)
+                                val index = listData.indexOf(getData)
+                                if (connects.child("connected").value == true) {
+                                    listData.add(getData!!)
+                                } else {
+                                    listData.removeAt(index)
 //                                listData.remove(getData!!)
+                                }
+
                             }
 
-                        }
+                            override fun onCancelled(error: DatabaseError) {
+                                Log.d("abcd","error in child add is : "+error.message)
+                            }
 
-                        override fun onCancelled(error: DatabaseError) {
-                            Log.d("abcd","error in child add is : "+error.message)
-                        }
+                        })
 
-                    })
-
-                } else {
-                    Log.d("abcd","snap이 존재하지 않음")
+                    } else {
+                        Log.d("abcd","snap이 존재하지 않음")
+                    }
+                    mutableData.value = listData
                 }
-                mutableData.value = listData
-            }
-            //자식 제거 (..계정 삭제?)
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                for (s in snapshot.children) {
-                    Log.d("abcd"," result 3 : "+s.value)
+                //자식 제거 (..계정 삭제?)
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    for (s in snapshot.children) {
+                        Log.d("abcd"," result 3 : "+s.value)
+                    }
                 }
-            }
 
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                for (s in snapshot.children) {
-                    Log.d("abcd"," result 4 : "+s.value)
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                    for (s in snapshot.children) {
+                        Log.d("abcd"," result 4 : "+s.value)
+                    }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
+                override fun onCancelled(error: DatabaseError) {
                     Log.d("abcd"," result 5 : "+error.message)
 
-            }
+                }
 
-        })
+            })
 
-
+        }
         return mutableData
+
     }
 
     /** 자동 로그인 */ //todo : singleLiveEvent로 변경
@@ -165,40 +170,30 @@ class userRepo {
     }
 
     /** 닉네임 체크 */
-    suspend fun checkData(nickname:String) : Flow<Boolean> {
-
+    suspend fun checkData(nickname:String) : LiveData<Boolean> {
+        val mutableData = MutableLiveData<Boolean>()
         //유저들 -> 하위노드 (유저) -> nickname -> 값이 nickname과 같은 쿼리
-        return flow {
-            var result = false
-            val query = myRef.orderByChild("nickname").equalTo(nickname)
-
-               query.get().addOnSuccessListener {
-                   Log.d("abcd", "Got value ${it.value}")
-                   //if 문
-                   if(it.value == null) {
-                       result = true
-                       Log.d("abcd","사용 할 수 있습니다.")
-                   } else {
-                       result = false
-                   }
-                   Log.d("Abcd", "userrepo result is : "+result)
-               }.addOnFailureListener{
-                   Log.d("abcd", "Error getting data", it)
-               }
-            delay(500)
-            emit(result)
-
-        }.flowOn(Dispatchers.IO)
-
-
+        CoroutineScope(Dispatchers.IO).launch {
+            myRef.orderByChild("nickname").equalTo(nickname).get()
+                .addOnCompleteListener {
+                    Log.d("abcd","it.result.exists() is : ${it.result.exists()}")
+                    mutableData.value = it.result.exists()
+                }
+                .addOnFailureListener {
+                    Log.d("abcd","userepo error ${it.message}")
+                }
+        }
+        return mutableData
     }
+
 
     /** insert new user */
     suspend fun insertNewUser(uid:String, number: String, nickname: String,stateMsg:String,sOrB:Boolean) : Flow<Boolean> {
 
         return flow {
             var result = false
-            val user = User(uid,0,nickname,stateMsg,0,false,null,sOrB)
+            val profileImg = auth?.photoUrl.toString() ?: null
+            val user = User(uid,0,nickname,stateMsg,0,false,null,sOrB,profileImg)
             myRef
                 .child(uid)
                 .setValue(user)

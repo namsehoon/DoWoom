@@ -41,12 +41,12 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         //어뎁터
         adapter = HomeAdapter(requireActivity(),
             profileClick = { user ->
-                //todo 프로필 이미지 추가
+                //todo 프로필 클릭시 이벤트
 
         },
         talkClick = { user ->
             //todo 프로필 이미지 추가
-            val alertDialog = CustomAlertDialog(this.requireActivity())
+            val alertDialog = CustomAlertDialog(requireActivity())
             alertDialog.start(user.nickname.plus("님과 대화하시겠습니까?"))
             //대화생성 ok 클릭 시,
             alertDialog.onOkClickListener(object : CustomAlertDialog.onDialogCustomListener {
@@ -93,7 +93,7 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         //observe
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.observeUser().observe(viewLifecycleOwner, Observer {
-                Log.d("Abcd","it is : ${it.toString()}")
+                Log.d("Abcd","home is : ${it}")
                 adapter.setUser(it)
             })
 
