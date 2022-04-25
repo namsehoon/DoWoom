@@ -32,9 +32,7 @@ class ChatRepo : repo{
 
     /** 메세지 삭제 */
     suspend fun deleteMessage(messageId: String, otherUid: String, timeStamp: Long, sender: String) {
-
         //chatid 구하기
-
         CoroutineScope(Dispatchers.IO).launch {
 
             val message = Message(sender,otherUid,null,"삭제되었습니다.",messageId,timeStamp,true)
@@ -43,17 +41,10 @@ class ChatRepo : repo{
                 "/Message/$sender/$otherUid/$messageId" to messageValue
             )
             database.reference.updateChildren(childUpdates)
-                .addOnCompleteListener {
-                    Log.d("abcd","메세지 업데이트 성공.")
-                    //last message 업데이트
-
-                }
-                .addOnFailureListener { Log.d("abcd","메세지 업데이트 실패.") }
+                .addOnCompleteListener { Log.d("abcd","메세지 삭제 성공.") }
+                .addOnFailureListener { Log.d("abcd","메세지 삭제 실패.") }
         }
-
     }
-
-
 
     /** 메세지 추가 */
     suspend fun insertMessage(sender:String,otherUid: String,imageUrl:String? = null, newMessage:String? = null,timestamp:Long, otherNickname:String) : Flow<Message> {
@@ -66,26 +57,30 @@ class ChatRepo : repo{
             messageRef.child(auth.uid).child(otherUid).child(messageId!!).setValue(message)
                 .addOnCompleteListener {
                     Log.d("Abcd","메세지 보내기 성공 : ${messageId} ")
+                    //last message 업데이트 todo : 이게 최선인가?..
+                    updateChatRoom(sender,newMessage!!,otherUid,timestamp,otherNickname)
                 }
                 .addOnFailureListener { Log.d("Abcd","메세지 보내기 실패 : ${messageId} ") }
 
             emit(message)
-        }
+        }.flowOn(Dispatchers.IO)
     }
+
     /** 채팅룸 업데이트 : lastmessage 및 timeStamp */
     fun updateChatRoom(sender:String,lastMessage:String, otherUid: String, timestamp: Long, otherNickname: String) {
 
-       CoroutineScope(Dispatchers.IO).launch {
-           val chatroom = ChatRoom(otherUid,otherNickname,lastMessage,timestamp,false)
-           val chatRoomValue = chatroom.toMap()
-           val chatRoomUpdate = hashMapOf<String,Any>(
-               "/$sender/$otherUid" to chatRoomValue
-           )
+        val chatroom = ChatRoom(otherUid,otherNickname,lastMessage,timestamp,false)
+        val chatRoomValue = chatroom.toMap()
+        val chatRoomUpdate = hashMapOf<String,Any>(
+            "ChatRoom/$sender/$otherUid" to chatRoomValue
+        )
 
-           talkRef.updateChildren(chatRoomUpdate)
-               .addOnCompleteListener { Log.d("abcd","채팅룸 업데이트 성공.") }
-               .addOnFailureListener { Log.d("abcd","채팅룸 업데이트 실패.") }
-       }
+        database.reference.updateChildren(chatRoomUpdate)
+            .addOnCompleteListener {
+                Log.d("abcd","채팅룸 업데이트 성공.")
+            }
+            .addOnFailureListener { Log.d("abcd","채팅룸 업데이트 실패.") }
+
 
     }
 
@@ -115,32 +110,10 @@ class ChatRepo : repo{
                     Log.d("abcd","load할 메세지가 없습니다.")
                 }
             }
-
             //메세지가 새로 추가되거나, 메세지 삭제버튼을 눌러서 "message text 변경"
             override fun onChildChanged(messages: DataSnapshot, previousChildName: String?) {
                 if (messages.exists()) {
-
-                      /** 1. 멤버의 닉네임 가져올거임 */
-                    memberRef.child(auth.uid).child(otherUid).addListenerForSingleValueEvent(object : ValueEventListener{
-                        override fun onDataChange(member: DataSnapshot) {
-
-                            val memberData = member.getValue(com.example.dowoom.model.Member::class.java)
-
-                            /** 2.채팅방 업데이트 (lastmessage, timestamp) */
-
-                            //마지막 element 데이터
-                            val messageData = messages.children.last().getValue(Message::class.java)
-                            Log.d("abcd","the last message data is : ${messageData}")
-                            updateChatRoom(auth.uid,messageData?.message!!, otherUid, messageData.timeStamp!!, memberData?.nickname!!)
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            Log.d("abcd","getMessageData error is : ${error.message} ")
-                        }
-
-                    })
                 }
-
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
@@ -172,6 +145,7 @@ class ChatRepo : repo{
         talkRef.orderByKey().equalTo(myUid).addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(chatRooms: DataSnapshot, previousChildName: String?) {
                 if (chatRooms.exists()) {
+                    listData.clear()
                     Log.d("abcd","chat room is : ${chatRooms.ref}")
                     for(chatRoom in chatRooms.children) {
                         val getChatRoom = chatRoom.getValue(ChatRoom::class.java)
@@ -182,23 +156,20 @@ class ChatRepo : repo{
                     Log.d("abcd","chatRooms이 없음 ")
                 }
             }
-
+            // /users/<userId>/images/<image-file>
             override fun onChildChanged(chatRooms: DataSnapshot, previousChildName: String?) {
                 if (chatRooms.exists()) {
-                    //청소
-                    listData.clear()
-            //  todo 문제 : 업데이트가 두번됨......
-
-                    //todo D/abcd: 채팅룸 업데이트 성공.
-                    //todo I/chatty: uid=10134(com.example.dowoom) identical 1 line
-                    //todo D/abcd: 채팅룸 업데이트 성공.
-
-                    Log.d("abcd","chatroom onChildChanged is : ${chatRooms.value}")
-                    for(chatRoom in chatRooms.children) {
-                        val getChatRoom = chatRoom.getValue(ChatRoom::class.java)
-                        listData.add(getChatRoom!!)
+                    if (chatRooms.exists()) {
+                        listData.clear()
+                        Log.d("abcd","chat room is : ${chatRooms.ref}")
+                        for(chatRoom in chatRooms.children) {
+                            val getChatRoom = chatRoom.getValue(ChatRoom::class.java)
+                            listData.add(getChatRoom!!)
+                        }
+                        mutableData.value = listData
+                    } else {
+                        Log.d("abcd","chatRooms이 없음 ")
                     }
-                    mutableData.value = listData
 
                 } else {
                     Log.d("abcd","chatRooms이 없음 ")
@@ -222,7 +193,6 @@ class ChatRepo : repo{
         return mutableData
 
     }
-
 
     /** 채팅 시작 */
     suspend fun checkedChat(user: User) {

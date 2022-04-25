@@ -31,6 +31,8 @@ class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Uni
         notifyDataSetChanged()
     }
 
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatRoomAdapter.Viewholder {
         binding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),

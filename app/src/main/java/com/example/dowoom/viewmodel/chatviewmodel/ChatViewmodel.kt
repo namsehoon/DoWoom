@@ -18,7 +18,7 @@ class ChatViewmodel : ViewModel() {
     val _message = MutableLiveData<Message>()
     val message : LiveData<Message> get() = _message
 
-    //channelFlow : 쓰레드 안전, cold(동기), 파이프라인,
+    /** 메세지 추가 (채팅룸 업데이트)*/
     suspend fun insertMessage(message:String, sender:String, otherUid: String, otherNickname:String)  {
         viewModelScope.launch {
             //메세지 insert
@@ -33,6 +33,7 @@ class ChatViewmodel : ViewModel() {
         }
     }
 
+    /** 메세지 삭제 */
     suspend fun deleteMessage(
         messageId: String,
         otherUid: String,
@@ -43,7 +44,7 @@ class ChatViewmodel : ViewModel() {
             chatRepo.deleteMessage(messageId,otherUid,timeStamp,sender)
         }
     }
-
+    /** 전체 메세지 관찰 */
     suspend fun observeMessage(otherUid: String): LiveData<MutableList<Message>> {
         val messages = MutableLiveData<MutableList<Message>>()
 

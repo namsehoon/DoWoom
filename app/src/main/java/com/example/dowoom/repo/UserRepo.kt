@@ -33,6 +33,7 @@ class userRepo {
     val auth:FirebaseUser? = Firebase.auth.currentUser
     val rootRef : DatabaseReference = database.reference
     val myRef: DatabaseReference = rootRef.child("User")
+    val conRef: DatabaseReference = rootRef.child("Connect")
 
 
     /** 유저 phone number(id) 가져오기 */
@@ -65,9 +66,7 @@ class userRepo {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-
             rootRef.child("Connect").orderByChild("connected/").equalTo(true).addChildEventListener(object : ChildEventListener {
-
                 //온라인 유저 추가
                 override fun onChildAdded(connects: DataSnapshot, previousChildName: String?) {
                     Log.d("abcd","connects is : "+connects)
@@ -75,33 +74,26 @@ class userRepo {
                         //유저
                         Log.d("abcd"," connects.child : "+connects.ref)
 
-                        connects.children.forEach { child ->
-                            myRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onDataChange(users: DataSnapshot) {
-                                    if (users.exists()) {
-                                        val getData = users.child(connects.key!!).getValue(User::class.java)
-                                        //나는 나를 볼 수 없게.
-                                        if (getData?.uid == connects.key!! && !getData.uid.equals(auth?.uid)) {
-                                            listData.add(getData)
-                                        }
-                                        mutableData.value = listData
+                        myRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(users: DataSnapshot) {
+                                if (users.exists()) {
+                                    val getData = users.child(connects.key!!).getValue(User::class.java)
+                                    //나는 나를 볼 수 없게.
+                                    if (getData?.uid == connects.key!! && !getData.uid.equals(auth?.uid)) {
+                                        listData.add(getData)
                                     }
+                                    mutableData.value = listData
                                 }
+                            }
 
-                                override fun onCancelled(error: DatabaseError) {
-                                    Log.d("abcd","error in child add is : "+error.message)
-                                }
-
-                            })
-
-                        }
-
+                            override fun onCancelled(error: DatabaseError) {
+                                Log.d("abcd","error in child add is : "+error.message)
+                            }
+                        })
 
                     } else {
                         Log.d("abcd","snap이 존재하지 않음")
                     }
-
-
                 }
                 //자식 변경 (온라인 오프라인)
                 override fun onChildChanged(connects: DataSnapshot, previousChildName: String?) {
@@ -199,7 +191,9 @@ class userRepo {
                 .setValue(user)
                 .addOnSuccessListener {
                     Log.d("abcd","사용자가 추가 되었습니다. in userrepo")
-                    result = true }
+                    result = true
+                    insertConnect(auth?.uid!!)
+                }
                 .addOnFailureListener{ error ->
                     Log.d("abcd", "error in user repo : "+error.message)
                 }
@@ -207,4 +201,15 @@ class userRepo {
             this.emit(result)
         }.flowOn(Dispatchers.IO)
     }
+
+    /** insert connect*/
+
+    fun insertConnect(uid: String) {
+        val connect = Connect(false,auth?.uid)
+        conRef.child(uid).setValue(connect).addOnSuccessListener{
+        }
+    }
+
+
+
 }

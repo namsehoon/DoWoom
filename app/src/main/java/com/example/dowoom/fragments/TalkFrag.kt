@@ -62,6 +62,12 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                 Log.d("abcd","it chat is : "+it.toString())
                 adapter.setChatroom(it)
             })
+
+            //마지막 메세지 및 시간
+//            viewModel.updateChatroom(otherUid = "Ss").observe(viewLifecycleOwner, Observer { chatroom ->
+//                Log.d("abcd","update chat room is : ${chatroom}")
+//
+//            })
         }
     }
 
