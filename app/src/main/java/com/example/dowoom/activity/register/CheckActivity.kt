@@ -39,6 +39,7 @@ import android.os.Build
 import androidx.lifecycle.lifecycleScope
 import com.example.dowoom.Util.CustomProgressDialog
 import com.example.dowoom.Util.HandleImage
+import com.example.dowoom.Util.PermissionCheck
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
@@ -54,13 +55,16 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
     var spinnerText:String? = null
 
     lateinit var progressDialog:CustomProgressDialog
-    
-    var currentUser = FirebaseAuth.getInstance()
 
     //start result for activity
     val TAKE_IMAGE_CODE = 10001
 
-    private val permissionList = arrayOf<String>(Manifest.permission.READ_EXTERNAL_STORAGE)
+    override fun onDestroy() {
+        super.onDestroy()
+        nickname = null
+        statusMsg = null
+        spinnerText = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,12 +79,13 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
         //  갤러리
         binding.ivProfile.setOnClickListener {
             //권한 획득
-            checkPermission()
+            PermissionCheck(this@CheckActivity).checkPermission()
 
             Log.d("abcd","클릭 됨")
             // 모든 사진에 사용하는 공통 위치, 모든 음악과 오디오 파일에 사용하는 또 다른 공통 위치 등이 있습니다.
             // 앱은 플랫폼의 MediaStore API를 사용하여 이 콘텐츠에 액세스할 수 있습니다."
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+                .apply { type = MediaStore.Images.Media.CONTENT_TYPE }
 
             //startActivity(intent) 를 실행하기 전 해당 intent를 실행시킬 수 있는지 체크할 필요가 있습니다.
             // 만일 기기에 인텐트를 처리할 수 있는 앱이 존재하지 않으면 비정상 종료되기 때문입니다.
@@ -88,24 +93,6 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
         }
     }
 
-    fun checkPermission() {
-        //현재 버전 6.0 미만이면 종료 --> 6이후 부터 권한 허락
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
-
-        //각 권한 허용 여부를 확인
-        for (permission in permissionList) {
-            val chk = checkCallingOrSelfPermission(permission)
-            //거부 상태라면
-            if (chk == PackageManager.PERMISSION_DENIED) {
-                //사용자에게 권한 허용여부를 확인하는 창을 띄운다.
-                requestPermissions(permissionList, 0) //권한 검사 필요한 것들만 남는다.
-                break
-            }
-
-
-        }
-
-    }
 
     private fun initializedViewmodel() {
         with(viewModel) {
@@ -195,18 +182,6 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
             }
         }
     }
-
-
-//    fun saveData( statusMsg:String, spinnerText:String) {
-//
-//        //백그라운드에서 실행 (Default, io)
-//        CoroutineScope(Dispatchers.Default).launch {
-//            datastore.storeData("statusMsg", statusMsg)
-//            datastore.storeData("spinner", spinnerText)
-//            datastore.storeData("nickname",viewModel.etNickname.value.toString())
-//
-//        }
-//    }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 

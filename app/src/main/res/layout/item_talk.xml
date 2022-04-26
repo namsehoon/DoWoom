@@ -22,12 +22,13 @@
             android:layout_gravity="start">
 
 
-<!--            <ImageView-->
-<!--                android:id="@+id/imageView"-->
-<!--                android:layout_width="100sp"-->
-<!--                android:src="@{chatItem.profileImg}"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                tools:srcCompat="@tools:sample/avatars" />-->
+            <ImageView
+                android:id="@+id/profileImg"
+                android:padding="5sp"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
+                android:adjustViewBounds="true"
+                tools:srcCompat="@tools:sample/avatars" />
 
         </LinearLayout>
 
@@ -49,7 +50,7 @@
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{chatItem.nickname}" />
+                     />
 
 
                 <TextView
@@ -59,8 +60,7 @@
                     android:layout_weight="1"
                     android:layout_gravity="center|end"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{Long.toString(chatItem.timeStamp)}" />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
             <LinearLayout
@@ -75,19 +75,16 @@
                     android:layout_weight="9"
                     android:gravity="center|start"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@{chatItem.lastMessage}" />
+                    android:layout_height="match_parent" />
 
-                <ImageView
+                <TextView
                     android:id="@+id/newMsg"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="5sp"
                     android:padding="1dp"
                     android:layout_gravity="center"
                     android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:visibility="gone"
-                    android:src="@drawable/ic_baseline_new_releases_24"/>
+                    android:layout_height="24dp" />
 
             </LinearLayout>
 

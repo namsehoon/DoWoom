@@ -4,6 +4,7 @@ import com.google.firebase.database.Exclude
 
 //talk fragment
 data class ChatRoom(
+                    var profileImg:String? = null,
                     var otherUid:String? = null,
                     var nickname:String? = null,
                     var lastMessage:String? = null,
@@ -12,6 +13,7 @@ data class ChatRoom(
     @Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(
+            "profileImg" to profileImg,
             "otherUid" to otherUid,
             "nickname" to nickname,
             "lastMessage" to lastMessage,

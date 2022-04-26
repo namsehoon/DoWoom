@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -47,12 +49,20 @@ class ChatRepo : repo{
     }
 
     /** 메세지 추가 */
-    suspend fun insertMessage(sender:String,otherUid: String,imageUrl:String? = null, newMessage:String? = null,timestamp:Long, otherNickname:String) : Flow<Message> {
+    suspend fun insertMessage(ImageUri:String? = null, sender:String,otherUid: String, newMessage:String? = null,timestamp:Long, otherNickname:String) : Flow<Message> {
 
         return flow<Message> {
             //삭제할 때 필요함
             val messageId = messageRef.push().key
-            val message = Message(sender,otherUid,imageUrl,newMessage, messageId,timestamp,false)
+            val message:Message
+
+            if (newMessage == "photo" && ImageUri !== null) {
+                //사진 보내기
+                message = Message(sender,otherUid,ImageUri,"photo", messageId,timestamp,false)
+            } else {
+                //메세지만 보내기
+                message = Message(sender,otherUid,null,newMessage, messageId,timestamp,false)
+            }
 
             messageRef.child(auth.uid).child(otherUid).child(messageId!!).setValue(message)
                 .addOnCompleteListener {
@@ -69,7 +79,10 @@ class ChatRepo : repo{
     /** 채팅룸 업데이트 : lastmessage 및 timeStamp */
     fun updateChatRoom(sender:String,lastMessage:String, otherUid: String, timestamp: Long, otherNickname: String) {
 
-        val chatroom = ChatRoom(otherUid,otherNickname,lastMessage,timestamp,false)
+        var profileImg:StorageReference? =  storage.reference.child("User/$otherUid/profileImages/${otherUid.plus(".jpeg")}")
+        Log.d("abcd","profileimg path is : ${profileImg}")
+
+        val chatroom = ChatRoom(profileImg?.path,otherUid,otherNickname,lastMessage,timestamp,false)
         val chatRoomValue = chatroom.toMap()
         val chatRoomUpdate = hashMapOf<String,Any>(
             "ChatRoom/$sender/$otherUid" to chatRoomValue
@@ -216,39 +229,39 @@ class ChatRepo : repo{
                             //똑같은 멤버로 구성된 채팅방이 있는지 보기
                             if(getMember?.otherUid == otherUid && getMember?.myUid == myUid) {
                                 //todo : 있는 곳으로 가야 됨
-                                Log.d("abcd","other 같음 : "+ getMember?.otherUid +" : "+ otherUid)
-                                Log.d("abcd","myuid 같음 : "+ getMember?.myUid +" : "+ myUid)
+                                Log.d("abcd","other 같음 : "+ getMember.otherUid +" : "+ otherUid)
+                                Log.d("abcd","myuid 같음 : "+ getMember.myUid +" : "+ myUid)
                             } else { //새로운 채팅방
                                 val messageId = messageRef.push().key
 
-                                val chatRoom = ChatRoom(otherUid ,user.nickname, null, 0, false)
+                                val chatRoom = ChatRoom(user.profileImg,otherUid ,user.nickname, null, 0, false)
                                 val message = Message( myUid, otherUid, null, null,messageId,0, false)
                                 val chatMember = com.example.dowoom.model.Member(myUid, user.nickname, otherUid)
 
                                 talkRef.child(myUid).child(otherUid!!).setValue(chatRoom)
                                     .addOnCompleteListener { Log.d("abcd", "chat 성공") }
                                     .addOnFailureListener { Log.d("abcd", "chat 실패") }
-                                memberRef.child(myUid).child(otherUid!!).setValue(chatMember)
+                                memberRef.child(myUid).child(otherUid).setValue(chatMember)
                                     .addOnCompleteListener { Log.d("abcd", "member 성공") }
                                     .addOnFailureListener { Log.d("abcd", "member 실패") }
-                                messageRef.child(myUid).child(otherUid!!).child(messageId!!).setValue(message)
+                                messageRef.child(myUid).child(otherUid).child(messageId!!).setValue(message)
 
                             }
                         }
                     } else {
                         val messageId = messageRef.push().key
 
-                        val chatRoom = ChatRoom(otherUid ,user.nickname, null, 0, false)
+                        val chatRoom = ChatRoom(user.profileImg, otherUid ,user.nickname, null, 0, false)
                         val message = Message( myUid, otherUid, null, null,messageId,0, false)
                         val chatMember = com.example.dowoom.model.Member(myUid, user.nickname, otherUid)
 
                         talkRef.child(myUid).child(otherUid!!).setValue(chatRoom)
                             .addOnCompleteListener { Log.d("abcd", "chat 성공") }
                             .addOnFailureListener { Log.d("abcd", "chat 실패") }
-                        memberRef.child(myUid).child(otherUid!!).setValue(chatMember)
+                        memberRef.child(myUid).child(otherUid).setValue(chatMember)
                             .addOnCompleteListener { Log.d("abcd", "member 성공") }
                             .addOnFailureListener { Log.d("abcd", "member 실패") }
-                        messageRef.child(myUid).child(otherUid!!).child(messageId!!).setValue(message)
+                        messageRef.child(myUid).child(otherUid).child(messageId!!).setValue(message)
 
                     }
 

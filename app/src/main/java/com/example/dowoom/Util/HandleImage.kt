@@ -8,11 +8,12 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 
-class HandleImage(val context: Context, val bitmap: Bitmap) {
+class HandleImage(val context: Context, val bitmap: Bitmap ) {
 
     init {
         handleUpload(bitmap)
@@ -27,10 +28,12 @@ class HandleImage(val context: Context, val bitmap: Bitmap) {
         //로그인한 유저 uid
         val uid = FirebaseAuth.getInstance().currentUser?.uid
 
-        //사진 업로드 and 위치 기억
-        val storage = Firebase.storage.reference
+        //사진 업로드 and 위치 기억  /users/<userId>/profileImages/<image-file>
+        val storage = FirebaseStorage.getInstance().reference
+            .child("User")
+            .child(uid!!)
             .child("profileImages")
-            .child(uid?.plus(".jpeg")!!)
+            .child(uid.plus(".jpeg"))
 
         storage.putBytes(stream.toByteArray())
             .addOnSuccessListener {

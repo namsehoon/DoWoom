@@ -46,7 +46,6 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
         if (user.profileImg != null) {
             Glide.with(context)
                 .load(user.profileImg) // 이미지를 로드
-                .thumbnail(1f)
                 .override(100,100)
                 .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
                 .error(R.drawable.ic_baseline_person_24) // 불러오다가 에러발생
@@ -60,6 +59,8 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
                 .fallback(R.drawable.ic_baseline_person_24) // 이미지가 null
                 .into(viewHolder.binding.imageView) //이미지를 보여줄 view를 지정
         }
+
+
         viewHolder.binding.tvAge.text = user.age.toString()
         viewHolder.binding.tvNickname.text = user.nickname
         viewHolder.binding.tvState.text = user.stateMsg

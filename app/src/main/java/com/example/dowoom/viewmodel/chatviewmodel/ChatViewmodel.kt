@@ -19,11 +19,11 @@ class ChatViewmodel : ViewModel() {
     val message : LiveData<Message> get() = _message
 
     /** 메세지 추가 (채팅룸 업데이트)*/
-    suspend fun insertMessage(message:String, sender:String, otherUid: String, otherNickname:String)  {
+    suspend fun insertMessage(ImageUri:String?, message:String, sender:String, otherUid: String, otherNickname:String)  {
         viewModelScope.launch {
             //메세지 insert
             val time = System.currentTimeMillis()/1000
-            chatRepo.insertMessage(sender, otherUid, null, message, time, otherNickname)
+            chatRepo.insertMessage(ImageUri,sender, otherUid, message, time, otherNickname)
                 .catch { error ->
                     Log.d("abcd","insert message error is :${error.message}") }
                 .collect { result ->

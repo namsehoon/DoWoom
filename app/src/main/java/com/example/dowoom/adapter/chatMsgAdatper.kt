@@ -1,10 +1,14 @@
 package com.example.dowoom.adapter
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,6 +23,8 @@ import com.example.dowoom.model.Member
 import com.example.dowoom.model.Message
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import java.io.FileNotFoundException
+import java.io.InputStream
 import kotlin.system.measureTimeMillis
 
 class chatMsgAdatper(val context: Context,
@@ -84,12 +90,26 @@ class chatMsgAdatper(val context: Context,
                 viewHolder.sendBinding.llMsgSend.visibility = View.GONE
                 viewHolder.sendBinding.llImgSend.visibility = View.VISIBLE
                 viewHolder.sendBinding.imgSend.visibility = View.VISIBLE
-                Glide.with(context)
-                    .load(message.imageUrl) // 이미지를 로드
-                    .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
-                    .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
-                    .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
-                    .into(viewHolder.sendBinding.imgSend) //이미지를 보여줄 view를 지정
+
+                try{
+//                    val inputStream: InputStream = context.getContentResolver().openInputStream(message.imageUrl?.toUri()!!)!!
+//                    val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream);
+                    Log.d("abcd","경로 is : ${message.imageUrl}")
+
+                    val options:BitmapFactory.Options = BitmapFactory.Options()
+                    val toBitmap = BitmapFactory.decodeFile(message.imageUrl, options)
+
+                    Glide.with(context)
+                        .load(toBitmap) // 이미지를 로드
+                        .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
+                        .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
+                        .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
+                        .into(viewHolder.sendBinding.imgSend) //이미지를 보여줄 view를 지정
+                } catch (e: FileNotFoundException){
+                    e.printStackTrace();
+                }
+
+
             }
 
             //메세지
@@ -110,6 +130,8 @@ class chatMsgAdatper(val context: Context,
             viewHolder.receiveBinding.executePendingBindings()
         }
     }
+
+
 
     override fun getItemCount(): Int {
         return messages.size
