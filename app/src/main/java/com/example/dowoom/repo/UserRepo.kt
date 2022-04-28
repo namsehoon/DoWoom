@@ -66,22 +66,25 @@ class userRepo {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            rootRef.child("Connect").orderByChild("connected/").equalTo(true).addChildEventListener(object : ChildEventListener {
+            rootRef.child("Connect").orderByChild("connected").equalTo(true).addChildEventListener(object : ChildEventListener {
                 //온라인 유저 추가
                 override fun onChildAdded(connects: DataSnapshot, previousChildName: String?) {
                     Log.d("abcd","connects is : "+connects)
                     if (connects.exists()) {
                         //유저
-                        Log.d("abcd"," connects.child : "+connects.ref)
+                        Log.d("abcd"," connects.child : "+connects.key)
 
                         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(users: DataSnapshot) {
                                 if (users.exists()) {
                                     val getData = users.child(connects.key!!).getValue(User::class.java)
                                     //나는 나를 볼 수 없게.
-                                    if (getData?.uid == connects.key!! && !getData.uid.equals(auth?.uid)) {
-                                        listData.add(getData)
+                                    if (!getData?.uid.equals(auth?.uid)) {
+                                        listData.add(getData!!)
+                                     } else {
+                                         listData.remove(getData)
                                     }
+                                    Log.d("abcd","listdata is empty? : ${listData.isEmpty()}")
                                     mutableData.value = listData
                                 }
                             }
@@ -91,14 +94,17 @@ class userRepo {
                             }
                         })
 
+
                     } else {
                         Log.d("abcd","snap이 존재하지 않음")
                     }
+
                 }
                 //자식 변경 (온라인 오프라인)
                 override fun onChildChanged(connects: DataSnapshot, previousChildName: String?) {
                     if (connects.exists()) {
                         //유저
+                            listData.clear()
                         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(users: DataSnapshot) {
                                 val getData = users.child(connects.key!!).getValue(User::class.java)
@@ -109,7 +115,8 @@ class userRepo {
                                     listData.removeAt(index)
 //                                listData.remove(getData!!)
                                 }
-
+                                Log.d("abcd","listdata is empty? : ${listData.isEmpty()}")
+                                mutableData.value = listData
                             }
 
                             override fun onCancelled(error: DatabaseError) {
@@ -121,7 +128,6 @@ class userRepo {
                     } else {
                         Log.d("abcd","snap이 존재하지 않음")
                     }
-                    mutableData.value = listData
                 }
                 //자식 제거 (..계정 삭제?)
                 override fun onChildRemoved(snapshot: DataSnapshot) {
@@ -144,6 +150,7 @@ class userRepo {
             })
 
         }
+
         return mutableData
 
     }
@@ -192,7 +199,6 @@ class userRepo {
                 .addOnSuccessListener {
                     Log.d("abcd","사용자가 추가 되었습니다. in userrepo")
                     result = true
-                    insertConnect(auth?.uid!!)
                 }
                 .addOnFailureListener{ error ->
                     Log.d("abcd", "error in user repo : "+error.message)
@@ -202,13 +208,7 @@ class userRepo {
         }.flowOn(Dispatchers.IO)
     }
 
-    /** insert connect*/
 
-    fun insertConnect(uid: String) {
-        val connect = Connect(false,auth?.uid)
-        conRef.child(uid).setValue(connect).addOnSuccessListener{
-        }
-    }
 
 
 

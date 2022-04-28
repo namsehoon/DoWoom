@@ -9,11 +9,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
+import com.example.dowoom.Util.CustomAlertDialog
 import com.example.dowoom.activity.chat.ChatActivity
 import com.example.dowoom.adapter.ChatRoomAdapter
 import com.example.dowoom.databinding.TalkFragmentBinding
 import com.example.dowoom.viewmodel.mainViewmodel.TalkViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fragment) {
 
@@ -37,9 +41,29 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                 //채팅방 uid
                 intent.putExtra("otherUid", chatRoom.otherUid)
                 intent.putExtra("otherNickname", chatRoom.nickname)
+                intent.putExtra("chatId",chatRoom.chatId)
 
                 context?.startActivity(intent)
-            })
+            }
+            ,chatClicked = { chatRoom, position ->
+                val dialog = CustomAlertDialog(requireContext())
+                dialog.start("채팅방을 삭제하시겠습니까?\n(채팅방내 모든 데이터가 삭제 됩니다.)")
+                dialog.onOkClickListener(object : CustomAlertDialog.onDialogCustomListener {
+                    override fun onClicked() {
+                        Log.d("abcd","삭제 확인 누름")
+                        CoroutineScope(Dispatchers.IO).launch {
+                            //todo 여기부터 (채팅룸 삭제)
+//                            viewModel.deleteMessage(message.messageId!!,message.otherUid!!,message.timeStamp!!,message.sender!!)
+                            withContext(Dispatchers.Main) {
+                                adapter.chatRooms.removeAt(position)
+                                adapter.notifyItemRemoved(position)
+                            }
+                        }
+                    }
+
+                })
+            }
+        )
 
         binding.rvChatroom.layoutManager = LinearLayoutManager(this.context)
         binding.rvChatroom.adapter = adapter
@@ -63,11 +87,6 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                 adapter.setChatroom(it)
             })
 
-            //마지막 메세지 및 시간
-//            viewModel.updateChatroom(otherUid = "Ss").observe(viewLifecycleOwner, Observer { chatroom ->
-//                Log.d("abcd","update chat room is : ${chatroom}")
-//
-//            })
         }
     }
 

@@ -37,23 +37,23 @@ class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Uni
         val chatroom = chatRooms[position]
 
 
-        if (chatroom.profileImg != null) {
-            Glide.with(context)
-                .load(chatroom.profileImg) // 이미지를 로드
-                .override(100,100)
-                .placeholder(R.drawable.ic_baseline_person_24) // 이미지로딩을 시작하기전에 보여줄 이미지
-                .error(R.drawable.ic_baseline_person_24) // 불러오다가 에러발생
-                .fallback(R.drawable.ic_baseline_person_24) // 이미지가 null
-                .into(holder.chatRoomBinding.profileImg) //이미지를 보여줄 view를 지정
-        } else {
-            Glide.with(context)
-                .load(chatroom.profileImg) // 이미지를 로드
-                .override(100,100)
-                .placeholder(R.drawable.ic_baseline_person_24) // 이미지로딩을 시작하기전에 보여줄 이미지
-                .error(R.drawable.ic_baseline_person_24) // 불러오다가 에러발생
-                .fallback(R.drawable.ic_baseline_person_24) // 이미지가 null
-                .into(holder.chatRoomBinding.profileImg) //이미지를 보여줄 view를 지정
-        }
+//        if (chatroom.profileImg != null) {
+//            Glide.with(context)
+//                .load(chatroom.profileImg) // 이미지를 로드
+//                .override(100,100)
+//                .placeholder(R.drawable.ic_baseline_person_24) // 이미지로딩을 시작하기전에 보여줄 이미지
+//                .error(R.drawable.ic_baseline_person_24) // 불러오다가 에러발생
+//                .fallback(R.drawable.ic_baseline_person_24) // 이미지가 null
+//                .into(holder.chatRoomBinding.profileImg) //이미지를 보여줄 view를 지정
+//        } else {
+//            Glide.with(context)
+//                .load(chatroom.profileImg) // 이미지를 로드
+//                .override(100,100)
+//                .placeholder(R.drawable.ic_baseline_person_24) // 이미지로딩을 시작하기전에 보여줄 이미지
+//                .error(R.drawable.ic_baseline_person_24) // 불러오다가 에러발생
+//                .fallback(R.drawable.ic_baseline_person_24) // 이미지가 null
+//                .into(holder.chatRoomBinding.profileImg) //이미지를 보여줄 view를 지정
+//        }
 
         if (chatroom.lastMessage.toString() == "photo") {
             holder.chatRoomBinding.tvLastMsg.text = "사진"
@@ -70,6 +70,8 @@ class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Uni
         holder.chatRoomBinding.llChatroom.setOnClickListener {
             goIntoChatroom(chatRooms[position])
         }
+
+        //todo : 생각해보니까 상대방은 채팅방 어떻게 들어옴?
 
         //채팅방 길게 클릭 시, 삭제
         holder.itemView.setOnLongClickListener {

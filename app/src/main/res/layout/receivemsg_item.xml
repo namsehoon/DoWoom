@@ -43,10 +43,12 @@
         android:gravity="start">
 
         <LinearLayout
+            android:id="@+id/llMsgReceive"
             android:orientation="horizontal"
             android:padding="5dp"
             android:layout_marginHorizontal="10sp"
             android:layout_marginTop="5sp"
+            android:layout_gravity="start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -71,9 +73,10 @@
 
             <ImageView
                 android:id="@+id/imgReceive"
-                android:visibility="gone"
                 android:layout_width="200sp"
                 android:layout_height="130dp"
+                android:scaleType="centerCrop"
+                android:layout_margin="5sp"
                 android:src="@drawable/ic_baseline_attach_file_24"/>
 
         </LinearLayout>

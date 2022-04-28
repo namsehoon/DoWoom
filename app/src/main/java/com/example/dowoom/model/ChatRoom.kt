@@ -9,7 +9,9 @@ data class ChatRoom(
                     var nickname:String? = null,
                     var lastMessage:String? = null,
                     var timeStamp:Long? = null,
-                    var readOrNot:Boolean = false) {
+                    var readOrNot:Boolean = false,
+                    var chatId:String? = null
+                    ) {
     @Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(
@@ -18,7 +20,9 @@ data class ChatRoom(
             "nickname" to nickname,
             "lastMessage" to lastMessage,
             "timeStamp" to timeStamp,
-            "readOrNot" to readOrNot
+            "readOrNot" to readOrNot,
+            "chatId" to chatId,
+
         )
     }
 }

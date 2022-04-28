@@ -24,10 +24,11 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         fun newInstance() = HomeFrag()
     }
 
-
     //https://developer.android.com/kotlin/ktx
     val viewModel by viewModels<HomeViewModel>()
     private lateinit var adapter: HomeAdapter
+
+    var chatId:String? = null
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         //툴바 filter item 보이게 하기
@@ -63,6 +64,7 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
                         //상대방 nickname
                         intent.putExtra("otherNickname", user.nickname)
                         intent.putExtra("profileImg", user.profileImg)
+                        intent.putExtra("chatId",chatId)
                         context?.startActivity(intent)
 
                     }
@@ -95,6 +97,10 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
             viewModel.observeUser().observe(viewLifecycleOwner, Observer {
                 Log.d("Abcd","home is : ${it}")
                 adapter.setUser(it)
+            })
+            viewModel.getChatId.observe(viewLifecycleOwner, Observer { result ->
+                Log.d("abcd","chatid in homeFrag is : ${result}")
+                chatId = result
             })
 
         }

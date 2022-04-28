@@ -46,17 +46,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
         }
     }
 
+    //오프라인
     override fun onStop() {
         super.onStop()
-        val connect = database!!.reference.child("Connect/".plus(auth!!.uid).plus("/connected/"))
+        val connect = database!!.reference.child("Connect/${auth!!.uid}/connected")
         connect.setValue(false).addOnFailureListener {
             Log.d("abcd", " it.message is : " + it.message)
         }
     }
-
+    //온라인
     override fun onResume() {
         super.onResume()
-        val connect = database!!.reference.child("Connect/".plus(auth!!.uid).plus("/connected/"))
+        val connect = database!!.reference.child("Connect/${auth!!.uid}/connected")
         connect.setValue(true).addOnFailureListener {
             Log.d("abcd", " it.message is : " + it.message)
         }
@@ -143,7 +144,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item?.itemId) {
+        when(item.itemId) {
             R.id.notiItem -> {
                 Log.d("abcd","notiItem 클릭됨")
                 return super.onOptionsItemSelected(item)

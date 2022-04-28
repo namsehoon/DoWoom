@@ -45,6 +45,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
     var otherUid:String? = null
     var otherNickname:String? = null
     var profileImg:String? = null
+    var chatId:String? = null
 
     //start result for activity
     val TAKE_IMAGE_CODE = 10001
@@ -74,7 +75,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
                 val message = viewModel.etMessage.value.toString()
                 if (!message.isNullOrEmpty()) {
                     CoroutineScope(Dispatchers.Main).launch {
-                        viewModel.insertMessage(null ,message,myUid!!,otherUid!!,otherNickname!!)
+                        viewModel.insertMessage(null ,message,myUid!!,otherUid!!,otherNickname!!,chatId!!)
                     }
                 } else {
                     Toast.makeText(this@ChatActivity,"메세지를 입력해주세요.",Toast.LENGTH_SHORT).show()
@@ -102,7 +103,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
     fun initialViewModel() {
         //메세지
         CoroutineScope(Dispatchers.Main).launch {
-            viewModel.observeMessage(otherUid!!).observe(this@ChatActivity , Observer { it ->
+            viewModel.observeMessage(chatId!!).observe(this@ChatActivity , Observer { it ->
                 Log.d("Abcd"," it value in chatAC is : $it")
                 adapter.setMessage(it)
 
@@ -128,7 +129,8 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         otherNickname = i.getStringExtra("otherNickname")
         //상대방 img
         profileImg = i.getStringExtra("profileImg")
-
+        //chatId
+        chatId = i.getStringExtra("chatId")
 
 
         //어뎁터 설정
@@ -151,6 +153,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
             })
         })
         binding.rvChatRoom.layoutManager = LinearLayoutManager(this@ChatActivity)
+        binding.rvChatRoom.setHasFixedSize(true)
         binding.rvChatRoom.adapter = adapter
 
     }
@@ -181,7 +184,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
                         //사진 to db
                         CoroutineScope(Dispatchers.Main).launch {
-                            context.viewModel.insertMessage(tempFile.absolutePath,"photo",myUid!!,otherUid!!,otherNickname!!)
+                            context.viewModel.insertMessage(tempFile.absolutePath,"photo",myUid!!,otherUid!!,otherNickname!!,chatId!!)
                         }
 
                     } finally {

@@ -105,6 +105,7 @@ class chatMsgAdatper(val context: Context,
                         .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
                         .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
                         .into(viewHolder.sendBinding.imgSend) //이미지를 보여줄 view를 지정
+
                 } catch (e: FileNotFoundException){
                     e.printStackTrace();
                 }
@@ -122,7 +123,7 @@ class chatMsgAdatper(val context: Context,
             viewHolder.sendBinding.executePendingBindings()
 
         } else {
-            //받는이
+            /** 상대방  */
             val viewHolder = holder as receiveMsgHolder
             //일반
             viewHolder.receiveBinding.msgReceive.text = message.message

@@ -21,12 +21,7 @@ class TalkViewModel : ViewModel() {
 
     }
 
-    /** 채팅룸 개별 업데이트 */
-//    suspend fun updateChatroom(otherUid:String) : LiveData<ChatRoom> {
-//        val chat = MutableLiveData<ChatRoom>()
-//        chatRepo.getChatRoomEachUpdate(otherUid).observeForever(Observer { it ->
-//            chat.value = it
-//        })
-//        return chat
-//    }
+    suspend fun deleteChatRoom(otherUid:String) {
+
+    }
 }

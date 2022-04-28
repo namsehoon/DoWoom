@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:text="안녕하게ㅛㅇ"
                 android:textAlignment="textStart"
-                android:textSize="20dp" />
+                android:textSize="15dp" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/llImgSend"
