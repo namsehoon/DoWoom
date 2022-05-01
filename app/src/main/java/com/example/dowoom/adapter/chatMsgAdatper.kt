@@ -1,5 +1,6 @@
 package com.example.dowoom.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -23,12 +24,12 @@ import com.example.dowoom.model.Member
 import com.example.dowoom.model.Message
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.MutableData
 import java.io.FileNotFoundException
 import java.io.InputStream
 import kotlin.system.measureTimeMillis
 
 class chatMsgAdatper(val context: Context,
-                     val myUid:String,
                      val msgClicked:(Message, position:Int) -> Unit
 ): RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
 
@@ -38,22 +39,20 @@ class chatMsgAdatper(val context: Context,
     var messages = mutableListOf<Message>()
 
     //메세지 set
-    fun setMessage(message: MutableList<Message>) {
-        Log.d("abcd","messages is in adapter is : ${message.toString()}")
+    @SuppressLint("NotifyDataSetChanged")
+    fun setMessage(messageList: MutableList<Message>) {
         messages.clear()
-        messages.addAll(message)
+        messages.addAll(messageList)
         notifyDataSetChanged()
     }
 
     fun addMessage(message: Message) {
         messages.add(message)
-        notifyItemInserted(messages.size)
+        notifyItemInserted(messages.count())
     }
-
 
     val ITEM_SENT = 1
     val ITEM_RECEIVE = 2
-
 
     /** implementation */
 
@@ -65,14 +64,15 @@ class chatMsgAdatper(val context: Context,
         } else {
             //받은 메세지
             val view = LayoutInflater.from(context).inflate(R.layout.receivemsg_item,parent,false)
-            receiveMsgHolder(view)
+            ReceiveMsgHolder(view)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
+        val user = FirebaseAuth.getInstance().currentUser?.uid
         val message = messages[position]
         //만약 내 uid와 message sender의 uid가 동일하다면 ITEM_SENT
-        return if (myUid == message.sender) {
+        return if (user == message.sender) {
             ITEM_SENT
         } else {
             ITEM_RECEIVE
@@ -81,6 +81,7 @@ class chatMsgAdatper(val context: Context,
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val message = messages[position]
+
         //보내는이
         if (holder.javaClass == SendMsgHolder::class.java) {
             val viewHolder = holder as SendMsgHolder
@@ -109,8 +110,6 @@ class chatMsgAdatper(val context: Context,
                 } catch (e: FileNotFoundException){
                     e.printStackTrace();
                 }
-
-
             }
 
             //메세지
@@ -124,7 +123,7 @@ class chatMsgAdatper(val context: Context,
 
         } else {
             /** 상대방  */
-            val viewHolder = holder as receiveMsgHolder
+            val viewHolder = holder as ReceiveMsgHolder
             //일반
             viewHolder.receiveBinding.msgReceive.text = message.message
 
@@ -145,7 +144,7 @@ class chatMsgAdatper(val context: Context,
     }
 
 
-    inner class receiveMsgHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
+    inner class ReceiveMsgHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
         var receiveBinding : ReceivemsgItemBinding = ReceivemsgItemBinding.bind(itemView)
     }
 

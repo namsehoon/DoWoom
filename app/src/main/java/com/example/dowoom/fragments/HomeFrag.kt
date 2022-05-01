@@ -14,6 +14,7 @@ import com.example.dowoom.R
 import com.example.dowoom.activity.chat.ChatActivity
 import com.example.dowoom.databinding.HomeFragmentBinding
 import com.example.dowoom.Util.CustomAlertDialog
+import com.example.dowoom.Util.CustomProgressDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,17 +55,24 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
                 override fun onClicked() {
                     CoroutineScope(Dispatchers.Main).launch {
 
-
                         //채팅방 ac으로 이동
                         val intent = Intent(context, ChatActivity::class.java)
                         //todo : 만약 존재하면 그 채팅방으로 가야됨
+                        val process = CustomProgressDialog(context!!)
+                        process.start()
+
                         viewModel.checkedChat(user)
+
                         //상대방 uid
                         intent.putExtra("otherUid",user.uid)
                         //상대방 nickname
                         intent.putExtra("otherNickname", user.nickname)
                         intent.putExtra("profileImg", user.profileImg)
-                        intent.putExtra("chatId",chatId)
+                        intent.putExtra("chatId",viewModel.getChatId.value.toString())
+                        Log.d("abcd","chatid in homefrag 1 : ${viewModel.getChatId.value.toString()}")
+
+                        process.dismiss()
+
                         context?.startActivity(intent)
 
                     }
@@ -98,11 +106,6 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
                 Log.d("Abcd","home is : ${it}")
                 adapter.setUser(it)
             })
-            viewModel.getChatId.observe(viewLifecycleOwner, Observer { result ->
-                Log.d("abcd","chatid in homeFrag is : ${result}")
-                chatId = result
-            })
-
         }
     }
 
@@ -110,6 +113,7 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
     // 사용자가 프래그먼트를 떠나면 첫번째로 onPause()를 호출합니다.
     // 사용자가 돌아오지 않을 수 있으므로, 여기에 현재 사용자 세션을 넘어 지속되어야하는 변경사항을 저장.
     override fun onPause() {
+
         super.onPause()
     }
 

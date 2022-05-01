@@ -37,7 +37,7 @@ class HomeViewModel : ViewModel() {
     }
 
     //chatId 받아오기
-    val _getChatId =  MutableLiveData<String>()
+    val _getChatId = MutableLiveData<String>()
     val getChatId:LiveData<String> get() = _getChatId
 
 

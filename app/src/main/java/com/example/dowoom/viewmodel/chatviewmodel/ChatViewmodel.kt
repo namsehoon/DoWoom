@@ -15,6 +15,20 @@ class ChatViewmodel : ViewModel() {
     //etMessage
     val etMessage = MutableLiveData<String>("")
 
+    //    suspend fun insertMessage(ImageUri:String?, message:String, sender:String, otherUid: String, otherNickname:String, chatId:String)  {
+//        viewModelScope.launch {
+//            //메세지 insert
+//            val time = System.currentTimeMillis()/1000
+//            chatRepo.insertMessage(ImageUri,sender, otherUid, message, time, otherNickname,chatId)
+//                .catch { error ->
+//                    Log.d("abcd","insert message error is :${error.message}") }
+//                .collect { result ->
+//                    _message.value = result
+//                }
+//
+//        }
+//    }
+
     val _message = MutableLiveData<Message>()
     val message : LiveData<Message> get() = _message
 
@@ -23,12 +37,10 @@ class ChatViewmodel : ViewModel() {
         viewModelScope.launch {
             //메세지 insert
             val time = System.currentTimeMillis()/1000
-            chatRepo.insertMessage(ImageUri,sender, otherUid, message, time, otherNickname,chatId)
-                .catch { error ->
-                    Log.d("abcd","insert message error is :${error.message}") }
-                .collect { result ->
+            chatRepo.insertMessage(ImageUri,sender, otherUid, message, time, otherNickname,chatId).observeForever(
+                Observer { result ->
                     _message.value = result
-                }
+            })
 
         }
     }
@@ -38,12 +50,14 @@ class ChatViewmodel : ViewModel() {
         messageId: String,
         otherUid: String,
         timeStamp: Long,
-        sender: String
+        sender: String,
+        chatId: String
     ) {
         viewModelScope.launch {
-            chatRepo.deleteMessage(messageId,otherUid,timeStamp,sender)
+            chatRepo.deleteMessage(messageId,otherUid,timeStamp,sender,chatId)
         }
     }
+
     /** 전체 메세지 관찰 */
     suspend fun observeMessage(chatId:String): LiveData<MutableList<Message>> {
         val messages = MutableLiveData<MutableList<Message>>()

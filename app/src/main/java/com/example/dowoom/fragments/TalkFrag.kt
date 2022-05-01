@@ -43,6 +43,8 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                 intent.putExtra("otherNickname", chatRoom.nickname)
                 intent.putExtra("chatId",chatRoom.chatId)
 
+                Log.d("abcd","chatId is in talkfrag is : ${chatRoom.chatId}")
+
                 context?.startActivity(intent)
             }
             ,chatClicked = { chatRoom, position ->

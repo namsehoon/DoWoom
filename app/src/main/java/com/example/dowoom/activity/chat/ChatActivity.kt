@@ -75,9 +75,10 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
                 val message = viewModel.etMessage.value.toString()
                 if (!message.isNullOrEmpty()) {
                     CoroutineScope(Dispatchers.Main).launch {
-                        viewModel.insertMessage(null ,message,myUid!!,otherUid!!,otherNickname!!,chatId!!)
+                        viewModel.insertMessage(null ,message, myUid!!,otherUid!!,otherNickname!!,chatId!!)
                     }
                 } else {
+                    binding.ivSendMsg.isEnabled = false
                     Toast.makeText(this@ChatActivity,"메세지를 입력해주세요.",Toast.LENGTH_SHORT).show()
                 }
             }
@@ -102,7 +103,8 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
     fun initialViewModel() {
         //메세지
-        CoroutineScope(Dispatchers.Main).launch {
+        lifecycleScope.launch {
+            Log.d("abcd","chatid is : ${chatId}")
             viewModel.observeMessage(chatId!!).observe(this@ChatActivity , Observer { it ->
                 Log.d("Abcd"," it value in chatAC is : $it")
                 adapter.setMessage(it)
@@ -113,6 +115,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
             viewModel.message.observe(this@ChatActivity, Observer { result ->
                 Log.d("abcd","result is ${result}")
                 adapter.addMessage(result)
+                binding.rvChatRoom.scrollToPosition(adapter.messages.size -1)
             })
         }
     }
@@ -121,7 +124,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
     fun initialized() {
         val i = intent
 
-        //내 uid
+        //내 uids
         myUid = FirebaseAuth.getInstance().currentUser?.uid
         //상대방 uid
         otherUid = i.getStringExtra("otherUid")
@@ -134,7 +137,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
 
         //어뎁터 설정
-        adapter = chatMsgAdatper(this@ChatActivity, myUid!!, msgClicked =  { message, position ->
+        adapter = chatMsgAdatper(this@ChatActivity, msgClicked =  { message, position ->
             //메세지 삭제
             val dialog = CustomAlertDialog(this@ChatActivity)
             dialog.start("삭제하시겠습니까? (상대방에게서도 삭제됨)")
@@ -142,7 +145,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
                 override fun onClicked() {
                     Log.d("abcd","삭제 확인 누름")
                    CoroutineScope(Dispatchers.IO).launch {
-                       viewModel.deleteMessage(message.messageId!!,message.otherUid!!,message.timeStamp!!,message.sender!!)
+                       viewModel.deleteMessage(message.messageId!!,message.otherUid!!,message.timeStamp!!,message.sender!!,chatId!!)
                        withContext(Dispatchers.Main) {
                            message.message = "삭제되었습니다."
                            adapter.notifyItemChanged(position)
@@ -153,7 +156,6 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
             })
         })
         binding.rvChatRoom.layoutManager = LinearLayoutManager(this@ChatActivity)
-        binding.rvChatRoom.setHasFixedSize(true)
         binding.rvChatRoom.adapter = adapter
 
     }
@@ -169,7 +171,6 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
                         // uri 스키마를 content:///에서 file:///로변경 (절대경로)
                         val proj = arrayOf(MediaStore.Images.Media.DATA)
                         val uri:Uri = data?.data!!
-
 
                         cursor = context.contentResolver.query(uri, proj, null, null, null)
 

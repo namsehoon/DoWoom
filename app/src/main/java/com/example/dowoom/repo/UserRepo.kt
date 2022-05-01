@@ -70,16 +70,17 @@ class userRepo {
                 //온라인 유저 추가
                 override fun onChildAdded(connects: DataSnapshot, previousChildName: String?) {
                     Log.d("abcd","connects is : "+connects)
+                    listData.clear()
                     if (connects.exists()) {
                         //유저
                         Log.d("abcd"," connects.child : "+connects.key)
 
-                        myRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        myRef.child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(users: DataSnapshot) {
                                 if (users.exists()) {
-                                    val getData = users.child(connects.key!!).getValue(User::class.java)
+                                    val getData = users.getValue(User::class.java)
                                     //나는 나를 볼 수 없게.
-                                    if (!getData?.uid.equals(auth?.uid)) {
+                                    if (!getData?.uid.equals(auth?.uid) && !listData.contains(getData)) {
                                         listData.add(getData!!)
                                      } else {
                                          listData.remove(getData)
@@ -104,18 +105,20 @@ class userRepo {
                 override fun onChildChanged(connects: DataSnapshot, previousChildName: String?) {
                     if (connects.exists()) {
                         //유저
-                            listData.clear()
-                        myRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                            Log.d("abcd","얘는 언제 오는거임?")
+
+                        myRef.child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(users: DataSnapshot) {
-                                val getData = users.child(connects.key!!).getValue(User::class.java)
-                                val index = listData.indexOf(getData)
-                                if (connects.child("connected").value == true) {
+
+                                val getData = users.getValue(User::class.java)
+
+                                //유저가 '나' 이거나, 이미 리스트에 포함 되어있다면 뺌
+                                if (!getData?.uid.equals(auth?.uid) && !listData.contains(getData)) {
                                     listData.add(getData!!)
                                 } else {
-                                    listData.removeAt(index)
-//                                listData.remove(getData!!)
+                                    listData.remove(getData)
                                 }
-                                Log.d("abcd","listdata is empty? : ${listData.isEmpty()}")
+                                Log.d("abcd","listdata is empty? : ${listData}")
                                 mutableData.value = listData
                             }
 
@@ -129,16 +132,31 @@ class userRepo {
                         Log.d("abcd","snap이 존재하지 않음")
                     }
                 }
-                //자식 제거 (..계정 삭제?)
-                override fun onChildRemoved(snapshot: DataSnapshot) {
-                    for (s in snapshot.children) {
-                        Log.d("abcd"," result 3 : "+s.value)
+                //자식 제거 (온라인 오프라인)
+                override fun onChildRemoved(connects: DataSnapshot) {
+                    if (connects.exists()) {
+
+                        myRef.child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(users: DataSnapshot) {
+
+                                val getData = users.getValue(User::class.java)
+                                Log.d("abcd","getdata is : ${getData?.uid!!}")
+                                listData.remove(getData)
+
+                                mutableData.value = listData
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                Log.d("abcd","error in child add is : "+error.message)
+                            }
+
+                        })
                     }
                 }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
                     for (s in snapshot.children) {
-                        Log.d("abcd"," result 4 : "+s.value)
+                        Log.d("abcd","유저 가져오기 onChildMoved in Userrepo is : "+s.value)
                     }
                 }
 
