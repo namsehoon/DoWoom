@@ -45,7 +45,6 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
     var otherUid:String? = null
     var otherNickname:String? = null
     var profileImg:String? = null
-    var chatId:String? = null
 
     //start result for activity
     val TAKE_IMAGE_CODE = 10001
@@ -61,6 +60,8 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
@@ -68,20 +69,23 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         initialized()
         initialViewModel()
 
-        //메세지 보내기
         lifecycleScope.launchWhenResumed {
+            //메세지 보내기
+
             binding.ivSendMsg.setOnClickListener {
                 Log.d("abcd","클릭됨")
+
                 val message = viewModel.etMessage.value.toString()
                 if (!message.isNullOrEmpty()) {
                     CoroutineScope(Dispatchers.Main).launch {
-                        viewModel.insertMessage(null ,message, myUid!!,otherUid!!,otherNickname!!,chatId!!)
+                        viewModel.insertMessage(null ,message, myUid!!,otherUid!!,otherNickname!!)
                     }
                 } else {
                     binding.ivSendMsg.isEnabled = false
                     Toast.makeText(this@ChatActivity,"메세지를 입력해주세요.",Toast.LENGTH_SHORT).show()
                 }
             }
+
 
             //todo 이미지 보내기
             binding.ivSendImg.setOnClickListener {
@@ -99,13 +103,19 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
             }
         }
+
     }
 
     fun initialViewModel() {
-        //메세지
-        lifecycleScope.launch {
-            Log.d("abcd","chatid is : ${chatId}")
-            viewModel.observeMessage(chatId!!).observe(this@ChatActivity , Observer { it ->
+
+
+        lifecycleScope.launchWhenResumed {
+
+            viewModel.getChatId(otherUid!!).observe(this@ChatActivity, Observer { getchatId ->
+                Log.d("abcd","get chatid in chatAC is : ${getchatId}")
+            })
+
+            viewModel.observeMessage().observe(this@ChatActivity , Observer { it ->
                 Log.d("Abcd"," it value in chatAC is : $it")
                 adapter.setMessage(it)
 
@@ -117,6 +127,8 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
                 adapter.addMessage(result)
                 binding.rvChatRoom.scrollToPosition(adapter.messages.size -1)
             })
+
+
         }
     }
 
@@ -128,12 +140,11 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         myUid = FirebaseAuth.getInstance().currentUser?.uid
         //상대방 uid
         otherUid = i.getStringExtra("otherUid")
+        Log.d("abcd","otheruid is : ${otherUid}")
         //상대방 닉네임
         otherNickname = i.getStringExtra("otherNickname")
         //상대방 img
         profileImg = i.getStringExtra("profileImg")
-        //chatId
-        chatId = i.getStringExtra("chatId")
 
 
         //어뎁터 설정
@@ -145,7 +156,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
                 override fun onClicked() {
                     Log.d("abcd","삭제 확인 누름")
                    CoroutineScope(Dispatchers.IO).launch {
-                       viewModel.deleteMessage(message.messageId!!,message.otherUid!!,message.timeStamp!!,message.sender!!,chatId!!)
+                       viewModel.deleteMessage(message.messageId!!,message.otherUid!!,message.timeStamp!!,message.sender!!,viewModel.chatId.value.toString())
                        withContext(Dispatchers.Main) {
                            message.message = "삭제되었습니다."
                            adapter.notifyItemChanged(position)
@@ -185,7 +196,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
                         //사진 to db
                         CoroutineScope(Dispatchers.Main).launch {
-                            context.viewModel.insertMessage(tempFile.absolutePath,"photo",myUid!!,otherUid!!,otherNickname!!,chatId!!)
+                            context.viewModel.insertMessage(tempFile.absolutePath,"photo",myUid!!,otherUid!!,otherNickname!!)
                         }
 
                     } finally {

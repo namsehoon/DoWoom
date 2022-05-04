@@ -41,9 +41,6 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                 //채팅방 uid
                 intent.putExtra("otherUid", chatRoom.otherUid)
                 intent.putExtra("otherNickname", chatRoom.nickname)
-                intent.putExtra("chatId",chatRoom.chatId)
-
-                Log.d("abcd","chatId is in talkfrag is : ${chatRoom.chatId}")
 
                 context?.startActivity(intent)
             }
@@ -83,6 +80,7 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
 
     fun observerData() {
         //대화 recycler 만들기
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.observeChat().observe(viewLifecycleOwner, Observer { it ->
                 Log.d("abcd","it chat is : "+it.toString())

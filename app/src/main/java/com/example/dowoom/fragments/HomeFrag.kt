@@ -15,9 +15,10 @@ import com.example.dowoom.activity.chat.ChatActivity
 import com.example.dowoom.databinding.HomeFragmentBinding
 import com.example.dowoom.Util.CustomAlertDialog
 import com.example.dowoom.Util.CustomProgressDialog
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.*
 
 class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.home_fragment) {
 
@@ -28,8 +29,6 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
     //https://developer.android.com/kotlin/ktx
     val viewModel by viewModels<HomeViewModel>()
     private lateinit var adapter: HomeAdapter
-
-    var chatId:String? = null
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         //툴바 filter item 보이게 하기
@@ -58,22 +57,22 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
                         //채팅방 ac으로 이동
                         val intent = Intent(context, ChatActivity::class.java)
                         //todo : 만약 존재하면 그 채팅방으로 가야됨
-                        val process = CustomProgressDialog(context!!)
+                        val process = CustomProgressDialog(activity!!)
                         process.start()
 
                         viewModel.checkedChat(user)
+                        delay(500)
 
                         //상대방 uid
                         intent.putExtra("otherUid",user.uid)
                         //상대방 nickname
                         intent.putExtra("otherNickname", user.nickname)
                         intent.putExtra("profileImg", user.profileImg)
-                        intent.putExtra("chatId",viewModel.getChatId.value.toString())
-                        Log.d("abcd","chatid in homefrag 1 : ${viewModel.getChatId.value.toString()}")
 
                         process.dismiss()
 
                         context?.startActivity(intent)
+
 
                     }
                 }
@@ -105,6 +104,10 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
             viewModel.observeUser().observe(viewLifecycleOwner, Observer {
                 Log.d("Abcd","home is : ${it}")
                 adapter.setUser(it)
+            })
+
+            viewModel.getChatId.observe(viewLifecycleOwner, Observer {
+                Log.d("abcd", "chatId in homefrag is : ${it}")
             })
         }
     }

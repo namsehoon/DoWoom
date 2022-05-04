@@ -70,26 +70,48 @@ class ChatRepo : repo {
         val _message = MutableLiveData<Message>()
         val mutable : LiveData<Message> = _message
 
+        Log.d("abcd","chatId is : ${chatId}")
+
         CoroutineScope(Dispatchers.IO).launch {
-            val messageId = messageRef.push().key
-            lateinit var message: Message
 
-            if (newMessage == "photo" && ImageUri !== null) {
-                //사진 보내기
-                message = Message(sender, otherUid, ImageUri, "photo", messageId, timestamp, false)
-            } else {
-                //메세지만 보내기
-                message = Message(sender, otherUid, null, newMessage, messageId, timestamp, false)
-            }
+            //todo : 내 userchat에 있는 상대방의 uid의 채팅방을 검색해서 내가 없으면
+            userChatRef.child(otherUid).child(chatId).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(result: DataSnapshot) {
+                    if (!result.exists()) {
+                        val otherUserChat = UserChat(chatId, otherUid, auth.uid)
 
+                        userChatRef.child(otherUid).child(chatId).setValue(otherUserChat)
+                            .addOnCompleteListener {  Log.d("abcd", "상대방 userChat 성공") }
+                            .addOnFailureListener {Log.d("abcd", "상대방 userChat 실패")}
 
-                messageRef.child(chatId).push().setValue(message)
-                    .addOnCompleteListener {
-                        Log.d("Abcd", "메세지 보내기 성공 : ${messageId} ")
-                        //last message 업데이트 todo : 이게 최선인가?..
-                        updateChatRoom(newMessage!!, timestamp, chatId)
                     }
-                    .addOnFailureListener { Log.d("Abcd", "메세지 보내기 실패 : ${messageId} ") }
+
+                    val messageId = messageRef.push().key
+                    lateinit var message: Message
+
+                    if (newMessage == "photo" && ImageUri !== null) {
+                        //사진 보내기
+                        message = Message(sender, otherUid, ImageUri, "photo", messageId, timestamp, false)
+                    } else {
+                        //메세지만 보내기
+                        message = Message(sender, otherUid, null, newMessage, messageId, timestamp, false)
+                    }
+
+                    messageRef.child(chatId).push().setValue(message)
+                        .addOnCompleteListener {
+                            Log.d("Abcd", "메세지 보내기 성공 : ${messageId} ")
+                            //last message 업데이트 todo : 이게 최선인가?..
+                        }
+                        .addOnFailureListener { Log.d("Abcd", "메세지 보내기 실패 : ${messageId} ") }
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d("abcd","error in insert message : ${error.message}")
+                }
+
+            })
+
 
         }
 
@@ -111,10 +133,10 @@ class ChatRepo : repo {
     ) {
 
         talkRef.ref.child("$chatId/lastMessage").setValue(lastMessage).addOnCompleteListener {
-            Log.d("abcd","!@!@")
+            Log.d("abcd","채팅방 lastmessage update 완료")
         }
         talkRef.ref.child("$chatId/timeStamp").setValue(timestamp).addOnCompleteListener {
-            Log.d("abcd","!@!@")
+            Log.d("abcd","채팅방 ")
         }
 
     }
@@ -125,9 +147,10 @@ class ChatRepo : repo {
         val listData: MutableList<Message> = mutableListOf<Message>()
         val mutableData = MutableLiveData<MutableList<Message>>()
 
-        Log.d("abcd","chatid is in getmessagedata is : ${chatId} ")
+        Log.d("abcd","chatid is in getmessagedata is  33 : ${chatId} ")
 
        CoroutineScope(Dispatchers.IO).launch {
+
            //대화방 메시지 -> 각 대화방의 멤버를 찾아서 넣어줌
            messageRef.child(chatId).addChildEventListener(object : ChildEventListener {
                override fun onChildAdded(messages: DataSnapshot, previousChildName: String?) {
@@ -182,6 +205,10 @@ class ChatRepo : repo {
         val mutableData = MutableLiveData<MutableList<ChatRoom>>()
         val listData: MutableList<ChatRoom> = mutableListOf<ChatRoom>()
 
+//onChildAdded(): 리스트의 아이템을 검색하거나 아이템의 추가가 있을때 수신합니다.
+//onChildChanged(): 아이템의 변화가 있을때 수신합니다.
+//onChildRemoved(): 아이템이 삭제되었을때 수신합니다.
+//onChildMoved(): 순서가 있는 리스트에서 순서가 변경되었을때 수신합니다.
 
         //chatid
         Log.d("abcd","authuid is : ${auth.uid}")
@@ -218,12 +245,15 @@ class ChatRepo : repo {
                     //채팅룸
                     listData.clear()
 
+//                    messageRef.child(chatId.key.toString()).
+
                     talkRef.child(chatId.key.toString())
                         .addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(chatRoom: DataSnapshot) {
 
-                                val getChatRoom = chatRoom.getValue(ChatRoom::class.java)
 
+                                val getChatRoom = chatRoom.getValue(ChatRoom::class.java)
+//                                getChatRoom.lastMessage =
                                 listData.add(getChatRoom!!)
                                 mutableData.value =listData
                             }
@@ -303,20 +333,16 @@ class ChatRepo : repo {
     //user : 상대방임
      fun initialChat(myUid:String,user:User) : String {
 
-        val messageId = messageRef.push().key
+
         val chatId = userChatRef.push().key
 
         val time = System.currentTimeMillis()/1000
 
         val myUserChat = UserChat(chatId!!, myUid, user.uid)
-        val otherUserChat = UserChat(chatId, user.uid,myUid)
-        val message = Message(myUid, user.uid, null, "안녕하세요.", messageId,time, false)
-        val chatRoom = ChatRoom(user.profileImg,user.uid ,user.nickname, "안녕하세요.", time, false, chatId)
+        val member = com.example.dowoom.model.Member(myUid, user.uid)
+        val chatRoom = ChatRoom(user.profileImg,user.uid ,user.nickname, "안녕하세요.", time, false, chatId, member)
 
-        //상대방
-        userChatRef.child(user.uid!!).child(chatId).setValue(otherUserChat)
-            .addOnCompleteListener {  Log.d("abcd", "상대방 userChat 성공") }
-            .addOnFailureListener {Log.d("abcd", "상대방 userChat 실패")}
+
         //나
         userChatRef.child(myUid).child(chatId).setValue(myUserChat)
             .addOnCompleteListener {Log.d("abcd", "내 userChat 성공")}
@@ -326,8 +352,7 @@ class ChatRepo : repo {
             .addOnCompleteListener { Log.d("abcd", "chat 성공") }
             .addOnFailureListener { Log.d("abcd", "chat 실패") }
 
-//        //메세지
-        messageRef.child(chatId).child(messageId!!).setValue(message)
+        messageRef.setValue(chatId)
             .addOnCompleteListener { Log.d("abcd", "message 성공") }
             .addOnFailureListener { Log.d("abcd", "message 실패") }
 

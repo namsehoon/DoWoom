@@ -10,7 +10,8 @@ data class ChatRoom(
                     var lastMessage:String? = null,
                     var timeStamp:Long? = null,
                     var readOrNot:Boolean = false,
-                    var chatId:String? = null
+                    var chatId:String? = null,
+                    var member: Member? = null
                     ) {
     @Exclude
     fun toMap(): Map<String, Any?> {
@@ -22,6 +23,7 @@ data class ChatRoom(
             "timeStamp" to timeStamp,
             "readOrNot" to readOrNot,
             "chatId" to chatId,
+            "member" to member,
 
         )
     }

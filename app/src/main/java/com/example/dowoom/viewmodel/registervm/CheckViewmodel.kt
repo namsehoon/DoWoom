@@ -24,7 +24,6 @@ class CheckViewmodel : ViewModel() {
 
     //닉네임 확인
     private val _requestOkOrNot = MutableLiveData<Boolean>()
-    private var repoResult = false
 
     //view에서 사용 할.
     val requestOkOrNot :LiveData<Boolean> get() = _requestOkOrNot
