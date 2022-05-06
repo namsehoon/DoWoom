@@ -2,10 +2,7 @@ package com.example.dowoom.activity.chat
 
 import android.content.Intent
 import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -13,18 +10,14 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.withCreated
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
 import com.example.dowoom.Util.CustomAlertDialog
-import com.example.dowoom.Util.CustomProgressDialog
-import com.example.dowoom.Util.HandleImage
 import com.example.dowoom.Util.PermissionCheck
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.adapter.chatMsgAdatper
 
 import com.example.dowoom.databinding.ActivityChatBinding
-import com.example.dowoom.model.Message
 import com.example.dowoom.viewmodel.chatviewmodel.ChatViewmodel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +26,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.IOException
 
 class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layout.activity_chat) {
 
@@ -108,12 +100,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
     fun initialViewModel() {
 
-
         lifecycleScope.launchWhenResumed {
-
-            viewModel.getChatId(otherUid!!).observe(this@ChatActivity, Observer { getchatId ->
-                Log.d("abcd","get chatid in chatAC is : ${getchatId}")
-            })
 
             viewModel.observeMessage().observe(this@ChatActivity , Observer { it ->
                 Log.d("Abcd"," it value in chatAC is : $it")
@@ -146,6 +133,11 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         //상대방 img
         profileImg = i.getStringExtra("profileImg")
 
+        Log.d("abcd","otheruid in chatactivity is : ${otherUid}")
+        //chatid 가져오기
+        CoroutineScope(Dispatchers.Main).launch {
+            viewModel.getChatId(otherUid!!)
+        }
 
         //어뎁터 설정
         adapter = chatMsgAdatper(this@ChatActivity, msgClicked =  { message, position ->

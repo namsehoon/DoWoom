@@ -1,7 +1,5 @@
 package com.example.dowoom.activity.register
 
-import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -21,24 +19,15 @@ import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.activity.main.MainActivity
 import com.example.dowoom.databinding.ActivityCheckBinding
 import com.example.dowoom.viewmodel.registervm.CheckViewmodel
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
-import java.net.URI
-import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
 
 import android.os.Build
 import androidx.lifecycle.lifecycleScope
 import com.example.dowoom.Util.CustomProgressDialog
-import com.example.dowoom.Util.HandleImage
+import com.example.dowoom.Util.HandleProfileImage
 import com.example.dowoom.Util.PermissionCheck
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -216,7 +205,8 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
                         e.printStackTrace()
                     }
                     binding.ivProfile.setImageBitmap(bitmap!!)
-                    HandleImage(context,bitmap)
+
+                    HandleProfileImage(context,bitmap)
                         .let { progressDialog.dismiss() }
                 }
 

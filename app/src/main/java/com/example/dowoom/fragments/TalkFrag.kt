@@ -40,6 +40,7 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                 //todo : 만약 존재하면 그 채팅방으로 가야됨
                 //채팅방 uid
                 intent.putExtra("otherUid", chatRoom.otherUid)
+                Log.d("abcd", " otherUid in talkfrag is : ${chatRoom.otherUid}")
                 intent.putExtra("otherNickname", chatRoom.nickname)
 
                 context?.startActivity(intent)

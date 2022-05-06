@@ -16,9 +16,9 @@ import kotlinx.coroutines.flow.*
 import kotlin.time.Duration.Companion.days
 
 class ChatViewmodel : ViewModel() {
-    private val chatRepo = ChatRepo()
 
-    val db = FirebaseDatabase.getInstance().reference.database
+
+    private val chatRepo = ChatRepo()
 
     //etMessage
     val etMessage = MutableLiveData<String>("")
@@ -28,40 +28,15 @@ class ChatViewmodel : ViewModel() {
     val _chatId = MutableLiveData<String>()
     val chatId : LiveData<String> get() = _chatId
 
-    suspend fun getChatId(otherUid: String) : LiveData<String> {
-
-        val myuid = FirebaseAuth.getInstance().currentUser?.uid
-
-
-            db.reference.child("UserChat").child(myuid!!).addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        Log.d("abcd","snapshot is ; ${snapshot.ref}")
-                        for (child in snapshot.children) {
-
-                            val getChatid = child.getValue(UserChat::class.java)
-
-                            //만약 "내"가 제공한 내 uid를 사용하여 "상대방"의 uid가 같다면, chatid 리턴
-                            if (getChatid?.otherUid == otherUid) {
-                                _chatId.value = getChatid.chatId!!
-                                Log.d("abcd","get chatid in viewmodel getChatid() is : ${getChatid.chatId}")
-                            }
-                        }
-                    } else {
-                        Log.d("abcd","snapshot doesnt exist in ChatViewModel ")
-                    }
-
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Log.d("abcd","error in chatviewmodel is :${error.message}")
-                }
-
+    suspend fun getChatId(chatId: String)  {
+        viewModelScope.launch {
+            chatRepo.getChatIdRepo(chatId).observeForever(Observer { id ->
+                _chatId.value = id
             })
-
-
-        return chatId
+        }
     }
+
+
 
     /** 메세지 추가 (채팅룸 업데이트)*/
 
@@ -97,10 +72,12 @@ class ChatViewmodel : ViewModel() {
         }
     }
 
+
+
     /** 전체 메세지 관찰 */
     suspend fun observeMessage(): LiveData<MutableList<Message>> {
         val messages = MutableLiveData<MutableList<Message>>()
-
+        delay(500)
         if (!chatId.value.toString().isNullOrEmpty()) {
             val chat = chatId.value.toString()
 

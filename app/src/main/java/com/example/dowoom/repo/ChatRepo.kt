@@ -1,13 +1,17 @@
 package com.example.dowoom.repo
 
+import android.media.Image
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
+import com.example.dowoom.Util.HandleImage
 import com.example.dowoom.model.ChatRoom
 import com.example.dowoom.model.Message
 import com.example.dowoom.model.User
 import com.example.dowoom.model.UserChat
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
@@ -33,6 +37,47 @@ class ChatRepo : repo {
 
     //chatId
     val userChatRef = rootRef.child("UserChat")
+
+    /** chat id 가져오기 */
+    suspend fun getChatIdRepo(otherUid: String) : LiveData<String> {
+
+        val chatId = MutableLiveData<String>()
+
+
+        val myuid = FirebaseAuth.getInstance().currentUser?.uid
+
+        CoroutineScope(Dispatchers.IO).launch {
+            userChatRef.child(myuid!!).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        Log.d("abcd","snapshot is ; ${snapshot.ref}")
+                        for (child in snapshot.children) {
+
+                            val getChatid = child.getValue(UserChat::class.java)
+
+                            //만약 "내"가 제공한 내 uid를 사용하여 "상대방"의 uid가 같다면, chatid 리턴
+                            if (getChatid?.otherUid == otherUid) {
+                                chatId.value = getChatid.chatId!!
+                                Log.d("abcd","get chatid in viewmodel getChatid() is : ${getChatid.chatId}")
+                            }
+                        }
+                    } else {
+                        Log.d("abcd","snapshot doesnt exist in ChatViewModel ")
+                    }
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d("abcd","error in chatviewmodel is :${error.message}")
+                }
+
+            })
+        }
+
+
+        return chatId
+    }
+
 
     /** 메세지 삭제 */
     suspend fun deleteMessage(
@@ -91,7 +136,9 @@ class ChatRepo : repo {
 
                     if (newMessage == "photo" && ImageUri !== null) {
                         //사진 보내기
+                        HandleImage(ImageUri)
                         message = Message(sender, otherUid, ImageUri, "photo", messageId, timestamp, false)
+
                     } else {
                         //메세지만 보내기
                         message = Message(sender, otherUid, null, newMessage, messageId, timestamp, false)
@@ -118,11 +165,6 @@ class ChatRepo : repo {
         return  mutable
 
     }
-    //todo : 홈 유저 대화방 갔다가 나오면 안뜨는거, 채팅방 update
-    //todo : 홈 유저 대화방 갔다가 나오면 안뜨는거, 채팅방 update
-    //todo : 홈 유저 대화방 갔다가 나오면 안뜨는거, 채팅방 update
-    //todo : 홈 유저 대화방 갔다가 나오면 안뜨는거, 채팅방 update
-
 
 
     /** 채팅룸 업데이트 : lastmessage 및 timeStamp */

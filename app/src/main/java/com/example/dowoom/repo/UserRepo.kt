@@ -56,7 +56,7 @@ class userRepo {
 
 
 
-
+    //참고 : https://mailmail.tistory.com/44
     /** 온라인 유저 불러오기 */ //todo : childeventlisener로 바꾸고, 이게 최선인지 고민해보기 (callback), 차단한사람 안보여야함
      suspend fun getData(): LiveData<MutableList<User>> {
         // livedata 객체 만들기
@@ -67,10 +67,9 @@ class userRepo {
         CoroutineScope(Dispatchers.IO).launch {
 
             rootRef.child("Connect").orderByChild("connected").equalTo(true).addChildEventListener(object : ChildEventListener {
-                //온라인 유저 추가
+                //항목 목록을 검색하거나 항목 목록에 대한 추가를 수신 대기
                 override fun onChildAdded(connects: DataSnapshot, previousChildName: String?) {
                     Log.d("abcd","connects is : "+connects)
-                    listData.clear()
                     if (connects.exists()) {
                         //유저
                         Log.d("abcd"," connects.child : "+connects.key)
@@ -82,9 +81,8 @@ class userRepo {
                                     //나는 나를 볼 수 없게.
                                     if (!getData?.uid.equals(auth?.uid) && !listData.contains(getData)) {
                                         listData.add(getData!!)
-                                     } else {
-                                         listData.remove(getData)
                                     }
+
                                     Log.d("abcd","listdata is empty? : ${listData.isEmpty()}")
                                     mutableData.value = listData
                                 }
@@ -101,7 +99,7 @@ class userRepo {
                     }
 
                 }
-                //자식 변경 (온라인 오프라인)
+                //목록의 항목에 대한 변경을 수신 대기
                 override fun onChildChanged(connects: DataSnapshot, previousChildName: String?) {
                     if (connects.exists()) {
                         //유저
@@ -132,7 +130,7 @@ class userRepo {
                         Log.d("abcd","snap이 존재하지 않음")
                     }
                 }
-                //자식 제거 (온라인 오프라인)
+                //목록의 항목 삭제를 수신 대기
                 override fun onChildRemoved(connects: DataSnapshot) {
                     if (connects.exists()) {
 
