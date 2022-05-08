@@ -2,7 +2,10 @@ package com.example.dowoom.activity.chat
 
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -13,6 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
 import com.example.dowoom.Util.CustomAlertDialog
+import com.example.dowoom.Util.CustomProgressDialog
+import com.example.dowoom.Util.HandleImage
 import com.example.dowoom.Util.PermissionCheck
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.adapter.chatMsgAdatper
@@ -26,6 +31,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.IOException
 
 class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layout.activity_chat) {
 
@@ -170,30 +176,22 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
             when(resultCode) {
                 RESULT_OK -> {
-                    try {
-                        // uri 스키마를 content:///에서 file:///로변경 (절대경로)
-                        val proj = arrayOf(MediaStore.Images.Media.DATA)
+                    val activity = this@ChatActivity
+                    val progressDialog = CustomProgressDialog(activity)
+                    progressDialog.start()
+
                         val uri:Uri = data?.data!!
 
-                        cursor = context.contentResolver.query(uri, proj, null, null, null)
-
-                        val column_index: Int =
-                            cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)!!
-
-                        cursor.moveToFirst()
-
-                        val tempFile = File(cursor.getString(column_index))
-
-                        Log.d("abcd","file path is : ${tempFile.absolutePath}")
 
                         //사진 to db
-                        CoroutineScope(Dispatchers.Main).launch {
-                            context.viewModel.insertMessage(tempFile.absolutePath,"photo",myUid!!,otherUid!!,otherNickname!!)
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val result = HandleImage(uri, viewModel.chatId.value.toString()).handleUpload()
+                            Log.d("abcd"," path : ${result} ,,,, chatid : ${viewModel.chatId.value.toString()}")
+                            withContext(Dispatchers.Main) {
+                                context.viewModel.insertMessage(result,"photo",myUid!!,otherUid!!,otherNickname!!)
+                            }
                         }
-
-                    } finally {
-                        cursor?.close()
-                    }
+                    progressDialog.dismiss()
 
                 }
                 else -> {

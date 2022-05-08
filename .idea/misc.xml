@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.20092592592592592" />
         <entry key="app/src/main/res/drawable/progress_img.xml" value="0.2064814814814815" />
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_chat_room.xml" value="0.2640625" />

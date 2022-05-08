@@ -14,6 +14,9 @@ import com.example.dowoom.activity.chat.ChatActivity
 import com.example.dowoom.adapter.ChatRoomAdapter
 import com.example.dowoom.databinding.TalkFragmentBinding
 import com.example.dowoom.viewmodel.mainViewmodel.TalkViewModel
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,6 +31,8 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
 
     val viewModel by viewModels<TalkViewModel>()
     private lateinit var adapter: ChatRoomAdapter
+    val auth: FirebaseUser? = Firebase.auth.currentUser
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,9 +42,12 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
             goIntoChatroom = { chatRoom ->
                 //채팅방 클릭시, 채팅방 내로
                 val intent = Intent(context, ChatActivity::class.java)
-                //todo : 만약 존재하면 그 채팅방으로 가야됨
-                //채팅방 uid
-                intent.putExtra("otherUid", chatRoom.otherUid)
+                //만약 user1과 내 uid와 같다면,
+                if (chatRoom.member?.user1 == auth?.uid) {
+                    intent.putExtra("otherUid", chatRoom.member?.user2)
+                } else {
+                    intent.putExtra("otherUid", chatRoom.member?.user1)
+                }
                 Log.d("abcd", " otherUid in talkfrag is : ${chatRoom.otherUid}")
                 intent.putExtra("otherNickname", chatRoom.nickname)
 

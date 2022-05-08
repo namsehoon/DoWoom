@@ -89,4 +89,7 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
+    //firebase app check
+    //todo 설정해야함
+    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta06'
 }

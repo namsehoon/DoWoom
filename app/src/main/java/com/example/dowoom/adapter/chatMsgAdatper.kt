@@ -25,6 +25,8 @@ import com.example.dowoom.model.Message
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.MutableData
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import java.io.FileNotFoundException
 import java.io.InputStream
 import kotlin.system.measureTimeMillis
@@ -37,6 +39,9 @@ class chatMsgAdatper(val context: Context,
 
     //메세지
     var messages = mutableListOf<Message>()
+    //@string 만들어서 보완관련 코드들 넣어두기
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance()
+    private val storageRef: StorageReference = storage.reference
 
     //메세지 set
     @SuppressLint("NotifyDataSetChanged")
@@ -92,24 +97,18 @@ class chatMsgAdatper(val context: Context,
                 viewHolder.sendBinding.llImgSend.visibility = View.VISIBLE
                 viewHolder.sendBinding.imgSend.visibility = View.VISIBLE
 
-                try{
-//                    val inputStream: InputStream = context.getContentResolver().openInputStream(message.imageUrl?.toUri()!!)!!
-//                    val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream);
-                    Log.d("abcd","경로 is : ${message.imageUrl}")
-
-                    val options:BitmapFactory.Options = BitmapFactory.Options()
-                    val toBitmap = BitmapFactory.decodeFile(message.imageUrl, options)
-
-                    Glide.with(context)
-                        .load(toBitmap) // 이미지를 로드
-                        .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
-                        .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
-                        .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
-                        .into(viewHolder.sendBinding.imgSend) //이미지를 보여줄 view를 지정
-
-                } catch (e: FileNotFoundException){
-                    e.printStackTrace();
+                storageRef.child(message.imageUrl!!).downloadUrl.addOnCompleteListener { task ->
+                    if (task.isComplete) {
+                        Glide.with(context)
+                            .load(task.result) // 이미지를 로드
+                            .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
+                            .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
+                            .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
+                            .into(viewHolder.sendBinding.imgSend) //이미지를 보여줄 view를 지정
+                    }
                 }
+
+
             }
 
             //메세지

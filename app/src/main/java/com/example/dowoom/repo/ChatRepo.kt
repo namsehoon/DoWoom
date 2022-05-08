@@ -1,6 +1,5 @@
 package com.example.dowoom.repo
 
-import android.media.Image
 import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
@@ -41,7 +40,8 @@ class ChatRepo : repo {
     /** chat id 가져오기 */
     suspend fun getChatIdRepo(otherUid: String) : LiveData<String> {
 
-        val chatId = MutableLiveData<String>()
+        val _chatId = MutableLiveData<String>()
+        val chatId : LiveData<String>  = _chatId
 
 
         val myuid = FirebaseAuth.getInstance().currentUser?.uid
@@ -50,16 +50,19 @@ class ChatRepo : repo {
             userChatRef.child(myuid!!).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
-                        Log.d("abcd","snapshot is ; ${snapshot.ref}")
+                        Log.d("abcd","getChatIdRepo ref is ; ${snapshot.ref}")
                         for (child in snapshot.children) {
 
                             val getChatid = child.getValue(UserChat::class.java)
 
                             //만약 "내"가 제공한 내 uid를 사용하여 "상대방"의 uid가 같다면, chatid 리턴
-                            if (getChatid?.otherUid == otherUid) {
-                                chatId.value = getChatid.chatId!!
-                                Log.d("abcd","get chatid in viewmodel getChatid() is : ${getChatid.chatId}")
+                            if (getChatid?.otherUid.equals(otherUid)) {
+                                _chatId.value = getChatid?.chatId.toString()
+                                Log.d("abcd","get chatid in viewmodel getChatid() is : ${getChatid?.chatId}")
+                            } else {
+                                Log.d("Abcd","다릅니다")
                             }
+                            Log.d("abcd","getchatid is : ${getChatid}")
                         }
                     } else {
                         Log.d("abcd","snapshot doesnt exist in ChatViewModel ")
@@ -136,7 +139,6 @@ class ChatRepo : repo {
 
                     if (newMessage == "photo" && ImageUri !== null) {
                         //사진 보내기
-                        HandleImage(ImageUri)
                         message = Message(sender, otherUid, ImageUri, "photo", messageId, timestamp, false)
 
                     } else {
