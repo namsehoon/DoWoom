@@ -36,7 +36,7 @@ class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Uni
         //databinding한 useritem에 users의 positoin에 맞게 뿌려줌
         val chatroom = chatRooms[position]
 
-
+//todo
 //        if (chatroom.profileImg != null) {
 //            Glide.with(context)
 //                .load(chatroom.profileImg) // 이미지를 로드

@@ -39,7 +39,7 @@ class chatMsgAdatper(val context: Context,
 
     //메세지
     var messages = mutableListOf<Message>()
-    //@string 만들어서 보완관련 코드들 넣어두기
+    //todo : @string 만들어서 보안 관련 코드들 넣어두기
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
     private val storageRef: StorageReference = storage.reference
 

@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
@@ -125,6 +126,7 @@ class ChatRepo : repo {
             //todo : 내 userchat에 있는 상대방의 uid의 채팅방을 검색해서 내가 없으면
             userChatRef.child(otherUid).child(chatId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(result: DataSnapshot) {
+                    //처음 대화
                     if (!result.exists()) {
                         val otherUserChat = UserChat(chatId, otherUid, auth.uid)
 
@@ -136,6 +138,7 @@ class ChatRepo : repo {
 
                     val messageId = messageRef.push().key
                     lateinit var message: Message
+
 
                     if (newMessage == "photo" && ImageUri !== null) {
                         //사진 보내기
@@ -149,7 +152,7 @@ class ChatRepo : repo {
                     messageRef.child(chatId).push().setValue(message)
                         .addOnCompleteListener {
                             Log.d("Abcd", "메세지 보내기 성공 : ${messageId} ")
-                            //last message 업데이트 todo : 이게 최선인가?..
+                            updateChatRoom(newMessage!!,timestamp,chatId)
                         }
                         .addOnFailureListener { Log.d("Abcd", "메세지 보내기 실패 : ${messageId} ") }
 
@@ -176,11 +179,21 @@ class ChatRepo : repo {
         chatId:String
     ) {
 
-        talkRef.ref.child("$chatId/lastMessage").setValue(lastMessage).addOnCompleteListener {
-            Log.d("abcd","채팅방 lastmessage update 완료")
-        }
-        talkRef.ref.child("$chatId/timeStamp").setValue(timestamp).addOnCompleteListener {
-            Log.d("abcd","채팅방 ")
+        /////
+        //contructor
+        val chatRoom = ChatRoom(lastMessage,timestamp)
+        //mapping
+        val chatRoomValue: Map<String, Any?> = chatRoom.toMap()
+        //db 참조
+        val updateTalkRef = talkRef.child(chatId)
+
+        val childUpdates = hashMapOf<String,Any>(
+             "lastMessage" to lastMessage,
+            "timeStamp" to timestamp
+        )
+
+        updateTalkRef.updateChildren(childUpdates).addOnCompleteListener {
+            Log.d("abcd", "chatroom update 성공")
         }
 
     }
@@ -254,75 +267,198 @@ class ChatRepo : repo {
 //onChildRemoved(): 아이템이 삭제되었을때 수신합니다.
 //onChildMoved(): 순서가 있는 리스트에서 순서가 변경되었을때 수신합니다.
 
+//todo 채팅방 마지막메세지 업데이트 및 채팅방 삭제, 메세지 삭제
+
+        CoroutineScope(Dispatchers.IO).launch {
+            userChatRef.child(auth.uid).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        Log.d("abcd","getChatIdRepo ref is ; ${snapshot.ref}")
+                        for (child in snapshot.children) {
+
+                            val getChatid = child.getValue(UserChat::class.java)
+                            Log.d("abcd","getchatid is : ${getChatid}")
+
+                            talkRef.orderByChild(getChatid?.chatId!!)
+                                .addChildEventListener(object : ChildEventListener {
+                                    override fun onChildAdded(
+                                        chatRooms: DataSnapshot,
+                                        previousChildName: String?
+                                    ) {
+                                        if (chatRooms.exists()) {
+//                                            Log.d("abcd","ref is ${chatRooms.key}")
+                                        val getva = chatRooms.getValue(ChatRoom::class.java)
+                                            listData.add(getva!!)
+                                        Log.d("ABCD","getva add is ${getva}")
+                                            mutableData.value = listData
+                                        }
+                                    }
+
+                                    override fun onChildChanged(
+                                        chatRooms: DataSnapshot,
+                                        previousChildName: String?
+                                    ) {
+                                        if (chatRooms.exists()) {
+//                                            Log.d("abcd","ref is ${chatRooms.key}")
+                                            val getva = chatRooms.getValue(ChatRoom::class.java)
+                                            Log.d("ABCD","getva changed is ${getva}")
+                                        }
+                                    }
+
+                                    override fun onChildRemoved(snapshot: DataSnapshot) {
+                                        TODO("Not yet implemented")
+                                    }
+
+                                    override fun onChildMoved(
+                                        snapshot: DataSnapshot,
+                                        previousChildName: String?
+                                    ) {
+                                        TODO("Not yet implemented")
+                                    }
+
+                                    override fun onCancelled(error: DatabaseError) {
+                                        TODO("Not yet implemented")
+                                    }
+
+                                })
+                        }
+                    } else {
+                        Log.d("abcd","snapshot doesnt exist in ChatViewModel ")
+                    }
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d("abcd","error in chatviewmodel is :${error.message}")
+                }
+
+            })
+        }
+
+
+
         //chatid
-        Log.d("abcd","authuid is : ${auth.uid}")
-        userChatRef.child(auth.uid).addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(chatId: DataSnapshot, previousChildName: String?) {
-                if (chatId.exists()) {
-
-                    Log.d("abcd","snapshot.ref is : ${chatId.key}")
-
-                    //채팅룸
-                    talkRef.child(chatId.key.toString())
-                        .addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(chatRoom: DataSnapshot) {
-
-                                val getChatRoom = chatRoom.getValue(ChatRoom::class.java)
-
-                                listData.add(getChatRoom!!)
-                                mutableData.value =listData
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                Log.d("abcd"," error is : ${error.message}")
-                            }
-                    })
-
-
-                } else {
-                    Log.d("abcd","chatid가 없음")
-                }
-            }
-
-            override fun onChildChanged(chatId: DataSnapshot, previousChildName: String?) {
-                if (chatId.exists()) {
-                    //채팅룸
-                    listData.clear()
-
-//                    messageRef.child(chatId.key.toString()).
-
-                    talkRef.child(chatId.key.toString())
-                        .addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(chatRoom: DataSnapshot) {
-
-
-                                val getChatRoom = chatRoom.getValue(ChatRoom::class.java)
-//                                getChatRoom.lastMessage =
-                                listData.add(getChatRoom!!)
-                                mutableData.value =listData
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                Log.d("abcd"," error is : ${error.message}")
-                            }
-                        })
-                }
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                Log.d("abcd","snapshot value in chatrepo is  : ${snapshot.value}")
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d("abcd","snapshot value in chatrepo is  : ${snapshot.value}")
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d("abcd","error in chatrepo is  : ${error.message}")
-            }
-
-
-        })
+//        Log.d("abcd","authuid is : ${auth.uid}")
+//        userChatRef.child(auth.uid).addChildEventListener(object : ChildEventListener {
+//            override fun onChildAdded(chatId: DataSnapshot, previousChildName: String?) {
+//                if (chatId.exists()) {
+//
+//                    Log.d("abcd","snapshot.ref is : ${chatId.key}")
+//
+//                    //마지막메세지
+//                    messageRef.child(chatId.key.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
+//                        override fun onDataChange(messages: DataSnapshot) {
+//                            val getLastMessage = messages.children.last().getValue(Message::class.java)
+//                            Log.d("abcd","getLastMessage is : ${getLastMessage}")
+//
+//                            //채팅룸
+//                            talkRef.child(chatId.key.toString())
+//                                .addListenerForSingleValueEvent(object : ValueEventListener {
+//                                    override fun onDataChange(chatRoom: DataSnapshot) {
+//
+//                                        val getChatRoom = chatRoom.getValue(ChatRoom::class.java)
+//
+//                                        //채팅룸의 lastMessage와 메세지의 lastMessage가 다르다면 업데이트
+//                                        if (!getChatRoom?.lastMessage.equals(getLastMessage?.message)) {
+//                                            talkRef.child(chatId.key.toString()).child("lastMessage").setValue(getLastMessage?.message)
+//                                            talkRef.child(chatId.key.toString()).child("timeStamp").setValue(getLastMessage?.timeStamp)
+//                                        }
+//
+//                                        getChatRoom?.lastMessage = getLastMessage?.message
+//                                        listData.add(getChatRoom!!)
+//                                        mutableData.value =listData
+//                                    }
+//
+//                                    override fun onCancelled(error: DatabaseError) {
+//                                        Log.d("abcd"," error getChatRoomData is : ${error.message}")
+//                                    }
+//                                })
+//                        }
+//
+//                        override fun onCancelled(error: DatabaseError) {
+//                            Log.d("Abcd","error getChatRoomData is : ${error.message}")
+//                        }
+//                    })
+//
+//                } else {
+//                    Log.d("abcd","chatid가 없음")
+//                }
+//            }
+//
+//            override fun onChildChanged(chatId: DataSnapshot, previousChildName: String?) {
+//                if (chatId.exists()) {
+//                    //채팅룸
+//
+//                    //마지막메세지
+//                    messageRef.child(chatId.key.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
+//                        override fun onDataChange(messages: DataSnapshot) {
+//                            val getLastMessage = messages.children.last().getValue(Message::class.java)
+//                            Log.d("abcd","getLastMessage is : ${getLastMessage}")
+//
+//                            //채팅룸
+//                            talkRef.child(chatId.key.toString())
+//                                .addListenerForSingleValueEvent(object : ValueEventListener {
+//                                    override fun onDataChange(chatRoom: DataSnapshot) {
+//
+//                                        val getChatRoom = chatRoom.getValue(ChatRoom::class.java)
+//
+//                                        //채팅룸의 lastMessage와 메세지의 lastMessage가 다르다면 업데이트
+//                                        if (!getChatRoom?.lastMessage.equals(getLastMessage?.message)) {
+//                                            talkRef.child(chatId.key.toString()).child("lastMessage").setValue(getLastMessage?.message)
+//                                            talkRef.child(chatId.key.toString()).child("timeStamp").setValue(getLastMessage?.timeStamp)
+//                                        }
+//
+//                                        getChatRoom?.lastMessage = getLastMessage?.message
+//                                        listData.add(getChatRoom!!)
+//                                        mutableData.value =listData
+//                                    }
+//
+//                                    override fun onCancelled(error: DatabaseError) {
+//                                        Log.d("abcd"," error getChatRoomData is : ${error.message}")
+//                                    }
+//                                })
+//                        }
+//
+//                        override fun onCancelled(error: DatabaseError) {
+//                            Log.d("Abcd","error getChatRoomData is : ${error.message}")
+//                        }
+//                    })
+//                }
+//            }
+//            //대화방 삭제
+//            override fun onChildRemoved(chatId: DataSnapshot) {
+//                if(chatId.exists()) {
+//
+//                    Log.d("abcd","snapshot.ref is : ${chatId.key}")
+//
+//                    //채팅룸 삭제
+//                    talkRef.child(chatId.key.toString())
+//                        .addListenerForSingleValueEvent(object : ValueEventListener {
+//                            override fun onDataChange(chatRoom: DataSnapshot) {
+//
+//                                val getChatRoom = chatRoom.getValue(ChatRoom::class.java)
+//
+//                                listData.remove(getChatRoom!!)
+//                                mutableData.value =listData
+//                            }
+//
+//                            override fun onCancelled(error: DatabaseError) {
+//                                Log.d("abcd"," error getChatRoomData is : ${error.message}")
+//                            }
+//                        })
+//                }
+//            }
+//
+//            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+//                Log.d("abcd","snapshot value in chatrepo is  : ${snapshot.value}")
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                Log.d("abcd","userChat() error in chatrepo is  : ${error.message}")
+//            }
+//
+//
+//        })
         return mutableData
 
     }
@@ -382,9 +518,9 @@ class ChatRepo : repo {
 
         val time = System.currentTimeMillis()/1000
 
-        val myUserChat = UserChat(chatId!!, myUid, user.uid)
         val member = com.example.dowoom.model.Member(myUid, user.uid)
         val chatRoom = ChatRoom(user.profileImg,user.uid ,user.nickname, "안녕하세요.", time, false, chatId, member)
+        val myUserChat = UserChat(chatId!!, myUid, user.uid)
 
 
         //나

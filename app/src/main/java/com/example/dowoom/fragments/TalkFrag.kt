@@ -90,7 +90,7 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
     fun observerData() {
         //대화 recycler 만들기
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.observeChat().observe(viewLifecycleOwner, Observer { it ->
                 Log.d("abcd","it chat is : "+it.toString())
                 adapter.setChatroom(it)

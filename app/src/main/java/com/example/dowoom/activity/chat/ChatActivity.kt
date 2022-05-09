@@ -109,7 +109,6 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         lifecycleScope.launchWhenResumed {
 
             viewModel.observeMessage().observe(this@ChatActivity , Observer { it ->
-                Log.d("Abcd"," it value in chatAC is : $it")
                 adapter.setMessage(it)
 
             })
