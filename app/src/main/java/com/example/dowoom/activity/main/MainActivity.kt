@@ -46,9 +46,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
         }
     }
 
-    //오프라인
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         val connect = database!!.reference.child("Connect/${auth!!.uid}/connected")
         connect.setValue(false).addOnFailureListener {
             Log.d("abcd", " it.message is : " + it.message)

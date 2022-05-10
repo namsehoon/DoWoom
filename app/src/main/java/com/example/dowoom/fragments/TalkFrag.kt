@@ -60,11 +60,14 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                     override fun onClicked() {
                         Log.d("abcd","삭제 확인 누름")
                         CoroutineScope(Dispatchers.IO).launch {
-                            //todo 여기부터 (채팅룸 삭제)
-//                            viewModel.deleteMessage(message.messageId!!,message.otherUid!!,message.timeStamp!!,message.sender!!)
+
+                            viewModel.deleteChatRoom(chatRoom.chatId!!,chatRoom.member!!)
+
                             withContext(Dispatchers.Main) {
                                 adapter.chatRooms.removeAt(position)
                                 adapter.notifyItemRemoved(position)
+
+                                //todo : 더이상 메세지를 작성할 수없게
                             }
                         }
                     }

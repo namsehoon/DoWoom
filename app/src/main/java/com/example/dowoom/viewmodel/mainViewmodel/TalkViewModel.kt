@@ -2,6 +2,7 @@ package com.example.dowoom.viewmodel.mainViewmodel
 
 import androidx.lifecycle.*
 import com.example.dowoom.model.ChatRoom
+import com.example.dowoom.model.Member
 import com.example.dowoom.repo.ChatRepo
 import kotlinx.coroutines.launch
 
@@ -21,7 +22,11 @@ class TalkViewModel : ViewModel() {
 
     }
 
-    suspend fun deleteChatRoom(otherUid:String) {
+    /** 채팅룸 삭제*/
 
+    suspend fun deleteChatRoom(chatId: String, member: Member) {
+        viewModelScope.launch {
+            chatRepo.deleteChatRoom(chatId, member)
+        }
     }
 }

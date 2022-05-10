@@ -65,7 +65,6 @@ class userRepo {
         val mutableData = MutableLiveData<MutableList<User>>()
 
         CoroutineScope(Dispatchers.IO).launch {
-
             rootRef.child("Connect").orderByChild("connected").equalTo(true).addChildEventListener(object : ChildEventListener {
                 //항목 목록을 검색하거나 항목 목록에 대한 추가를 수신 대기
                 override fun onChildAdded(connects: DataSnapshot, previousChildName: String?) {

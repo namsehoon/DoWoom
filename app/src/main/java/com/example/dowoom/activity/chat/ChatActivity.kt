@@ -119,6 +119,17 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
                 adapter.addMessage(result)
                 binding.rvChatRoom.scrollToPosition(adapter.messages.size -1)
             })
+            //todo 여기서부터
+            //todo 여기서부터
+            //todo 여기서부터 그리고 . //todo 메세지 삭제, 사진 저장
+
+            viewModel.memberCheck.observe(this@ChatActivity, Observer { result ->
+                if (result) { // 둘 중 하나가 null 이라면,
+                     binding.ivSendMsg.isEnabled = false
+                    binding.etMessage.isEnabled = false
+                }
+
+            })
 
 
         }
@@ -139,21 +150,24 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         profileImg = i.getStringExtra("profileImg")
 
         Log.d("abcd","otheruid in chatactivity is : ${otherUid}")
+
+
         //chatid 가져오기
         CoroutineScope(Dispatchers.Main).launch {
             viewModel.getChatId(otherUid!!)
         }
 
+
         //어뎁터 설정
         adapter = chatMsgAdatper(this@ChatActivity, msgClicked =  { message, position ->
             //메세지 삭제
             val dialog = CustomAlertDialog(this@ChatActivity)
-            dialog.start("삭제하시겠습니까? (상대방에게서도 삭제됨)")
+            dialog.start("삭제하시겠습니까?\n(상대방에게서도 삭제됨)")
             dialog.onOkClickListener(object : CustomAlertDialog.onDialogCustomListener {
                 override fun onClicked() {
                     Log.d("abcd","삭제 확인 누름")
                    CoroutineScope(Dispatchers.IO).launch {
-                       viewModel.deleteMessage(message.messageId!!,message.otherUid!!,message.timeStamp!!,message.sender!!,viewModel.chatId.value.toString())
+                       viewModel.deleteMessage(message.messageId!!,viewModel.chatId.value.toString())
                        withContext(Dispatchers.Main) {
                            message.message = "삭제되었습니다."
                            adapter.notifyItemChanged(position)
@@ -171,7 +185,6 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == TAKE_IMAGE_CODE) {
             val context = this@ChatActivity
-            var cursor:Cursor? = null
 
             when(resultCode) {
                 RESULT_OK -> {

@@ -23,6 +23,17 @@ class ChatViewmodel : ViewModel() {
     //etMessage
     val etMessage = MutableLiveData<String>("")
 
+    /** 만약 채팅 멤버 한명만 null이면, 메세지 작성 및 버튼 비활성화 */
+
+    val _memberCheck = MutableLiveData<Boolean>()
+    val memberCheck : LiveData<Boolean> get() = _memberCheck
+
+    suspend fun checkChatRoomMemberOneNull() {
+        chatRepo.memberResult.observeForever(Observer {
+            _memberCheck.value = it
+        })
+    }
+
     /** chatid 가져오기 */
 
     val _chatId = MutableLiveData<String>()
@@ -62,16 +73,12 @@ class ChatViewmodel : ViewModel() {
     /** 메세지 삭제 */
     suspend fun deleteMessage(
         messageId: String,
-        otherUid: String,
-        timeStamp: Long,
-        sender: String,
         chatId: String
     ) {
         viewModelScope.launch {
-            chatRepo.deleteMessage(messageId,otherUid,timeStamp,sender,chatId)
+            chatRepo.deleteMessage(messageId,chatId)
         }
     }
-
 
 
     /** 전체 메세지 관찰 */
