@@ -42,7 +42,7 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
             goIntoChatroom = { chatRoom ->
                 //채팅방 클릭시, 채팅방 내로
                 val intent = Intent(context, ChatActivity::class.java)
-                //만약 user1과 내 uid와 같다면,
+                //만약 user1과 내 uid와 같거나
                 if (chatRoom.member?.user1 == auth?.uid) {
                     intent.putExtra("otherUid", chatRoom.member?.user2)
                 } else {
@@ -53,6 +53,7 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
 
                 context?.startActivity(intent)
             }
+            //채팅방 나가기
             ,chatClicked = { chatRoom, position ->
                 val dialog = CustomAlertDialog(requireContext())
                 dialog.start("채팅방을 삭제하시겠습니까?\n(채팅방내 모든 데이터가 삭제 됩니다.)")

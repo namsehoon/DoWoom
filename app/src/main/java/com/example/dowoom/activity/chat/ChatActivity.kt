@@ -65,7 +65,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
 
         initialized()
-        initialViewModel()
+
 
         lifecycleScope.launchWhenResumed {
             //메세지 보내기
@@ -105,6 +105,10 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
     }
 
     fun initialViewModel() {
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.getChatId(otherUid!!)
+        }
 
         lifecycleScope.launchWhenResumed {
 
@@ -152,12 +156,6 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         Log.d("abcd","otheruid in chatactivity is : ${otherUid}")
 
 
-        //chatid 가져오기
-        CoroutineScope(Dispatchers.Main).launch {
-            viewModel.getChatId(otherUid!!)
-        }
-
-
         //어뎁터 설정
         adapter = chatMsgAdatper(this@ChatActivity, msgClicked =  { message, position ->
             //메세지 삭제
@@ -167,9 +165,12 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
                 override fun onClicked() {
                     Log.d("abcd","삭제 확인 누름")
                    CoroutineScope(Dispatchers.IO).launch {
-                       viewModel.deleteMessage(message.messageId!!,viewModel.chatId.value.toString())
+                       Log.d("abcd","\"클릭된 id : ${message.messageId}\"")
+                       Log.d("abcd","\"클릭된 message : ${message.message}\"")
+                       viewModel.deleteMessage(message.messageId!!)
                        withContext(Dispatchers.Main) {
-                           message.message = "삭제되었습니다."
+                           //그냥 position에 박아버리는 듯. 다른건 뒤로 밀려버리고
+                           message.message = "삭제되었습니다. activity"
                            adapter.notifyItemChanged(position)
                        }
                    }
@@ -179,6 +180,8 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         })
         binding.rvChatRoom.layoutManager = LinearLayoutManager(this@ChatActivity)
         binding.rvChatRoom.adapter = adapter
+
+        initialViewModel()
 
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

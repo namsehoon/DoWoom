@@ -114,6 +114,7 @@ class chatMsgAdatper(val context: Context,
             //메세지
             viewHolder.sendBinding.msgSend.text = message.message
             //메세지 삭제
+
             viewHolder.itemView.setOnLongClickListener {
                 msgClicked(message, position)
                 false

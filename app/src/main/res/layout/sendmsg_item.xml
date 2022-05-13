@@ -6,10 +6,6 @@
             name="item"
             type="com.example.dowoom.model.Message" />
 
-        <variable
-            name="member"
-            type="com.example.dowoom.model.Member" />
-
     </data>
 
     <LinearLayout

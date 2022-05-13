@@ -44,7 +44,7 @@ class HomeViewModel : ViewModel() {
     //대화 생성완료
     suspend fun checkedChat(user:User) {
         viewModelScope.launch {
-            chatRepo.checkedChat(user).observeForever(Observer { result ->
+             chatRepo.checkedChat(user).observeForever(Observer { result ->
                 _getChatId.value = result
             })
         }

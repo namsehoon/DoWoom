@@ -15,6 +15,7 @@ import com.example.dowoom.activity.chat.ChatActivity
 import com.example.dowoom.databinding.HomeFragmentBinding
 import com.example.dowoom.Util.CustomAlertDialog
 import com.example.dowoom.Util.CustomProgressDialog
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
@@ -54,14 +55,17 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
                 override fun onClicked() {
                     CoroutineScope(Dispatchers.Main).launch {
 
-                        //채팅방 ac으로 이동
-                        val intent = Intent(context, ChatActivity::class.java)
-                        //todo : 만약 존재하면 그 채팅방으로 가야됨
                         val process = CustomProgressDialog(activity!!)
                         process.start()
 
+                        //todo : 문제다.. 문제.. userChat이 늦게 만들어지면 message 로드 할때 못찾음
+                        // 2. 둘 대화방 삭제하고, 다시 대화 시작하면 checkedChat() 메소드 실행이 안됨
                         viewModel.checkedChat(user)
-                        delay(500)
+                        delay(1000)
+
+                        //채팅방 ac으로 이동
+                        val intent = Intent(context, ChatActivity::class.java)
+
 
                         //상대방 uid
                         intent.putExtra("otherUid",user.uid)
@@ -72,6 +76,7 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
                         process.dismiss()
 
                         context?.startActivity(intent)
+
 
 
                     }
@@ -107,7 +112,7 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
             })
 
             viewModel.getChatId.observe(viewLifecycleOwner, Observer {
-                Log.d("abcd", "chatId in homefrag is : ${it}")
+                Log.d("abcd", "chatId in homefrag 채팅시작 is : ${it}")
             })
         }
     }

@@ -43,18 +43,18 @@ class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Uni
         //databinding한 useritem에 users의 positoin에 맞게 뿌려줌
         val chatroom = chatRooms[position]
 
-        if (chatroom.profileImg != null) {
-            storageRef.child(chatroom.profileImg!!).downloadUrl.addOnCompleteListener { task ->
-                if (task.isComplete) {
-                    Glide.with(context)
-                        .load(task.result) // 이미지를 로드
-                        .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
-                        .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
-                        .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
-                        .into(holder.chatRoomBinding.profileImg) //이미지를 보여줄 view를 지정
-                }
-            }
-        }
+//        if (chatroom.profileImg != null) {
+//            storageRef.child(chatroom.profileImg!!).downloadUrl.addOnCompleteListener { task ->
+//                if (task.isComplete) {
+//                    Glide.with(context)
+//                        .load(task.result) // 이미지를 로드
+//                        .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
+//                        .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
+//                        .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
+//                        .into(holder.chatRoomBinding.profileImg) //이미지를 보여줄 view를 지정
+//                }
+//            }
+//        }
 
         if (chatroom.lastMessage.equals("photo")) {
             holder.chatRoomBinding.tvLastMsg.text = "사진"

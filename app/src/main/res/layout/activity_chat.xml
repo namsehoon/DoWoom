@@ -8,6 +8,8 @@
         <variable
             name="vm"
             type="com.example.dowoom.viewmodel.chatviewmodel.ChatViewmodel" />
+
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

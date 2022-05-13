@@ -39,9 +39,9 @@ class ChatViewmodel : ViewModel() {
     val _chatId = MutableLiveData<String>()
     val chatId : LiveData<String> get() = _chatId
 
-    suspend fun getChatId(chatId: String)  {
+    suspend fun getChatId(otherUid: String)  {
         viewModelScope.launch {
-            chatRepo.getChatIdRepo(chatId).observeForever(Observer { id ->
+            chatRepo.getChatIdRepo(otherUid).observeForever(Observer { id ->
                 _chatId.value = id
             })
         }
@@ -72,11 +72,12 @@ class ChatViewmodel : ViewModel() {
 
     /** 메세지 삭제 */
     suspend fun deleteMessage(
-        messageId: String,
-        chatId: String
+        messageId: String
     ) {
         viewModelScope.launch {
-            chatRepo.deleteMessage(messageId,chatId)
+            if (chatId.value.toString() != null) {
+                chatRepo.deleteMessage(messageId,chatId.value.toString())
+            }
         }
     }
 
