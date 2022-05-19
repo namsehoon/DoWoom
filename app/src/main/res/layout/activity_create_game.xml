@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.example.dowoom.viewmodel.gameViewmodel.GameCreateViewModel" />
+    </data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.game.CreateGameActivity">
+
+
+    <TextView
+        android:id="@+id/tvChooseGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="게임선택"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/llKindOfGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16sp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toStartOf="@+id/tvChooseGame"
+        app:layout_constraintTop_toBottomOf="@+id/tvChooseGame">
+
+        <RadioGroup
+            android:id="@+id/rgRadiogroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:textSize="12dp"
+            android:checkedButton="@id/rbLadderGame"
+            android:weightSum="3">
+
+        <RadioButton
+            android:id="@+id/rbLadderGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="사다리게임" />
+
+        <RadioButton
+            android:id="@+id/rbCircleGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="돌려돌려 돌림판"
+            android:layout_marginStart="24sp"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/rbFasterGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="24sp"
+            android:text="선착순게임" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textSize="24dp"
+        android:text="방 제목"
+        app:layout_constraintStart_toStartOf="@+id/llKindOfGame"
+        app:layout_constraintTop_toBottomOf="@+id/llKindOfGame" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="방 제목을 입력 해주세요."
+        app:layout_constraintStart_toStartOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+    <TextView
+        android:id="@+id/tvChoosePresent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textSize="24dp"
+        android:text="상품 선택"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+
+    <ImageView
+        android:id="@+id/ivChoosePresent"
+        android:layout_width="60sp"
+        android:layout_height="60sp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@+id/tvChoosePresent"
+        app:layout_constraintTop_toBottomOf="@+id/tvChoosePresent"
+        android:src="@drawable/ic_baseline_camera_alt_24"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChoiceImage"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_margin="16sp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/ivChoosePresent"
+        app:layout_constraintTop_toBottomOf="@+id/ivChoosePresent" />
+
+    <TextView
+        android:id="@+id/tvCreateGameRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:textSize="24sp"
+        android:text="게임 생성"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

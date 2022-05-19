@@ -3,17 +3,19 @@ package com.example.dowoom.Util
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.provider.ContactsContract
 import android.util.Log
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 
-class HandleProfileImage(val context: Context, val bitmap: Bitmap ) {
+class HandleProfileImage(val context: Context, val bitmap: Bitmap , val nickname:String) {
 
     init {
         handleUpload(bitmap)
@@ -59,11 +61,15 @@ class HandleProfileImage(val context: Context, val bitmap: Bitmap ) {
         val user = FirebaseAuth.getInstance().currentUser
         Log.d("abcd","setUserProfileurl in handleProfileimage() is : ${uri}")
 
-        val request = UserProfileChangeRequest.Builder()
-            .setPhotoUri(uri)
-            .build()
+        var nick:String? = null
+        nick = nickname
 
-        user!!.updateProfile(request)
+        val profileUpdate = userProfileChangeRequest {
+            displayName = nick
+            photoUri = uri
+        }
+
+        user!!.updateProfile(profileUpdate)
             .addOnSuccessListener(OnSuccessListener {
                 Log.d("abcd","프로필 업데이트 성공")
             })

@@ -206,7 +206,7 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
                     }
                     binding.ivProfile.setImageBitmap(bitmap!!)
 
-                    HandleProfileImage(context,bitmap)
+                    HandleProfileImage(context,bitmap,binding.etNickname.text.toString())
                         .let { progressDialog.dismiss() }
                 }
 

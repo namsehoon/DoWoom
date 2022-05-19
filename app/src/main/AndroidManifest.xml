@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.dowoom">
-
-<!--  인터넷 권한  -->
-    <uses-permission android:name="android.permission.INTERNET" />
-<!-- 사진 앨범 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- 인터넷 권한 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 사진 앨범 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DoWoom">
+        <activity
+            android:name=".activity.game.CreateGameActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.chat.ChatActivity"
             android:exported="false" />
@@ -38,7 +39,7 @@
             android:exported="true" />
         <activity
             android:name=".activity.login.StartActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activity.login.LoginActivity"
             android:exported="false" />

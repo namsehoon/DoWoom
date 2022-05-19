@@ -29,8 +29,11 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
         fun newInstance() = TalkFrag()
     }
 
+    //viewmodel
     val viewModel by viewModels<TalkViewModel>()
+    //adapter
     private lateinit var adapter: ChatRoomAdapter
+    //로그인한 유저
     val auth: FirebaseUser? = Firebase.auth.currentUser
 
 

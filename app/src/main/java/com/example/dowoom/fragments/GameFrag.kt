@@ -1,11 +1,20 @@
 package com.example.dowoom.fragments
 
+import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.viewModels
 import com.example.dowoom.viewmodel.mainViewmodel.GameViewModel
 import com.example.dowoom.R
+import com.example.dowoom.activity.game.CreateGameActivity
+import com.example.dowoom.activity.game.LadderGame
 import com.example.dowoom.databinding.GameFragmentBinding
+import com.example.dowoom.viewmodel.mainViewmodel.HomeViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
+//게임 프레그먼트
 class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fragment) {
 
 
@@ -13,14 +22,28 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
         fun newInstance() = GameFrag()
     }
 
-    private lateinit var viewModel: GameViewModel
+    val viewModel by viewModels<GameViewModel>()
 
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
-        // TODO: Use the ViewModel
+        binding.vm = viewModel
+        binding.lifecycleOwner = requireActivity()
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //게임 생성
+        binding.tvCreateGame.setOnClickListener {
+            val intent = Intent(context, CreateGameActivity::class.java)
+            context?.startActivity(intent)
+        }
+
+        val ladder = LadderGame()
+        ladder.toString()
     }
 
 

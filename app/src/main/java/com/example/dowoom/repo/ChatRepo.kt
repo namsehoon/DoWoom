@@ -210,7 +210,6 @@ class ChatRepo : repo {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            //todo : 내 userchat에 있는 상대방의 uid의 채팅방을 검색해서 내가 없으면
             userChatRef.child(otherUid).child(chatId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(result: DataSnapshot) {
                     //처음 대화
@@ -365,7 +364,7 @@ class ChatRepo : repo {
                 }
 
                 override fun onChildChanged(chatIds: DataSnapshot, previousChildName: String?) {
-                    //todo UserChat 안해도 됨
+
                     if (chatIds.exists()) {
 
                         Log.d("abcd","observeChatId() onChildChanged is : ${chatIds.key}")
@@ -405,7 +404,7 @@ class ChatRepo : repo {
 //onChildRemoved(): 아이템이 삭제되었을때 수신합니다.
 //onChildMoved(): 순서가 있는 리스트에서 순서가 변경되었을때 수신합니다.
 
-//todo 메세지 삭제, 사진 저장
+//todo  사진 저장
 
 
             //유저 각자 가지고 있는 chat id들을 가져옴

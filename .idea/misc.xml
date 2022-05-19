@@ -4,10 +4,21 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.20092592592592592" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/ic_baseline_attach_file_24.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/ic_baseline_image_not_supported_24.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/ic_baseline_new_releases_24.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/ic_filter.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/ic_notification.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/ic_setting.xml" value="0.209375" />
         <entry key="app/src/main/res/drawable/progress_img.xml" value="0.2064814814814815" />
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_chat_room.xml" value="0.2640625" />
         <entry key="app/src/main/res/layout/activity_check.xml" value="0.2921875" />
+        <entry key="app/src/main/res/layout/activity_create_game.xml" value="0.34912571052801117" />
         <entry key="app/src/main/res/layout/activity_find_by_email.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_loading.xml" value="0.37318840579710144" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.37604166666666666" />
@@ -16,13 +27,15 @@
         <entry key="app/src/main/res/layout/activity_start.xml" value="0.22988505747126436" />
         <entry key="app/src/main/res/layout/blank_fragment.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/chatroom_item.xml" value="0.2640625" />
+        <entry key="app/src/main/res/layout/choose_multi_image.xml" value="1.0261362332794157" />
         <entry key="app/src/main/res/layout/comu_fragment.xml" value="0.20885416666666667" />
         <entry key="app/src/main/res/layout/create_chat.xml" value="0.23854166666666668" />
         <entry key="app/src/main/res/layout/deletemsg.xml" value="0.2640625" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.20885416666666667" />
-        <entry key="app/src/main/res/layout/game_fragment.xml" value="0.20885416666666667" />
+        <entry key="app/src/main/res/layout/game_fragment.xml" value="0.33" />
         <entry key="app/src/main/res/layout/home_fragment.xml" value="0.2642209594328298" />
         <entry key="app/src/main/res/layout/item_comu.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/item_game.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/item_recycler.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_talk.xml" value="0.1" />
         <entry key="app/src/main/res/layout/my_dialog.xml" value="0.33" />
