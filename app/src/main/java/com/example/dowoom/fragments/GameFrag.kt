@@ -3,6 +3,7 @@ package com.example.dowoom.fragments
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.example.dowoom.viewmodel.mainViewmodel.GameViewModel
@@ -42,8 +43,6 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
             context?.startActivity(intent)
         }
 
-        val ladder = LadderGame()
-        ladder.toString()
     }
 
 

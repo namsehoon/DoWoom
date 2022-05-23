@@ -18,7 +18,7 @@
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_chat_room.xml" value="0.2640625" />
         <entry key="app/src/main/res/layout/activity_check.xml" value="0.2921875" />
-        <entry key="app/src/main/res/layout/activity_create_game.xml" value="0.34912571052801117" />
+        <entry key="app/src/main/res/layout/activity_create_game.xml" value="0.3460202802135533" />
         <entry key="app/src/main/res/layout/activity_find_by_email.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_loading.xml" value="0.37318840579710144" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.37604166666666666" />
@@ -27,7 +27,7 @@
         <entry key="app/src/main/res/layout/activity_start.xml" value="0.22988505747126436" />
         <entry key="app/src/main/res/layout/blank_fragment.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/chatroom_item.xml" value="0.2640625" />
-        <entry key="app/src/main/res/layout/choose_multi_image.xml" value="1.0261362332794157" />
+        <entry key="app/src/main/res/layout/choose_multi_image.xml" value="0.3302844543854211" />
         <entry key="app/src/main/res/layout/comu_fragment.xml" value="0.20885416666666667" />
         <entry key="app/src/main/res/layout/create_chat.xml" value="0.23854166666666668" />
         <entry key="app/src/main/res/layout/deletemsg.xml" value="0.2640625" />
@@ -36,7 +36,7 @@
         <entry key="app/src/main/res/layout/home_fragment.xml" value="0.2642209594328298" />
         <entry key="app/src/main/res/layout/item_comu.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/item_game.xml" value="0.37604166666666666" />
-        <entry key="app/src/main/res/layout/item_recycler.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_recycler.xml" value="0.37322515212981744" />
         <entry key="app/src/main/res/layout/item_talk.xml" value="0.1" />
         <entry key="app/src/main/res/layout/my_dialog.xml" value="0.33" />
         <entry key="app/src/main/res/layout/progress.xml" value="0.16944444444444445" />

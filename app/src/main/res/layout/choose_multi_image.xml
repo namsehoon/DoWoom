@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="100sp"
-        android:layout_height="100sp"
-        android:layout_marginHorizontal="5dp"
-        android:padding="8sp"
-        android:src="@drawable/ic_baseline_camera_alt_24" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/cancelBtn"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/ic_baseline_cancel_24"
-        android:clickable="true"
-        android:backgroundTint="@color/black"
-        app:layout_anchor="@id/image"
-        app:layout_anchorGravity="top|right"
-        app:layout_constraintEnd_toEndOf="@+id/image"
-        app:layout_constraintTop_toTopOf="@+id/image" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/ivTookImage"
+            android:layout_width="100sp"
+            android:layout_height="100sp"
+            android:src="@drawable/ic_baseline_camera_alt_24"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginHorizontal="5sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fbDeleteBtn"
+            app:fabCustomSize="30dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_baseline_cancel_24"
+            android:clickable="true"
+            app:layout_anchor="@id/ivTookImage"
+            app:layout_anchorGravity="top|right"
+            app:layout_constraintEnd_toEndOf="@+id/ivTookImage"
+            app:layout_constraintTop_toTopOf="@+id/ivTookImage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

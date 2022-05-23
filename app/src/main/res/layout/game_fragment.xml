@@ -27,25 +27,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvGameList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/tvActiveGame"
-        app:layout_constraintTop_toBottomOf="@+id/tvCreateGame"
-        tools:listitem="@layout/item_game"/>
 
     <TextView
         android:id="@+id/tvActiveGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
+        android:textSize="16dp"
+        android:layout_marginBottom="16dp"
         android:text="게임중"
         app:layout_constraintBottom_toTopOf="@+id/rvGameList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvGameList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tvActiveGame"
+        app:layout_constraintTop_toBottomOf="@+id/tvCreateGame"
+        app:layout_constraintVertical_bias="0.0"
+        tools:listitem="@layout/item_game" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
