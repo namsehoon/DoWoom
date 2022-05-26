@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 
 interface repo {
@@ -16,11 +17,16 @@ interface repo {
     val auth: FirebaseUser
     get() = Firebase.auth.currentUser!!
 
-    val storage: FirebaseStorage
-        get() = FirebaseStorage.getInstance()
-
     //root
     val rootRef : DatabaseReference
     get() = database.reference
+
+/////////////
+
+    val storage: FirebaseStorage
+        get() = FirebaseStorage.getInstance()
+
+    val storageRef: StorageReference
+    get() = storage.reference
 
 }

@@ -88,11 +88,12 @@
         app:layout_constraintTop_toBottomOf="@+id/llKindOfGame" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/etGameTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
+        android:text="@={vm.etGameTitle}"
         android:inputType="textPersonName"
         android:hint="방 제목을 입력 해주세요."
         app:layout_constraintStart_toStartOf="@+id/textView10"
@@ -105,8 +106,8 @@
         android:layout_marginTop="32dp"
         android:textSize="24dp"
         android:text="상품 선택"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintStart_toStartOf="@+id/etGameTitle"
+        app:layout_constraintTop_toBottomOf="@+id/etGameTitle" />
 
     <ImageView
         android:id="@+id/ivChoosePresent"

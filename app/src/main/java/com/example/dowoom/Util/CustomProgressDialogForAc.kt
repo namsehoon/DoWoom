@@ -2,16 +2,13 @@ package com.example.dowoom.Util
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Window
-import androidx.fragment.app.FragmentActivity
 import com.example.dowoom.R
 
-class CustomProgressDialog(context: Context) {
-
-    private val dialog = Dialog(context)
+class CustomProgressDialogForAc(activity: Activity) {
+    private val dialog = Dialog(activity)
 
     fun start() {
         //노 타이틀

@@ -1,4 +1,4 @@
 package com.example.dowoom.model
 
-data class Present(val one:String, val two:String,val three:String, val four:String, val five:String, val six:String) {
+data class Present(var one:String? = null, var two:String?= null,var three:String? = null, var four:String? = null, var five:String? = null, var six:String? = null) {
 }

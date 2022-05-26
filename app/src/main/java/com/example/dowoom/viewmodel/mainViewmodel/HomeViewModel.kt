@@ -45,9 +45,23 @@ class HomeViewModel : ViewModel() {
     suspend fun checkedChat(user:User) {
         viewModelScope.launch {
              chatRepo.checkedChat(user).observeForever(Observer { result ->
-                _getChatId.value = result
+                if (result != null) {
+                    _getChatId.value = result
+                    onEndLive.value = true
+                }
             })
+
         }
+    }
+
+    private val onEndLive = MutableLiveData<Boolean>(false)
+
+    fun getOnEndLive(): MutableLiveData<Boolean> {
+        return onEndLive
+    }
+
+    fun somethingHappens() {
+        onEndLive.value = true
     }
 
 

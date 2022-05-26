@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.example.dowoom.viewmodel.mainViewmodel.GameViewModel
 import com.example.dowoom.R
 import com.example.dowoom.activity.game.CreateGameActivity
@@ -43,8 +44,15 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
             context?.startActivity(intent)
         }
 
+        initialized()
+
     }
 
+    private fun initialized() {
+        viewModel.gameModel.observe(viewLifecycleOwner, Observer { ladders ->
+
+        })
+    }
 
 
 }

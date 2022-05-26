@@ -10,16 +10,22 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
+import com.example.dowoom.Util.CustomProgressDialog
+import com.example.dowoom.Util.HandleGameMultiImages
 import com.example.dowoom.Util.PermissionCheck
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.adapter.MultiImageAdapter
 import com.example.dowoom.databinding.ActivityCreateGameBinding
-import com.example.dowoom.model.LadderGameModel
+
 import com.example.dowoom.model.Present
 import com.example.dowoom.viewmodel.gameViewmodel.GameCreateViewModel
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임생성", R.layout.activity_create_game) {
@@ -34,6 +40,8 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
     // 선착순게임
     val FASTER_GAME = 3
     var whatKindGame = 0
+
+
 
     //start result for activity
     lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
@@ -95,6 +103,7 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
 
                        //adapter 설정
                        adapter = MultiImageAdapter(uriList, this@CreateGameActivity, deleteClicked =  { uri, position ->
+                           uriList.remove(uri)
                            adapter.notifyItemRemoved(position)
                        })
                        binding.rvChoiceImage.adapter = adapter
@@ -105,7 +114,7 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
 
                        if (clipData?.itemCount!! > 6) { //이미지가 6장 이상
                            Toast.makeText(this@CreateGameActivity, "6장이 최대 입니다.",Toast.LENGTH_SHORT).show()
-
+                            return@ActivityResultCallback // ?
                        } else {
                            for (i in 0..clipData.itemCount) {
                                val selectedMultiImageUri = clipData.getItemAt(i).uri
@@ -118,7 +127,9 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
                                }
                            }
                            adapter = MultiImageAdapter(uriList, this@CreateGameActivity, deleteClicked = { uri,position ->
+                               uriList.remove(uri)
                                adapter.notifyItemRemoved(position)
+
                            })
                            binding.rvChoiceImage.adapter = adapter
                            binding.rvChoiceImage.layoutManager = LinearLayoutManager(this@CreateGameActivity, LinearLayoutManager.HORIZONTAL,true)
@@ -134,30 +145,47 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
 
         //게임 생성
         binding.tvCreateGameRoom.setOnClickListener {
-            createGame()
+            val progress = CustomProgressDialog(this@CreateGameActivity)
+            progress.start()
+            CoroutineScope(Dispatchers.IO).launch {
+                //todo : 사진이 한장도 없으면 안됨
+                createGame()
+            }
+            progress.dismiss()
         }
     }
 
-    private fun createGame() {
-        uriList
+    private suspend fun createGame() {
+        CoroutineScope(Dispatchers.IO).launch {
+            Log.d("abcd","createGame() 게임 생성")
+            val handleImage = HandleGameMultiImages(uriList) // storage에 상품 올리기, gameuid 만들기
+            val gameUid = handleImage.handleUpload()
 
-        if (whatKindGame == 1) { // 사다리 게임
-            createLadderGame()
+            //게임 종류 별 게임 생성
+            if (whatKindGame == 0 || whatKindGame == 1) { // 사다리 게임
+                createLadderGame(gameUid)
 
-        } else if (whatKindGame == 2) { // 돌림판
-
-        } else if(whatKindGame == 3) // 선착순 게임
+            } else if (whatKindGame == 2) { // 돌림판
+                //todo
+            } else if(whatKindGame == 3) {
+                //todo
+            }
+        }
 
     }
 
-    private fun createLadderGame() {
+    //사다리 게임 생성
+    private suspend fun createLadderGame(gameUid : String) {
         //사다리 게임
-        val ladder = LadderGame()
-        val new = ladder.generateLadder(6,6)
-        val result = ladder.randomPresent(new)
-        val ladderModel = LadderGameModel(result[0], result[1], result[2], result[3], result[4], result[5])
-        val presentModel = Present(uriList[0], uriList[1], uriList[2],uriList[3],uriList[4],uriList[5])
-        Log.d("abcd","result is : $result")
+        CoroutineScope(Dispatchers.IO).launch {
+            val ladder = LadderGame() // 사다리게임 인스턴스 생성
+            val new = ladder.generateLadder(6,6) // 6 x 6
+            val resultList = ladder.randomPresent(new) // 결과 리스트
+            //방 제목, 닉네임, gameuid, 방인원, 남은인원, 게임
+            Log.d("abcd","여기는 언제 올까? : game id : ${gameUid}")
+            viewModel.createGame(whatKindGame, resultList, gameUid)
+        }
+
     }
 
 
@@ -165,6 +193,12 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
+
+        viewModel.getOnEndLive().observe(this, Observer { onEnd ->
+            if (onEnd != null && onEnd) {
+                finish()
+            }
+        })
     }
 
 }

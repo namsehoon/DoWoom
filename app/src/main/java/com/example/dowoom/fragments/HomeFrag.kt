@@ -31,11 +31,14 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
     val viewModel by viewModels<HomeViewModel>()
     private lateinit var adapter: HomeAdapter
 
+    private lateinit var intent: Intent
+
     override fun onPrepareOptionsMenu(menu: Menu) {
         //툴바 filter item 보이게 하기
         menu.findItem(R.id.filterItem).isVisible = true
         super.onPrepareOptionsMenu(menu)
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,10 +64,10 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
                         //todo : 문제다.. 문제.. userChat이 늦게 만들어지면 message 로드 할때 못찾음
                         // 2. 둘 대화방 삭제하고, 다시 대화 시작하면 checkedChat() 메소드 실행이 안됨
                         viewModel.checkedChat(user)
-                        delay(1000)
+
 
                         //채팅방 ac으로 이동
-                        val intent = Intent(context, ChatActivity::class.java)
+                        intent = Intent(context, ChatActivity::class.java)
 
 
                         //상대방 uid
@@ -74,10 +77,6 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
                         intent.putExtra("profileImg", user.profileImg)
 
                         process.dismiss()
-
-                        context?.startActivity(intent)
-
-
 
                     }
                 }
@@ -102,6 +101,8 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
     }
 
 
+
+
     fun observerData() {
         //어뎁터 설정
         //observe
@@ -114,6 +115,13 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
             viewModel.getChatId.observe(viewLifecycleOwner, Observer {
                 Log.d("abcd", "chatId in homefrag 채팅시작 is : ${it}")
             })
+
+            viewModel.getOnEndLive().observe(viewLifecycleOwner, Observer { onEnd ->
+                if (onEnd != null && onEnd == true)
+                    context?.startActivity(intent)
+            })
+
+
         }
     }
 

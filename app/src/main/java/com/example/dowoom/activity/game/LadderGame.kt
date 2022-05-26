@@ -92,7 +92,7 @@ class LadderGame {
 
 
     //width : 가로 줄 개수(사진 개수) , height()
-    init {
+//    init {
         // 결과
 //        var ladder = generateLadder(6, 6)
 //        // 시작
@@ -101,7 +101,8 @@ class LadderGame {
 //        randomPresent(ladder)
 //
 //        printLadder(ladder)
-    }
+//    }
+
 }
 
 // 0 1 2 3 4 시작
