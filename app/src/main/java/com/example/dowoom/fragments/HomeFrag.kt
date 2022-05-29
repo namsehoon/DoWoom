@@ -50,37 +50,41 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
 
         },
         talkClick = { user ->
+            CoroutineScope(Dispatchers.Main).launch {
+
             //todo 프로필 이미지 추가
+            //todo : 문제다.. 문제.. userChat이 늦게 만들어지면 message 로드 할때 못찾음
+            // 2. 둘 대화방 삭제하고, 다시 대화 시작하면 checkedChat() 메소드 실행이 안됨
+            viewModel.checkedChat(user)
+
+            //채팅방 ac으로 이동
+            intent = Intent(context, ChatActivity::class.java)
+
+
+            //상대방 uid
+            intent.putExtra("otherUid", user.uid)
+            //상대방 nickname
+            intent.putExtra("otherNickname", user.nickname)
+            intent.putExtra("profileImg", user.profileImg)
+
             val alertDialog = CustomAlertDialog(requireActivity())
             alertDialog.start(user.nickname.plus("님과 대화하시겠습니까?"))
             //대화생성 ok 클릭 시,
             alertDialog.onOkClickListener(object : CustomAlertDialog.onDialogCustomListener {
                 override fun onClicked() {
+
+
+
                     CoroutineScope(Dispatchers.Main).launch {
-
-                        val process = CustomProgressDialog(activity!!)
-                        process.start()
-
-                        //todo : 문제다.. 문제.. userChat이 늦게 만들어지면 message 로드 할때 못찾음
-                        // 2. 둘 대화방 삭제하고, 다시 대화 시작하면 checkedChat() 메소드 실행이 안됨
-                        viewModel.checkedChat(user)
-
-
-                        //채팅방 ac으로 이동
-                        intent = Intent(context, ChatActivity::class.java)
-
-
-                        //상대방 uid
-                        intent.putExtra("otherUid",user.uid)
-                        //상대방 nickname
-                        intent.putExtra("otherNickname", user.nickname)
-                        intent.putExtra("profileImg", user.profileImg)
-
-                        process.dismiss()
-
+                        delay(500)
                     }
+                    context?.startActivity(intent)
+
+
+
                 }
             })
+        }
 
         })
         binding.onlineRV.layoutManager = LinearLayoutManager(this.context)
@@ -116,9 +120,11 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
                 Log.d("abcd", "chatId in homefrag 채팅시작 is : ${it}")
             })
 
+            //참고 : https://stackoverflow.com/questions/50000975/am-i-allowed-to-observe-a-viewmodel-if-i-clean-up-the-back-references
             viewModel.getOnEndLive().observe(viewLifecycleOwner, Observer { onEnd ->
-                if (onEnd != null && onEnd == true)
-                    context?.startActivity(intent)
+                if (onEnd != null && onEnd == true) {
+//                    context?.startActivity(intent)
+                }
             })
 
 
@@ -129,7 +135,6 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
     // 사용자가 프래그먼트를 떠나면 첫번째로 onPause()를 호출합니다.
     // 사용자가 돌아오지 않을 수 있으므로, 여기에 현재 사용자 세션을 넘어 지속되어야하는 변경사항을 저장.
     override fun onPause() {
-
         super.onPause()
     }
 

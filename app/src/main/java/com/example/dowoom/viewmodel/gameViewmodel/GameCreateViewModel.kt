@@ -15,7 +15,7 @@ class GameCreateViewModel : ViewModel() {
     suspend fun createGame(whatKindGame:Int, resultList: ArrayList<Int>, gameUid:String) {
         viewModelScope.launch {
             var gameTitle = ""
-            if (etGameTitle.value.toString() == "") {
+            if (etGameTitle.value.toString().isNullOrEmpty()) {
                 gameTitle = "어서들 오시게~"
                 repo.createGame(whatKindGame,resultList, gameUid, gameTitle)
                 Log.d("abcd","실행됨 1")

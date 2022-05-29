@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DoWoom">
         <activity
+            android:name=".activity.game.PlayGameActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.game.CreateGameActivity"
             android:exported="false" />
         <activity

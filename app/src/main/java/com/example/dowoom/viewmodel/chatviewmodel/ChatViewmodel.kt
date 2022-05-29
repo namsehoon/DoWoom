@@ -1,6 +1,7 @@
 package com.example.dowoom.viewmodel.chatviewmodel
 
 import android.util.Log
+import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.example.dowoom.model.Message
 import com.example.dowoom.model.UserChat
@@ -19,6 +20,7 @@ class ChatViewmodel : ViewModel() {
 
 
     private val chatRepo = ChatRepo()
+
 
     //etMessage
     val etMessage = MutableLiveData<String>("")

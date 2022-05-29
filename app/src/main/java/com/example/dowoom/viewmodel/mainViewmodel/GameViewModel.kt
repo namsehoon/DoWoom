@@ -18,15 +18,13 @@ class GameViewModel : ViewModel() {
 
     /** 게임 리스트 (사다리 게임)*/
 
-    val _gameModel = MutableLiveData<MutableList<GameModel>>()
-    val gameModel : LiveData<MutableList<GameModel>> get() = _gameModel
-
     suspend fun observeLadderGame(): LiveData<MutableList<GameModel>> {
+        val gameList = MutableLiveData<MutableList<GameModel>>()
         gameRepo.getGameList().observeForever(Observer { ladders ->
-            _gameModel.value = ladders
+            gameList.value = ladders
         })
 
-        return gameModel
+        return gameList
     }
 
 }

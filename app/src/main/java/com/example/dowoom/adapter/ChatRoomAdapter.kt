@@ -72,7 +72,7 @@ class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Uni
 
         //채팅방 클릭 시, 채팅방 내에 들어가기
         holder.chatRoomBinding.llChatroom.setOnClickListener {
-            goIntoChatroom(chatRooms[position])
+            goIntoChatroom(chatroom)
         }
 
 
