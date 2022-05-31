@@ -1,6 +1,9 @@
 package com.example.dowoom.viewmodel.gameViewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
+import com.example.dowoom.model.GameModel
+import com.example.dowoom.model.GameResultModel
 import com.example.dowoom.model.User
 import com.example.dowoom.repo.GameRepo
 import kotlinx.coroutines.launch
@@ -17,9 +20,21 @@ class GamePlayViewModel : ViewModel() {
     fun getGameResult(gameId:String, result:String) {
         viewModelScope.launch {
             repo.getGameResult(gameId,result).observeForever(Observer { it ->
+                Log.d("abcd","play viewmodel result is : ${it}")
                 _img.value = it
             })
         }
+    }
+
+    fun getLeftCount(gameId:String) : LiveData<Int>{
+        val leftCount =  MutableLiveData<Int>()
+        viewModelScope.launch {
+            repo.observeFinishedGame(gameId).observeForever(Observer { it ->
+                Log.d("abcd","play viewmodel finished is : ${it}")
+                leftCount.value = it
+            })
+        }
+        return  leftCount
     }
 
 }

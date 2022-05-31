@@ -5,7 +5,7 @@ import com.google.firebase.database.Exclude
 data class GameModel(var title:String? = null,
                      var nickname:String? = null,
                      var gameUid:String? = null,
-                     var acceptable:Int? = 0,
+                     var acceptable:Int? = 6,
                      var leftCount:Int? = 0,
                      var active:Boolean? = true,
                      var whatKindGame:Int? = 0,

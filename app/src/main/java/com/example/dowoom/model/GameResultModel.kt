@@ -1,9 +1,9 @@
 package com.example.dowoom.model
 
-data class GameResultModel(var one:Int? = 0,
-                           val two:Int? = 1,
-                           val three:Int? = 2,
-                           val four:Int? = 3,
-                           val five:Int? = 4,
-                           val six:Int? = 5) {
+data class GameResultModel(var one:Int? = null,
+                           var two:Int? = null,
+                           var three:Int? = null,
+                           var four:Int? = null,
+                           var five:Int? = null,
+                           var six:Int? = null) {
 }

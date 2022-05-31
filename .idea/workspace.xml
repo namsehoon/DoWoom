@@ -12,11 +12,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="- 사다리게임&#10;&#10;다음 &#10;&#10;- to upload to firebase storage multi file">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Util/CustomProgressDialogForAc.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Util/HandleGameMultiImages.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/GameModel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/google-services.json" afterDir="false" />
+    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="- 게임생성ac, 사다리게임ac&#10;&#10;- 할일 : repo만들기">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Util/CustomGameDialog.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/game_result_dialog.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.bin" afterDir="false" />
@@ -31,21 +29,16 @@
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Util/CustomProgressDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/Util/CustomProgressDialog.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/game/CreateGameActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/game/CreateGameActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/game/LadderGame.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/game/LadderGame.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/game/PlayGameActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/game/PlayGameActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/GameFrag.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/GameFrag.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/HomeFrag.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/HomeFrag.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/GameParticipants.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/GameParticipants.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/LadderGameModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/GameResultModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/Present.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/Present.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/GameModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/GameModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/GameResultModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/model/GameResultModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/repo/GameRepo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/repo/GameRepo.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/repo/repo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/repo/repo.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/gameViewmodel/GameCreateViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/gameViewmodel/GameCreateViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/mainViewmodel/GameViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/mainViewmodel/GameViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/mainViewmodel/HomeViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/mainViewmodel/HomeViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_create_game.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_create_game.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/gameViewmodel/GamePlayViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/gameViewmodel/GamePlayViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_play_game.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_play_game.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,6 +179,9 @@
       <recent name="com.example.dowoom.viewmodel" />
       <recent name="com.example.dowoom" />
     </key>
+    <key name="android.template.-1806127349">
+      <recent name="com.example.dowoom.activity.game" />
+    </key>
     <key name="android.template.1739204860">
       <recent name="com.example.dowoom.start" />
     </key>
@@ -293,20 +289,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1644196360722</updated>
-    </task>
-    <task id="LOCAL-00007" summary="toolbar 작업중">
-      <created>1645410442607</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1645410442608</updated>
-    </task>
-    <task id="LOCAL-00008" summary="toolbar 작업중">
-      <created>1645435807494</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1645435807495</updated>
     </task>
     <task id="LOCAL-00009" summary="툴바 생성 및 컨트롤 : 액티비티&#10;툴바 visible : 프래그먼트">
       <created>1645497004302</created>
@@ -637,7 +619,21 @@
       <option name="project" value="LOCAL" />
       <updated>1653294035222</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="- 사다리게임 생성">
+      <created>1653531196428</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1653531196428</updated>
+    </task>
+    <task id="LOCAL-00057" summary="- 게임생성ac, 사다리게임ac&#10;&#10;- 할일 : repo만들기">
+      <created>1653809147942</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1653809147943</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -666,8 +662,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="채팅 fragment&#10;1. 유저 채팅목록 구현" />
-    <MESSAGE value="채팅 fragment&#10;1. 유저 채팅목록 클릭 시,, ChatActivity.kt로" />
     <MESSAGE value="채팅 fragment&#10;에러&#10;왜 메세지를 두번 불러옴(livedata)? 한번 불러올 땐, 잘 부르는데&#10;    //todo : 두번재 부를때는 빈 []임.." />
     <MESSAGE value="채팅 fragment&#10;에러&#10;1. 왜 메세지를 두번 불러옴(livedata)? 한번 불러올 땐, 잘 부르는데&#10;2. 두번재 부를때는 빈 []임.." />
     <MESSAGE value="일단 메세지는 로드 됨.&#10;문제&#10;1. livedata loaded twice (problem) &#10;2. message recyclerview data load (problem)" />
@@ -691,6 +685,8 @@
     <MESSAGE value="- 메세지 삭제&#10;- 대화방 삭제" />
     <MESSAGE value="- 사다리게임 view" />
     <MESSAGE value="- 사다리게임&#10;&#10;다음 &#10;&#10;- to upload to firebase storage multi file" />
-    <option name="LAST_COMMIT_MESSAGE" value="- 사다리게임&#10;&#10;다음 &#10;&#10;- to upload to firebase storage multi file" />
+    <MESSAGE value="- 사다리게임 생성" />
+    <MESSAGE value="- 게임생성ac, 사다리게임ac&#10;&#10;- 할일 : repo만들기" />
+    <option name="LAST_COMMIT_MESSAGE" value="- 게임생성ac, 사다리게임ac&#10;&#10;- 할일 : repo만들기" />
   </component>
 </project>

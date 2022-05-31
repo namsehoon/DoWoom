@@ -104,7 +104,6 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
     private fun observerData() {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.observeLadderGame().observe(viewLifecycleOwner, Observer { ladders ->
-                Log.d("abcd","ladders s s ss : ${ladders}")
                 adapter.setGameRoom(ladders)
             })
 

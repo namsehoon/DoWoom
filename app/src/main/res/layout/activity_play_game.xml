@@ -56,71 +56,71 @@
             android:weightSum="6"
             app:layout_constraintTop_toBottomOf="@+id/textView7">
 
-            <TextView
-                android:id="@+id/tvOne"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_margin="5dp"
-                android:text="선택"
-                app:layout_constraintStart_toStartOf="@+id/textView7"
-                tools:layout_editor_absoluteY="95dp" />
+<!--            <TextView-->
+<!--                android:id="@+id/tvOne"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_margin="5dp"-->
+<!--                android:text="선택"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/textView7"-->
+<!--                tools:layout_editor_absoluteY="95dp" />-->
 
-            <TextView
-                android:id="@+id/tvTwo"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_margin="5dp"
-                android:text="선택"
-                tools:layout_editor_absoluteX="82dp"
-                tools:layout_editor_absoluteY="95dp" />
+<!--            <TextView-->
+<!--                android:id="@+id/tvTwo"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_margin="5dp"-->
+<!--                android:text="선택"-->
+<!--                tools:layout_editor_absoluteX="82dp"-->
+<!--                tools:layout_editor_absoluteY="95dp" />-->
 
-            <TextView
-                android:id="@+id/tvThree"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_margin="5dp"
-                android:text="선택"
-                tools:layout_editor_absoluteX="146dp"
-                tools:layout_editor_absoluteY="94dp" />
+<!--            <TextView-->
+<!--                android:id="@+id/tvThree"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_margin="5dp"-->
+<!--                android:text="선택"-->
+<!--                tools:layout_editor_absoluteX="146dp"-->
+<!--                tools:layout_editor_absoluteY="94dp" />-->
 
-            <TextView
-                android:id="@+id/tvFour"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_margin="5dp"
-                android:text="선택"
-                tools:layout_editor_absoluteX="210dp"
-                tools:layout_editor_absoluteY="92dp" />
+<!--            <TextView-->
+<!--                android:id="@+id/tvFour"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_margin="5dp"-->
+<!--                android:text="선택"-->
+<!--                tools:layout_editor_absoluteX="210dp"-->
+<!--                tools:layout_editor_absoluteY="92dp" />-->
 
-            <TextView
-                android:id="@+id/tvFive"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_margin="5dp"
-                android:text="선택"
-                tools:layout_editor_absoluteX="273dp"
-                tools:layout_editor_absoluteY="94dp" />
+<!--            <TextView-->
+<!--                android:id="@+id/tvFive"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_margin="5dp"-->
+<!--                android:text="선택"-->
+<!--                tools:layout_editor_absoluteX="273dp"-->
+<!--                tools:layout_editor_absoluteY="94dp" />-->
 
-            <TextView
-                android:id="@+id/tvSix"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_margin="5dp"
-                android:text="선택"
-                tools:layout_editor_absoluteX="337dp"
-                tools:layout_editor_absoluteY="94dp" />
+<!--            <TextView-->
+<!--                android:id="@+id/tvSix"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_margin="5dp"-->
+<!--                android:text="선택"-->
+<!--                tools:layout_editor_absoluteX="337dp"-->
+<!--                tools:layout_editor_absoluteY="94dp" />-->
         </LinearLayout>
 
         <LinearLayout
@@ -129,6 +129,7 @@
             android:layout_height="300dp"
             android:layout_marginTop="20sp"
             android:orientation="horizontal"
+            android:clickable="false"
             app:layout_constraintEnd_toEndOf="@+id/llChoice"
             app:layout_constraintStart_toStartOf="@+id/llChoice"
             app:layout_constraintTop_toBottomOf="@+id/llChoice" >
@@ -137,9 +138,10 @@
 
             <TextView
                 android:id="@+id/tvShowResult"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"

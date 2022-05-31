@@ -8,6 +8,7 @@ import com.example.dowoom.model.*
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +26,9 @@ class GameRepo : repo {
     //선착순
     val fasterRef = rootRef.child("Game/Faster")
 
+    val resultRef = rootRef.child("Game/Result")
 
+    /** 게임 생성 */
     suspend fun createGame(whatKindGame: Int, resultList: ArrayList<Int>, gameUid: String, gameTitle: String) {
         CoroutineScope(Dispatchers.IO).launch {
             if ( whatKindGame == 0 || whatKindGame == 1) { //사다리 게임
@@ -36,7 +39,7 @@ class GameRepo : repo {
 
                 Log.d("abcd","여기까지는 오냐?")
                 //게임 모델
-                val gameModel = GameModel(gameTitle, auth.displayName!!,gameid,6,6,true,whatKindGame,result)
+                val gameModel = GameModel(gameTitle, auth.displayName!!,gameid,0,6,true,whatKindGame,result)
                 ladderRef.child(gameid).setValue(gameModel).addOnSuccessListener {
                     Log.d("abcd","game repo 게임 만들기 성공!!")
 
@@ -46,7 +49,7 @@ class GameRepo : repo {
         }
 
     }
-
+    /** 게임 리스트 가져오기 */
     suspend fun getGameList() : LiveData<MutableList<GameModel>> {
         val listData: MutableList<GameModel> = mutableListOf<GameModel>()
         val mutableData = MutableLiveData<MutableList<GameModel>>()
@@ -55,8 +58,9 @@ class GameRepo : repo {
             ladderRef.addChildEventListener(object : ChildEventListener {
                 override fun onChildAdded(ladders: DataSnapshot, previousChildName: String?) {
                     if (ladders.exists()) {
-                        Log.d("abcd","ladders ref is : ${ladders.ref}")
-//                        val addedLadderData =
+                        val ladderData = ladders.getValue(GameModel::class.java)
+                        listData.add(ladderData!!)
+                        mutableData.value = listData
                     }
                 }
 
@@ -80,4 +84,87 @@ class GameRepo : repo {
         return mutableData
 
     }
+
+    /** 이미 끝난 게임 선택 박스 disabled */
+    suspend fun observeFinishedGame(gameId: String) : LiveData<Int> {
+
+            val mutableData = MutableLiveData<Int>()
+
+            //이미 다른사용자가 선택한 것은 버튼 선택 할 수 없게 하기
+            CoroutineScope(Dispatchers.IO).launch {
+                ladderRef.orderByKey().equalTo(gameId).addChildEventListener(object  : ChildEventListener {
+                    override fun onChildAdded(choices: DataSnapshot, previousChildName: String?) {
+                        if (choices.exists()) {
+                            Log.d("abcd", "choices choices is : ${choices.key}")
+                            val gameModel = choices.getValue(GameModel::class.java)
+                            Log.d("abcd", "gameModel gameModel is : ${gameModel}")
+                            mutableData.value = gameModel?.leftCount!!
+                        }
+                    }
+
+                    override fun onChildChanged(
+                        snapshot: DataSnapshot,
+                        previousChildName: String?
+                    ) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onChildRemoved(snapshot: DataSnapshot) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
+            }
+
+        return mutableData
+    }
+
+    /** 게임 결과 가져오기 */
+    suspend fun getGameResult(gameId:String, result:String) : LiveData<String> {
+        val mutableData = MutableLiveData<String>()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            //게임결과
+            ladderRef.child(gameId).child("gameResult").child(result).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(gameResult: DataSnapshot) {
+                    val gameResultData = gameResult.getValue()
+                    Log.d("abcd","gameresult data(게임 선택에 대한 결과) is : ${gameResultData}")
+                    //선물
+                    resultRef.child(gameId).child(gameResultData.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
+                        override fun onDataChange(present: DataSnapshot) {
+                            Log.d("abcd","present is : ${present.ref}")
+                            val gamePresent = present.getValue()
+                            if (gamePresent == null) {
+                                mutableData.value = "꽝"
+                            } else {
+                                mutableData.value = gamePresent.toString()
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.d("abcd","error in gameRepo present is : ${error.message}")
+                        }
+                    })
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d("abcd","error in gameRepo result is : ${error.message}")
+                }
+
+            })
+        }
+
+        return mutableData
+
+    }
+
 }
