@@ -5,10 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dowoom.activity.game.CreateGameActivity
 import com.example.dowoom.model.*
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -164,7 +161,35 @@ class GameRepo : repo {
         }
 
         return mutableData
-
     }
 
+    /**  게임 카운트 체크 ! */
+
+     suspend fun checkGameCount() : LiveData<Boolean> {
+
+        val mutableData = MutableLiveData<Boolean>()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            rootRef.child("GameCount").child(auth.uid).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(gameCount: DataSnapshot) {
+                    val gameCountData = gameCount.getValue(GameCount::class.java)
+                    mutableData.value = gameCountData?.count!! <= 1
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                  Log.d("abcd","error checkGameCount in gamerepo  is: ${error}")
+                }
+
+            })
+        }
+        return mutableData
+    }
+
+    /** 게임 카운트 차감  */
+
+    suspend fun addGameCount() {
+        CoroutineScope(Dispatchers.IO).launch {
+            rootRef.child("GameCount").child(auth.uid).child("count").setValue(ServerValue.increment(1))
+        }
+    }
 }

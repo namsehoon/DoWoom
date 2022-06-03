@@ -12,10 +12,12 @@ class GamePlayViewModel : ViewModel() {
 
     val repo = GameRepo()
 
+
+    /** 게임 결과  */
+
     //chatId 받아오기
     val _img = MutableLiveData<String>()
     val img:LiveData<String> get() = _img
-
 
     fun getGameResult(gameId:String, result:String) {
         viewModelScope.launch {
@@ -25,6 +27,8 @@ class GamePlayViewModel : ViewModel() {
             })
         }
     }
+
+    /** 남은 선택들 개수 */
 
     fun getLeftCount(gameId:String) : LiveData<Int>{
         val leftCount =  MutableLiveData<Int>()

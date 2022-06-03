@@ -116,6 +116,13 @@ class PlayGameActivity : BaseActivity<ActivityPlayGameBinding>(TAG = "게임 플
                 R.id.tvShowResult -> {
                     val alertDialog = CustomGameDialog(this@PlayGameActivity,gameResult!!,gameUid!!)
                     alertDialog.start()
+                    //게임 fragment로 나가짐
+                    alertDialog.onOkClickListener(object : CustomGameDialog.onDialogCustomListener{
+                        override fun onClicked() {
+                            this@PlayGameActivity.finish()
+                        }
+
+                    })
                 }
             }
         }

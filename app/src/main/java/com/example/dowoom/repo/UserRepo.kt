@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import com.example.dowoom.activity.main.MainActivity
 import com.example.dowoom.model.Connect
+import com.example.dowoom.model.GameCount
 import com.example.dowoom.model.User
 import com.example.dowoom.viewmodel.registervm.LoadingViewmodel
 import com.google.firebase.auth.FirebaseUser
@@ -208,16 +209,22 @@ class userRepo {
             var result = false
             val profileImg = auth?.photoUrl.toString() ?: null
             val user = User(uid,0,nickname,stateMsg,0,false,null,sOrB,profileImg)
+            //게임 카운터
+            val userCount = GameCount(uid, 0)
             myRef
                 .child(uid)
                 .setValue(user)
                 .addOnSuccessListener {
                     Log.d("abcd","사용자가 추가 되었습니다. in userrepo")
+
                     result = true
                 }
                 .addOnFailureListener{ error ->
                     Log.d("abcd", "error in user repo : "+error.message)
                 }
+            myRef.child("GameCount").child(uid).setValue(userCount).addOnSuccessListener {
+                Log.d("abcd","game count가 추가 되었습니다. in userrepo")
+            }
             delay(500)
             this.emit(result)
         }.flowOn(Dispatchers.IO)

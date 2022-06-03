@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +24,7 @@ import com.example.dowoom.model.ChatRoom
 import com.example.dowoom.model.GameModel
 import com.example.dowoom.viewmodel.gameViewmodel.GamePlayViewModel
 import com.example.dowoom.viewmodel.mainViewmodel.HomeViewModel
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -55,6 +58,8 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
         adapter = GameAdapter(requireActivity(),
             //게임방으로 들어가기
             goIntoGameRoom = { game ->
+
+
                 val alertDialog = CustomAlertDialog(requireActivity())
 
                 val intent = Intent(context, PlayGameActivity::class.java)
@@ -70,16 +75,19 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
                 //게임 종류
                 intent.putExtra("whatKindGame",game.whatKindGame)
 
-                alertDialog.start("게임방에 입장 하시겠습니까?")
-                alertDialog.onOkClickListener(object :CustomAlertDialog.onDialogCustomListener {
-                    override fun onClicked() {
-                       CoroutineScope(Dispatchers.Main).launch {
-                           delay(500)
-                       }
-                        context?.startActivity(intent)
-                    }
+                //만약 true라면 게임 할 수 있음.
+                if (viewModel.countCheck.value!!) {
+                    alertDialog.start("게임방에 입장 하시겠습니까?\n게임 횟수가 차감됩니다.\n(하루 최대 2번)")
+                    alertDialog.onOkClickListener(object :CustomAlertDialog.onDialogCustomListener {
+                        override fun onClicked() {
+                            viewModel.addGameCount()
+                            context?.startActivity(intent)
+                        }
 
-                })
+                    })
+                } else {
+                    Toast.makeText(this.requireActivity(), "오늘 게임 횟수를 초과 했습니다.",Toast.LENGTH_SHORT).show()
+                }
 
             }
         )
@@ -107,7 +115,12 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
                 adapter.setGameRoom(ladders)
             })
 
+            viewModel.checkGameCount().observe(viewLifecycleOwner, Observer { gamecount ->
+                Log.d("abcd","gamecount in gamefrag is : ${gamecount}")
+            })
         }
+
+
     }
 
 

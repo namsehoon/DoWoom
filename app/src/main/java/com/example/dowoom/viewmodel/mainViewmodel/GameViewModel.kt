@@ -1,5 +1,6 @@
 package com.example.dowoom.viewmodel.mainViewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.dowoom.model.GameModel
 import com.example.dowoom.model.Message
 import com.example.dowoom.repo.GameRepo
+import com.example.dowoom.viewmodel.SingleLiveEvent
 import kotlinx.coroutines.launch
 
 class GameViewModel : ViewModel() {
@@ -25,6 +27,28 @@ class GameViewModel : ViewModel() {
         })
 
         return gameList
+    }
+
+    /** 게임 카운터 체크 ! */
+
+    val _countCheck = MutableLiveData<Boolean>()
+    val countCheck : LiveData<Boolean> get() = _countCheck
+
+    suspend fun checkGameCount() : LiveData<Boolean>  {
+        viewModelScope.launch {
+            gameRepo.checkGameCount().observeForever(Observer { bool ->
+                Log.d("abcd","bool is : ${bool}")
+                _countCheck.value = bool
+            })
+        }
+        return countCheck
+
+    }
+
+    fun addGameCount() {
+        viewModelScope.launch {
+            gameRepo.addGameCount()
+        }
     }
 
 }
