@@ -80,6 +80,7 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
                     alertDialog.start("게임방에 입장 하시겠습니까?\n게임 횟수가 차감됩니다.\n(하루 최대 2번)")
                     alertDialog.onOkClickListener(object :CustomAlertDialog.onDialogCustomListener {
                         override fun onClicked() {
+                            //유저의 게임 카운터를 +1
                             viewModel.addGameCount()
                             context?.startActivity(intent)
                         }

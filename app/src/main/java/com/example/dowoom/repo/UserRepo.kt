@@ -58,7 +58,7 @@ class userRepo {
 
 
     //참고 : https://mailmail.tistory.com/44
-    /** 온라인 유저 불러오기 */ //todo : childeventlisener로 바꾸고, 이게 최선인지 고민해보기 (callback), 차단한사람 안보여야함
+    /** 온라인 유저 불러오기 */ //todo : 이 func은 온라인과 오프라인만 관리함. userdata 변경에 대한건 관리 안함 : 프로필 activity 할때 생각해보자
      suspend fun getData(): LiveData<MutableList<User>> {
         // livedata 객체 만들기
         //firebase 추가 된 데이터 이벤트 리스너
@@ -66,14 +66,12 @@ class userRepo {
         val mutableData = MutableLiveData<MutableList<User>>()
 
         CoroutineScope(Dispatchers.IO).launch {
-            rootRef.child("Connect").orderByChild("connected").equalTo(true).addChildEventListener(object : ChildEventListener {
+            conRef.orderByChild("connected").equalTo(true).addChildEventListener(object : ChildEventListener {
                 //항목 목록을 검색하거나 항목 목록에 대한 추가를 수신 대기
                 override fun onChildAdded(connects: DataSnapshot, previousChildName: String?) {
-                    Log.d("abcd","connects is : "+connects)
                     if (connects.exists()) {
                         //유저
-                        Log.d("abcd"," connects.child : "+connects.key)
-
+                        Log.d("abcd","userRepo - onChildAdded")
                         myRef.child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(users: DataSnapshot) {
                                 if (users.exists()) {
@@ -103,10 +101,12 @@ class userRepo {
                 override fun onChildChanged(connects: DataSnapshot, previousChildName: String?) {
                     if (connects.exists()) {
                         //유저
-                            Log.d("abcd","얘는 언제 오는거임?")
+                            Log.d("abcd","userRepo - onChildChanged")
 
                         myRef.child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(users: DataSnapshot) {
+
+                                Log.d("abcd","userRepo - onChildChanged")
 
                                 val getData = users.getValue(User::class.java)
 
@@ -133,6 +133,8 @@ class userRepo {
                 //목록의 항목 삭제를 수신 대기
                 override fun onChildRemoved(connects: DataSnapshot) {
                     if (connects.exists()) {
+                        Log.d("abcd","userRepo - onChildRemoved")
+
 
                         myRef.child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(users: DataSnapshot) {

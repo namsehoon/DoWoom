@@ -30,15 +30,21 @@ class GamePlayViewModel : ViewModel() {
 
     /** 남은 선택들 개수 */
 
-    fun getLeftCount(gameId:String) : LiveData<Int>{
-        val leftCount =  MutableLiveData<Int>()
+    fun getLeftCount(gameId:String) : LiveData<GameModel>{
+        val game =  MutableLiveData<GameModel>()
         viewModelScope.launch {
             repo.observeFinishedGame(gameId).observeForever(Observer { it ->
                 Log.d("abcd","play viewmodel finished is : ${it}")
-                leftCount.value = it
+                game.value = it
             })
         }
-        return  leftCount
+        return game
+    }
+
+    fun deleteResult(gameId:String, result:String) {
+        viewModelScope.launch {
+            repo.deleteResult(gameId,result)
+        }
     }
 
 }
