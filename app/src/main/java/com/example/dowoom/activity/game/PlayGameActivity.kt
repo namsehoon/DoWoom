@@ -191,32 +191,34 @@ class PlayGameActivity : BaseActivity<ActivityPlayGameBinding>(TAG = "게임 플
         for (index in 0..5) {
             btn(arra,index)
         }
-
-        // TODO: 6번째를 클릭했는데, 3번째가 클릭된것처럼 뜸
-        // TODO: 6번째를 클릭했는데, 3번째가 클릭된것처럼 뜸
-        // TODO: 6번째를 클릭했는데, 3번째가 클릭된것처럼 뜸
-        // TODO: 6번째를 클릭했는데, 3번째가 클릭된것처럼 뜸
     }
+
     /** 게임 선택 박스 배열 */
     private fun getGameArray(game:GameModel) : Array<Int?> {
         val arra = arrayOfNulls<Int>(6)
         if (game.gameResult?.one != null) {
             arra.set(0, game.gameResult?.one!!)
+            Log.d("abcd","arra 0 is : ${arra[0]}")
         }
         if(game.gameResult?.two != null) {
             arra.set(1, game.gameResult?.two!!)
+            Log.d("abcd","arra 1 is : ${arra[1]}")
         }
         if (game.gameResult?.three != null) {
             arra.set(2, game.gameResult?.three!!)
+            Log.d("abcd","arra 2 is : ${arra[2]}")
         }
         if (game.gameResult?.four != null) {
             arra.set(3, game.gameResult?.four!!)
+            Log.d("abcd","arra 3 is : ${arra[3]}")
         }
         if (game.gameResult?.five != null) {
             arra.set(4, game.gameResult?.five!!)
+            Log.d("abcd","arra 4 is : ${arra[4]}")
         }
         if (game.gameResult?.six != null) {
             arra.set(5, game.gameResult?.six!!)
+            Log.d("abcd","arra 5 is : ${arra[5]}")
         }
 
         Log.d("abcd","arra is : ${arra.toString()}")
