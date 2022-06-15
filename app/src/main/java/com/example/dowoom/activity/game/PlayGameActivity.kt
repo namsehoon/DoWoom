@@ -116,7 +116,7 @@ class PlayGameActivity : BaseActivity<ActivityPlayGameBinding>(TAG = "게임 플
     //선택버튼 클릭 시,
     override fun onClick(v: View?) {
         lifecycleScope.launchWhenResumed {
-            Log.d("abcd","getGameResult is clicked : gameUid : ${gameUid}")
+            Log.d("abcd","선택된 v?.id  : ${v?.id}")
             when(v?.id) {
                 0 -> {
                     viewModel.getGameResult(gameUid!!, RESULT_ONE)
@@ -168,14 +168,14 @@ class PlayGameActivity : BaseActivity<ActivityPlayGameBinding>(TAG = "게임 플
         val button = TextView(this@PlayGameActivity).apply {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT,1f)
             gravity = Gravity.CENTER
-            Log.d("abcd","index  111 1 is : ${index}")
+            //순서대로 들어가나 확인
+            Log.d("abcd"," arra[index] is : ${arra[index] ?: 9} ,  index : ${index}")
             if (arra[index] == null) {
                 id = index+7
             } else {
-                id = arra[index]!!
+                id = index
             }
             text = "선택"
-            Log.d("abcd","index 2222 is ${index}")
         }
         button.setOnClickListener(this@PlayGameActivity)
         if (arra[index] == null) {
@@ -198,30 +198,24 @@ class PlayGameActivity : BaseActivity<ActivityPlayGameBinding>(TAG = "게임 플
         val arra = arrayOfNulls<Int>(6)
         if (game.gameResult?.one != null) {
             arra.set(0, game.gameResult?.one!!)
-            Log.d("abcd","arra 0 is : ${arra[0]}")
         }
         if(game.gameResult?.two != null) {
             arra.set(1, game.gameResult?.two!!)
-            Log.d("abcd","arra 1 is : ${arra[1]}")
         }
         if (game.gameResult?.three != null) {
             arra.set(2, game.gameResult?.three!!)
-            Log.d("abcd","arra 2 is : ${arra[2]}")
         }
         if (game.gameResult?.four != null) {
             arra.set(3, game.gameResult?.four!!)
-            Log.d("abcd","arra 3 is : ${arra[3]}")
         }
         if (game.gameResult?.five != null) {
             arra.set(4, game.gameResult?.five!!)
-            Log.d("abcd","arra 4 is : ${arra[4]}")
         }
         if (game.gameResult?.six != null) {
             arra.set(5, game.gameResult?.six!!)
-            Log.d("abcd","arra 5 is : ${arra[5]}")
         }
 
-        Log.d("abcd","arra is : ${arra.toString()}")
+        Log.d("abcd","arra is : arra[0] : ${arra[0]}, arra[1] : ${arra[1]}, arra[2] : ${arra[2]}, arra[3] : ${arra[3]}, arra[4] : ${arra[4]}, arra[5] : ${arra[5]}")
         return arra
     }
     /** 버튼 처리 */
