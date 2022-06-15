@@ -12,7 +12,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="- cloud function, scheduler, gameCount update 0 완료">
+    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="- game 수정 완료 &#10;&#10;arra[index] =&gt; index">
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.bin" afterDir="false" />
@@ -24,8 +24,9 @@
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/game/PlayGameActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/game/PlayGameActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/GameFrag.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/GameFrag.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/repo/GameRepo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/repo/GameRepo.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/mainViewmodel/GameViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/mainViewmodel/GameViewModel.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -277,13 +278,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1644196360722</updated>
-    </task>
-    <task id="LOCAL-00013" summary="firebase, homefragment, recyclerview">
-      <created>1646129815003</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1646129815003</updated>
     </task>
     <task id="LOCAL-00014" summary="datastore">
       <created>1646274062354</created>
@@ -621,7 +615,14 @@
       <option name="project" value="LOCAL" />
       <updated>1655105584105</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="- game 수정 완료 &#10;&#10;arra[index] =&gt; index">
+      <created>1655253257831</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1655253257832</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -650,7 +651,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="채팅 fragment&#10;문제 4/12&#10;1. 메세지 삭제 처리 및 신규메세지 처리&#10;2. image 처리" />
     <MESSAGE value="채팅 fragment&#10;완료&#10;&#10;1. 메세지 update 처리&#10;&#10;문제 4/12&#10;1. 메세지 삭제 처리 및 신규메세지 처&#10;2. image 처리" />
     <MESSAGE value="채팅 fragment&#10;&#10;- 채팅 메세지 보내기" />
     <MESSAGE value="채팅 fragment&#10;&#10;- 휴대폰인증(register) 후에 CheckActivity.kt로 넘어감" />
@@ -675,6 +675,7 @@
     <MESSAGE value="- 게임 완료." />
     <MESSAGE value="- 게임 수정 (버튼 만들기)" />
     <MESSAGE value="- cloud function, scheduler, gameCount update 0 완료" />
-    <option name="LAST_COMMIT_MESSAGE" value="- cloud function, scheduler, gameCount update 0 완료" />
+    <MESSAGE value="- game 수정 완료 &#10;&#10;arra[index] =&gt; index" />
+    <option name="LAST_COMMIT_MESSAGE" value="- game 수정 완료 &#10;&#10;arra[index] =&gt; index" />
   </component>
 </project>

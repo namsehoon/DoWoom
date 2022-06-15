@@ -92,7 +92,7 @@ class GameRepo : repo {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+                    Log.d("abcd","getGameList - error : "+error.message)
                 }
             })
         }
@@ -175,13 +175,13 @@ class GameRepo : repo {
                         }
 
                         override fun onCancelled(error: DatabaseError) {
-                            Log.d("abcd","error in gameRepo present is : ${error.message}")
+                            Log.d("abcd","getGameResult - 선물 - error  is : ${error.message}")
                         }
                     })
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Log.d("abcd","error in gameRepo result is : ${error.message}")
+                    Log.d("abcd","getGameResult - 게임결과 - error is : ${error.message}")
                 }
 
             })
@@ -213,23 +213,45 @@ class GameRepo : repo {
         return mutableData
     }
 
-    /** 게임 카운트 차감  */
+    /** 게임 카운트 차감  및 게임 leftCount 차감*/
 
-    suspend fun addGameCount() {
+    suspend fun addGameCount(gameuid:String) {
         CoroutineScope(Dispatchers.IO).launch {
             rootRef.child("GameCount").child(auth.uid).child("count").setValue(ServerValue.increment(1))
+            ladderRef.child(gameuid).child("leftCount").setValue(ServerValue.increment(-1))
         }
     }
 
     /** 게임 결과 삭제 및 leftcount 줄이기 -1 */
 
     suspend fun deleteResult(gameId: String,result: String) {
+
         CoroutineScope(Dispatchers.IO).launch {
-            ladderRef.child(gameId).child("gameResult").child(result).setValue(null)
-                .addOnCompleteListener{
-                    ladderRef.child(gameId).child("leftCount").setValue(ServerValue.increment(-1))
-                    Log.d("abcd","게임 삭제완료 ${gameId} , result : ${result}")
+
+            ladderRef.child(gameId).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(game: DataSnapshot) {
+                    if (game.exists()) {
+                        Log.d("abcd","delte result snapshot.ref is : ${game.ref}")
+                        Log.d("abcd","has child is : "+game.hasChild("gameResult/"))
+                        val gameData = game.getValue(GameModel::class.java)
+                        //아직 남아있는 게임이 있으면 해당 선물만 삭제
+                        game.ref.child("gameResult").child(result).setValue(null)
+                            .addOnCompleteListener{
+                                //성공 시, 게임 데이터 가져와서 leftCount가 0인지 확인
+                                if (gameData?.leftCount == 0) {
+                                    //만약, 0이라면, 게임 없애기
+                                    game.ref.removeValue().addOnCompleteListener { Log.d("abcd","게임이 삭제 되었습니다.") }
+                                    // 결과 삭제
+                                    resultRef.child(gameId).removeValue().addOnCompleteListener { Log.d("abcd","결과가 삭제 되었습니다.") }
+                                }
+                                Log.d("abcd","게임 삭제완료 ${gameId} , result : ${result}")
+                            }
+                    }
                 }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d("abcd"," deleteResult error is : ${error.message}")
+                }
+            })
         }
     }
 }

@@ -81,7 +81,7 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
                     alertDialog.onOkClickListener(object :CustomAlertDialog.onDialogCustomListener {
                         override fun onClicked() {
                             //유저의 게임 카운터를 +1
-                            viewModel.addGameCount()
+                            viewModel.addGameCount(game.gameUid!!)
                             context?.startActivity(intent)
                         }
 

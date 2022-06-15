@@ -45,9 +45,9 @@ class GameViewModel : ViewModel() {
 
     }
 
-    fun addGameCount() {
+    fun addGameCount(gameuid:String) {
         viewModelScope.launch {
-            gameRepo.addGameCount()
+            gameRepo.addGameCount(gameuid)
         }
     }
 
