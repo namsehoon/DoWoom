@@ -12,7 +12,7 @@ import com.example.dowoom.databinding.ChooseMultiImageBinding
 import com.example.dowoom.databinding.ItemGameBinding
 import com.example.dowoom.databinding.ReceivemsgItemBinding
 
-class MultiImageAdapter(var uriList: ArrayList<Uri>,val context: Context, val deleteClicked:(Uri , position:Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
+class MultiImageAdapter(var uriList: MutableList<Uri>,val context: Context, val deleteClicked:(Uri , position:Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

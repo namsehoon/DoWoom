@@ -65,7 +65,6 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
                 val intent = Intent(context, PlayGameActivity::class.java)
 
                 intent.putExtra("gameId",game.gameUid)
-                Log.d("abcd","gameId is : ${game.gameUid}")
                 //현재 이용한 사용자 수
                 intent.putExtra("leftCount",game.leftCount)
                 //방 활성화

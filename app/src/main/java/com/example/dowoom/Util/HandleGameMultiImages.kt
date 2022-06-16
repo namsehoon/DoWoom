@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HandleGameMultiImages(val uriList:ArrayList<Uri>) {
+class HandleGameMultiImages(val uriList:MutableList<Uri>) {
 
 
     private val storage = FirebaseStorage.getInstance().reference
