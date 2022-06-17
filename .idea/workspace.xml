@@ -12,24 +12,29 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="- 사진 선택기 라이브러리 (Matisse) 사용">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/childFragments/ComuGuest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/childFragments/ComuGuestViewModel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/childFragments/ComuUser.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/childFragments/ComuUserViewModel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/childFragments/CumuBest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/childFragments/CumuBestViewModel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/comu_guest_fragment.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/comu_user_fragment.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/cumu_best_fragment.xml" afterDir="false" />
+    <list default="true" id="7c647d0f-d89e-46a3-b213-f4c2516fbad5" name="Default Changelist" comment="- 커뮤니티 게시판 child fragments (변경 가능성 다분)">
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/jarAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/javaCompile/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/game/CreateGameActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/activity/game/CreateGameActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/ComuFrag.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/ComuFrag.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/childFragments/ComuUser.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/childFragments/ComuHumor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/childFragments/CumuBest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/fragments/childFragments/ComuBest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/comuChildViewModel/ComuUserViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/comuChildViewModel/ComuHumorViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/comuChildViewModel/CumuBestViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/dowoom/viewmodel/comuChildViewModel/ComuBestViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/comu_fragment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/comu_fragment.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/comu_user_fragment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/comu_humor_fragment.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/cumu_best_fragment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/comu_best_fragment.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,11 +170,11 @@
       <recent name="com.example.dowoom.viewmodel.registerViewmodel" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.example.dowoom.viewmodel.comuChildViewModel" />
+      <recent name="com.example.dowoom.fragments.childFragments" />
       <recent name="com.example.dowoom.Util" />
       <recent name="com.example.dowoom.activity.register" />
       <recent name="com.example.dowoom.viewmodel.registervm" />
-      <recent name="com.example.dowoom.viewmodel" />
-      <recent name="com.example.dowoom" />
     </key>
     <key name="android.template.-1806127349">
       <recent name="com.example.dowoom.activity.game" />
@@ -281,13 +286,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1644196360722</updated>
-    </task>
-    <task id="LOCAL-00016" summary="check activity viewmodel, repo, get query">
-      <created>1646471529319</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1646471529319</updated>
     </task>
     <task id="LOCAL-00017" summary="git">
       <created>1646647150181</created>
@@ -625,7 +623,14 @@
       <option name="project" value="LOCAL" />
       <updated>1655346626892</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="- 커뮤니티 게시판 child fragments (변경 가능성 다분)">
+      <created>1655426011103</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1655426011103</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -654,7 +659,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="채팅 fragment&#10;&#10;- 휴대폰인증(register) 후에 CheckActivity.kt로 넘어감" />
     <MESSAGE value="CheckActivity.kt&#10;&#10;- 프로필 이미지 업데이트" />
     <MESSAGE value="CheckActivity.kt&#10;&#10;- progress dialog" />
     <MESSAGE value="- 홈 레이아웃 수정, image처리 완료&#10;- 메세지 업데이트, 삭제, &#10;- 채팅룸 lastmessage, timestamp 업데이트&#10;&#10;문제 : 채팅룸 업데이트가 두번 됨.." />
@@ -679,6 +683,7 @@
     <MESSAGE value="- game 수정 완료 &#10;&#10;arra[index] =&gt; index" />
     <MESSAGE value="- game 삭제 완료" />
     <MESSAGE value="- 사진 선택기 라이브러리 (Matisse) 사용" />
-    <option name="LAST_COMMIT_MESSAGE" value="- 사진 선택기 라이브러리 (Matisse) 사용" />
+    <MESSAGE value="- 커뮤니티 게시판 child fragments (변경 가능성 다분)" />
+    <option name="LAST_COMMIT_MESSAGE" value="- 커뮤니티 게시판 child fragments (변경 가능성 다분)" />
   </component>
 </project>

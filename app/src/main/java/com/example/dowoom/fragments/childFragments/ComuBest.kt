@@ -7,26 +7,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.dowoom.R
-import com.example.dowoom.viewmodel.comuChildViewModel.ComuUserViewModel
+import com.example.dowoom.viewmodel.comuChildViewModel.ComuBestViewModel
 
-class ComuUser : Fragment() {
+class ComuBest : Fragment() {
 
     companion object {
-        fun newInstance() = ComuUser()
+        fun newInstance() = ComuBest()
     }
 
-    private lateinit var viewModel: ComuUserViewModel
+    private lateinit var viewModel: ComuBestViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.comu_user_fragment, container, false)
+        return inflater.inflate(R.layout.comu_best_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ComuUserViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ComuBestViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

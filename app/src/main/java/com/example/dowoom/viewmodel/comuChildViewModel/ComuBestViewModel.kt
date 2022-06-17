@@ -2,6 +2,6 @@ package com.example.dowoom.viewmodel.comuChildViewModel
 
 import androidx.lifecycle.ViewModel
 
-class ComuUserViewModel : ViewModel() {
+class ComuBestViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }
