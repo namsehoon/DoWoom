@@ -79,6 +79,9 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
                 R.id.rbFasterGame -> {
                     whatKindGame = FASTER_GAME
                 }
+                else -> {
+                    whatKindGame = LADDER_GAME
+                }
             }
         }
 
@@ -170,14 +173,18 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
         if (requestCode == CHOOSE_IMAGES && resultCode == RESULT_OK) {
                     uriList = Matisse.obtainResult(data)
 
-                    //adapter 설정
-                    adapter = MultiImageAdapter(uriList, this@CreateGameActivity, deleteClicked =  { uri, position ->
-                        uriList.remove(uri)
-                        adapter.notifyItemRemoved(position)
-                    })
-                    binding.rvChoiceImage.adapter = adapter
-                    binding.rvChoiceImage.layoutManager = LinearLayoutManager(this@CreateGameActivity, LinearLayoutManager.HORIZONTAL,true)
+                    if (uriList.isEmpty()) { //만약 사진이 한장도 없다면,,
+                        Toast.makeText(this@CreateGameActivity,"사진을 선택 해주세요.",Toast.LENGTH_SHORT).show()
+                    } else {
+                        //adapter 설정
+                        adapter = MultiImageAdapter(uriList, this@CreateGameActivity, deleteClicked =  { uri, position ->
+                            uriList.remove(uri)
+                            adapter.notifyItemRemoved(position)
+                        })
+                        binding.rvChoiceImage.adapter = adapter
+                        binding.rvChoiceImage.layoutManager = LinearLayoutManager(this@CreateGameActivity, LinearLayoutManager.HORIZONTAL,true)
 
+                    }
         }
     }
 }
