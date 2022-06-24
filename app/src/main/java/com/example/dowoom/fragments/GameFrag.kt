@@ -1,13 +1,11 @@
 package com.example.dowoom.fragments
 
 import android.content.Intent
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,22 +13,9 @@ import com.example.dowoom.viewmodel.mainViewmodel.GameViewModel
 import com.example.dowoom.R
 import com.example.dowoom.Util.CustomAlertDialog
 import com.example.dowoom.activity.game.CreateGameActivity
-import com.example.dowoom.activity.game.LadderGame
 import com.example.dowoom.activity.game.PlayGameActivity
-import com.example.dowoom.adapter.ChatRoomAdapter
 import com.example.dowoom.adapter.GameAdapter
 import com.example.dowoom.databinding.GameFragmentBinding
-import com.example.dowoom.model.ChatRoom
-import com.example.dowoom.model.GameModel
-import com.example.dowoom.viewmodel.gameViewmodel.GamePlayViewModel
-import com.example.dowoom.viewmodel.mainViewmodel.HomeViewModel
-import com.google.android.gms.tasks.Tasks
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 //게임 프레그먼트
 class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fragment) {

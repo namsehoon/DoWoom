@@ -1,20 +1,10 @@
 package com.example.dowoom.viewmodel.chatviewmodel
 
 import android.util.Log
-import androidx.databinding.ObservableField
 import androidx.lifecycle.*
-import com.example.dowoom.model.Message
-import com.example.dowoom.model.UserChat
+import com.example.dowoom.model.talkModel.Message
 import com.example.dowoom.repo.ChatRepo
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import kotlin.time.Duration.Companion.days
 
 class ChatViewmodel : ViewModel() {
 

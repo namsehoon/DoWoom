@@ -6,15 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.dowoom.R
 import com.example.dowoom.databinding.ItemTalkBinding
-import com.example.dowoom.model.ChatRoom
+import com.example.dowoom.model.talkModel.ChatRoom
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
-class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Unit, val chatClicked:(ChatRoom,position:Int) -> Unit) : RecyclerView.Adapter<ChatRoomAdapter.ChatRoomViewHolder>() {
+class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Unit, val chatClicked:(ChatRoom, position:Int) -> Unit) : RecyclerView.Adapter<ChatRoomAdapter.ChatRoomViewHolder>() {
 
     //유저
     var chatRooms = mutableListOf<ChatRoom>()

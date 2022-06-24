@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dowoom.R
 import com.example.dowoom.databinding.ItemGameBinding
-import com.example.dowoom.databinding.ItemTalkBinding
-import com.example.dowoom.model.GameModel
+import com.example.dowoom.model.gameModel.GameModel
 
 class GameAdapter(val context: Context,val goIntoGameRoom:(GameModel) -> Unit) : RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
 

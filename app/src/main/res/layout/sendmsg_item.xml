@@ -4,7 +4,7 @@
 
         <variable
             name="item"
-            type="com.example.dowoom.model.Message" />
+            type="com.example.dowoom.model.talkModel.Message" />
 
     </data>
 

@@ -1,13 +1,8 @@
 package com.example.dowoom.viewmodel.mainViewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import com.example.dowoom.model.ChatRoom
-import com.example.dowoom.repo.ChatRepo
+import com.example.dowoom.retrofit.GezipRepo
 
-class ComuViewModel : ViewModel() {
-
+class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
 
 }

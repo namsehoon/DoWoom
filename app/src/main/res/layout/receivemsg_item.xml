@@ -4,11 +4,11 @@
 
         <variable
             name="item"
-            type="com.example.dowoom.model.Message" />
+            type="com.example.dowoom.model.talkModel.Message" />
 
         <variable
             name="member"
-            type="com.example.dowoom.model.Member" />
+            type="com.example.dowoom.model.talkModel.Member" />
 
     </data>
 

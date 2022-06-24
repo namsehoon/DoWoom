@@ -7,9 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.dowoom.R
+import com.example.dowoom.databinding.ComuHumorFragmentBinding
+import com.example.dowoom.databinding.GameFragmentBinding
+import com.example.dowoom.fragments.BaseFragment
 import com.example.dowoom.viewmodel.comuChildViewModel.ComuHumorViewModel
 
-class ComuHumor : Fragment() {
+class ComuHumor : BaseFragment<ComuHumorFragmentBinding>("유머게시판", R.layout.comu_humor_fragment) {
 
     companion object {
         fun newInstance() = ComuHumor()

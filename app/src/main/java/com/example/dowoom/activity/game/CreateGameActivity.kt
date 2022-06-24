@@ -1,11 +1,8 @@
 package com.example.dowoom.activity.game
 
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
@@ -23,8 +20,6 @@ import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.adapter.MultiImageAdapter
 import com.example.dowoom.databinding.ActivityCreateGameBinding
 
-import com.example.dowoom.model.Present
-import com.example.dowoom.model.User
 import com.example.dowoom.viewmodel.gameViewmodel.GameCreateViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.zhihu.matisse.Matisse
@@ -33,7 +28,6 @@ import com.zhihu.matisse.engine.impl.GlideEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임생성", R.layout.activity_create_game) {
 

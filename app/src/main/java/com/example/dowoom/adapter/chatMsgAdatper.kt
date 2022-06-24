@@ -2,34 +2,18 @@ package com.example.dowoom.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dowoom.R
-import com.example.dowoom.Util.CustomAlertDialog
-import com.example.dowoom.databinding.DeletemsgBinding
-import com.example.dowoom.databinding.ItemTalkBinding
 import com.example.dowoom.databinding.ReceivemsgItemBinding
 import com.example.dowoom.databinding.SendmsgItemBinding
-import com.example.dowoom.model.ChatRoom
-import com.example.dowoom.model.Member
-import com.example.dowoom.model.Message
+import com.example.dowoom.model.talkModel.Message
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.MutableData
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import java.io.FileNotFoundException
-import java.io.InputStream
-import kotlin.system.measureTimeMillis
 
 class chatMsgAdatper(val context: Context,
                      val msgClicked:(Message, position:Int) -> Unit

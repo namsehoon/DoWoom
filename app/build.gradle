@@ -99,4 +99,9 @@ dependencies {
     //firebase app check
     //todo 설정해야함
     implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta06'
+
+    //retrofit
+    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
+
 }

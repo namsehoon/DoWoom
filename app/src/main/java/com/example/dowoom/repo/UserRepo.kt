@@ -1,15 +1,10 @@
 package com.example.dowoom.repo
 
 import android.util.Log
-import androidx.datastore.preferences.protobuf.StructOrBuilder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.distinctUntilChanged
-import com.example.dowoom.activity.main.MainActivity
-import com.example.dowoom.model.Connect
-import com.example.dowoom.model.GameCount
+import com.example.dowoom.model.gameModel.GameCount
 import com.example.dowoom.model.User
-import com.example.dowoom.viewmodel.registervm.LoadingViewmodel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
@@ -18,7 +13,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlin.coroutines.suspendCoroutine
 
 
 /**

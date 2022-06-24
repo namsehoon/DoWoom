@@ -6,7 +6,7 @@
     <data>
         <variable
             name="chatItem"
-            type="com.example.dowoom.model.ChatRoom" />
+            type="com.example.dowoom.model.talkModel.ChatRoom" />
 
     </data>
     <LinearLayout

@@ -2,9 +2,7 @@ package com.example.dowoom.viewmodel.gameViewmodel
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.dowoom.model.GameModel
-import com.example.dowoom.model.GameResultModel
-import com.example.dowoom.model.User
+import com.example.dowoom.model.gameModel.GameModel
 import com.example.dowoom.repo.GameRepo
 import kotlinx.coroutines.launch
 

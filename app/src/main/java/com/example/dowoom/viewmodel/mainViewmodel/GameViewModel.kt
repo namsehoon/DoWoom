@@ -6,10 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dowoom.model.GameModel
-import com.example.dowoom.model.Message
+import com.example.dowoom.model.gameModel.GameModel
 import com.example.dowoom.repo.GameRepo
-import com.example.dowoom.viewmodel.SingleLiveEvent
 import kotlinx.coroutines.launch
 
 class GameViewModel : ViewModel() {

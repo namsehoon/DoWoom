@@ -1,28 +1,21 @@
 package com.example.dowoom.activity.game
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
-import androidx.core.view.marginStart
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.example.dowoom.R
 import com.example.dowoom.Util.CustomGameDialog
 import com.example.dowoom.activity.BaseActivity
-import com.example.dowoom.databinding.ActivityCreateGameBinding
 import com.example.dowoom.databinding.ActivityPlayGameBinding
-import com.example.dowoom.model.GameModel
-import com.example.dowoom.model.GameResultModel
-import com.example.dowoom.viewmodel.gameViewmodel.GameCreateViewModel
+import com.example.dowoom.model.gameModel.GameModel
 import com.example.dowoom.viewmodel.gameViewmodel.GamePlayViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -185,7 +178,7 @@ class PlayGameActivity : BaseActivity<ActivityPlayGameBinding>(TAG = "게임 플
     }
 
     /** 버튼 생성 */
-    private fun createBtn(game:GameModel) {
+    private fun createBtn(game: GameModel) {
         val arra = getGameArray(game)
 
         for (index in 0..5) {
@@ -194,7 +187,7 @@ class PlayGameActivity : BaseActivity<ActivityPlayGameBinding>(TAG = "게임 플
     }
 
     /** 게임 선택 박스 배열 */
-    private fun getGameArray(game:GameModel) : Array<Int?> {
+    private fun getGameArray(game: GameModel) : Array<Int?> {
         val arra = arrayOfNulls<Int>(6)
         if (game.gameResult?.one != null) {
             arra.set(0, game.gameResult?.one!!)

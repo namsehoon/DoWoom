@@ -9,6 +9,10 @@
         <variable
             name="vm"
             type="com.example.dowoom.viewmodel.mainViewmodel.ComuViewModel" />
+
+        <variable
+            name="comuModel"
+            type="com.example.dowoom.model.comunityModel.ComuModel" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,15 +55,26 @@
 
         </LinearLayout>
 
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/childFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toTopOf="@+id/tabLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarMain">
-        </androidx.fragment.app.FragmentContainerView>
+           <androidx.recyclerview.widget.RecyclerView
+               android:id="@+id/rvComuList"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:layout_marginVertical="8dp"
+               tools:listitem="@layout/comu_items" />
+       </LinearLayout>
+
+<!--                <androidx.fragment.app.FragmentContainerView-->
+<!--            android:id="@+id/childFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/tabLayout"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/toolbarMain">-->
+<!--        </androidx.fragment.app.FragmentContainerView>-->
 </LinearLayout>
 </layout>

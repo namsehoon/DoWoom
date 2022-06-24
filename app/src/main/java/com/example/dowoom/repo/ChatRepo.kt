@@ -1,34 +1,18 @@
 package com.example.dowoom.repo
 
 import android.util.Log
-import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import com.example.dowoom.Util.HandleImage
-import com.example.dowoom.adapter.chatMsgAdatper
-import com.example.dowoom.model.ChatRoom
-import com.example.dowoom.model.Message
+import com.example.dowoom.model.talkModel.ChatRoom
+import com.example.dowoom.model.talkModel.Message
 import com.example.dowoom.model.User
-import com.example.dowoom.model.UserChat
-import com.example.dowoom.viewmodel.registervm.LoadingViewmodel
+import com.example.dowoom.model.talkModel.UserChat
+import com.example.dowoom.model.talkModel.Member
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
-import java.lang.reflect.Member
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class ChatRepo : repo {
 
@@ -97,7 +81,7 @@ class ChatRepo : repo {
             talkRef.child(chatId).child("member").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     Log.d("abcd", "checkChatRoomMemberOneNull ref is : ${snapshot.ref}")
-                    val mem = snapshot.getValue(com.example.dowoom.model.Member::class.java)
+                    val mem = snapshot.getValue(Member::class.java)
                     _memberResult.value = mem?.user2 == null || mem.user1 == null
                 }
 
@@ -139,7 +123,7 @@ class ChatRepo : repo {
     /** 채팅방 삭제 */
     suspend fun deleteChatRoom(
         chatId: String,
-        member: com.example.dowoom.model.Member,
+        member: Member,
     ) {
         //각 사용자가 대화방 나갈 때
         CoroutineScope(Dispatchers.IO).launch {
@@ -503,7 +487,7 @@ class ChatRepo : repo {
 
             val time = System.currentTimeMillis()/1000
 
-            val member = com.example.dowoom.model.Member(myUid, user.uid)
+            val member = Member(myUid, user.uid)
             val chatRoom = ChatRoom(user.profileImg,user.uid ,user.nickname, "안녕하세요.", time, false, chatId, member)
             val myUserChat = UserChat(chatId!!, myUid, user.uid)
 

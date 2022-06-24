@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.dowoom.R
+import com.example.dowoom.databinding.ComuHumorFragmentBinding
+import com.example.dowoom.fragments.BaseFragment
 import com.example.dowoom.viewmodel.comuChildViewModel.ComuBestViewModel
 
-class ComuBest : Fragment() {
+class ComuBest : BaseFragment<ComuHumorFragmentBinding>("베스트", R.layout.comu_best_fragment){
 
     companion object {
         fun newInstance() = ComuBest()

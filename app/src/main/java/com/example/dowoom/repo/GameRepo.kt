@@ -3,8 +3,9 @@ package com.example.dowoom.repo
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.dowoom.activity.game.CreateGameActivity
-import com.example.dowoom.model.*
+import com.example.dowoom.model.gameModel.GameCount
+import com.example.dowoom.model.gameModel.GameModel
+import com.example.dowoom.model.gameModel.GameResultModel
 import com.google.firebase.database.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
