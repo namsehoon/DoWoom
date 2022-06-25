@@ -59,7 +59,6 @@ class ComuAdapter(val context: Context
         viewHolder.comuBinding.tvComentCount.text = comu.commentCount.toString() ?: "카운터없음"
         viewHolder.comuBinding.tvContentTitle.text = comu.title ?: "타이틀없음"
         viewHolder.comuBinding.tvNickname.text = comu.creator ?: "닉없음"
-        viewHolder.comuBinding.tvUploadTime.text = comu.timestamp.toString() ?: "타임없음"
 
         //메세지 삭제
 

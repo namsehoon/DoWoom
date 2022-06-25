@@ -23,14 +23,22 @@ class GezipRepo {
                 if (!response.isSuccessful) {
                     Log.d("abcd","실패")
                 } else {
+
                     try {
                         val html = response.body()?.string()
                         val document = Jsoup.parse(html)
 
-                        val contentData : Elements = document.select(".list-body").select("li")
+                        val contentData : Elements = document.select(".list-board").select("li")
                         for (content in contentData) {
-                            val title = content.select("a").first().ownText()
-                            Log.d("abcd","content is : ${title}")
+                            if (!content.select(".member").get(0).text().equals("개집왕")) {
+                                val title = content.select("a").first().ownText()
+                                val kindOf = 1
+                                val creator = content.select(".member").get(0).text()
+                                val contentLocation = content.select(".item-subject").attr("href").replace("https://www.gezip.net/bbs/board.php?bo_table=realtime&wr_id=", "").split("&")[0]
+//                                val timestamp = content.select(".wr-date").text() // 시간 필요하나?..
+                                Log.d("abcd","title is : ${title} , ${creator}, ${contentLocation}")
+                            }
+
                         }
 
 

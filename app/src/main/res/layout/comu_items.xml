@@ -54,18 +54,17 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:gravity="center|start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="글쓴이 : "/>
+                <TextView
                     android:id="@+id/tvNickname"
                     android:gravity="center|start"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="삼매경"/>
-                <TextView
-                    android:id="@+id/tvUploadTime"
-                    android:gravity="center|start"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
-                    android:text="12:00"/>
+                    android:text="삼매경"/>
 
 
             </LinearLayout>
