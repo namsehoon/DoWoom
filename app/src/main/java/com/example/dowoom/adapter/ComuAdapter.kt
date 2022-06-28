@@ -56,7 +56,7 @@ class ComuAdapter(val context: Context
 
         val viewHolder = holder as ComuHolder
 
-        viewHolder.comuBinding.tvComentCount.text = comu.commentCount.toString() ?: "카운터없음"
+//        viewHolder.comuBinding.tvComentCount.text = comu.commentCount.toString() ?: "카운터없음"
         viewHolder.comuBinding.tvContentTitle.text = comu.title ?: "타이틀없음"
         viewHolder.comuBinding.tvNickname.text = comu.creator ?: "닉없음"
 

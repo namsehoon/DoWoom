@@ -1,13 +1,19 @@
 package com.example.dowoom.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
+import com.example.dowoom.Util.CustomAlertDialog
+import com.example.dowoom.activity.game.PlayGameActivity
 import com.example.dowoom.adapter.ComuAdapter
+import com.example.dowoom.adapter.GameAdapter
 import com.example.dowoom.databinding.ComuFragmentBinding
 import com.example.dowoom.factory.ComuViewModelFactory
 import com.example.dowoom.fragments.childFragments.ComuGuest
@@ -17,6 +23,7 @@ import com.example.dowoom.retrofit.GezipRepo
 import com.example.dowoom.viewmodel.mainViewmodel.ComuViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
@@ -29,6 +36,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         fun newInstance() = ComuFrag()
     }
     private val repository = GezipRepo()
+    @ExperimentalCoroutinesApi
     private val viewModel:ComuViewModel by viewModels { ComuViewModelFactory(repository)}
     //adapter
     private lateinit var adapter: ComuAdapter
@@ -45,6 +53,9 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         binding.vm = viewModel
         binding.lifecycleOwner = requireActivity()
 
+        viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
+            adapter.setContents(it)
+        })
     }
 
     //버튼 리스너, recyclerview 어뎁터
@@ -57,11 +68,13 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         binding.rvComuList.layoutManager = LinearLayoutManager(this.context)
         binding.rvComuList.adapter = adapter
 
+
+
         binding.tvHumor.setOnClickListener(this@ComuFrag)
         binding.tvBest.setOnClickListener(this@ComuFrag)
         binding.tvGuest.setOnClickListener(this@ComuFrag)
 
-        val ge = GezipRepo().loadGezipNotice(1,this@ComuFrag)
+
 
     }
 
