@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import com.example.dowoom.fragments.ComuFrag
 import com.example.dowoom.fragments.childFragments.ComuHumor
 import com.example.dowoom.model.comunityModel.ComuModel
+import com.example.dowoom.model.comunityModel.ContentModel
 import com.example.dowoom.model.comunityModel.Gezip
 import com.example.dowoom.model.gameModel.GameModel
 import com.google.android.gms.tasks.Task
@@ -48,53 +49,49 @@ class GezipRepo {
     //해당 페이지에 대한 '유머 리스트 가져오기'
     fun loadGezipNotice(page:Int) : kotlinx.coroutines.flow.Flow<ComuModel> = flow {
 
-        val humorList = mutableListOf<ComuModel>()
-
-
+         val humorList = mutableListOf<ComuModel>()
             //페이지 + get 요청
-            val call = GezipClient.service.loadNotice(page.toString())
+            val call = GezipClient.service.loadPage(page.toString())
+         Log.d("abcd","loadGezipNotice - 유머리스트 가져오기")
 
-            var comuModel:ComuModel? = null
+         call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (!response.isSuccessful) {
+                    Log.d("abcd","실패")
+                } else {
 
-             call.enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    if (!response.isSuccessful) {
-                        Log.d("abcd","실패")
-                    } else {
+                    try {
+                        val html = response.body()?.string()
+                        val document = Jsoup.parse(html)
 
-                        try {
-                            val html = response.body()?.string()
-                            val document = Jsoup.parse(html)
-
-                            val contentData : Elements = document.select(".list-board").select("li")
-                            for (content in contentData) {
-                                if (!content.select(".member").get(0).text().equals("개집왕")) {
-                                    val title = content.select("a").first().ownText()
-                                    val kindOf = 1
-                                    val creator = content.select(".member").get(0).text()
-                                    val contentLocation = content.select(".item-subject").attr("href").replace("https://www.gezip.net/bbs/board.php?bo_table=realtime&wr_id=", "").split("&")[0]
+                        val contentData : Elements = document.select(".list-board").select("li")
+                        for (content in contentData) {
+                            if (!content.select(".member").get(0).text().equals("개집왕")) {
+                                val title = content.select("a").first().ownText()
+                                val kindOf = 1
+                                val creator = content.select(".member").get(0).text()
+                                val contentLocation = content.select(".item-subject").attr("href").replace("https://www.gezip.net/bbs/board.php?bo_table=realtime&wr_id=", "").split("&")[0]
+                                val contentNumber = content.select(".wr-num").get(0).text()
 //                                val timestamp = content.select(".wr-date").text() // 시간 필요하나?..
-                                    comuModel = ComuModel(title,kindOf,null,creator,false,contentLocation)
-                                    humorList.add(comuModel!!)
-                                }
-
-
+                                val comuModel = ComuModel(contentNumber,title,kindOf,null,creator,false,contentLocation)
+                                humorList.add(comuModel)
                             }
-
-                        }catch (e: Exception) {
-                            e.printStackTrace()
                         }
-                        Log.d("abcd","성공")
+
+                    }catch (e: Exception) {
+                        e.printStackTrace()
                     }
-
+                    Log.d("abcd","성공")
                 }
 
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Log.d("abcd","retrofit failed error : ${t.message}")
-                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d("abcd","retrofit failed error : ${t.message}")
+            }
 
 
-            })
+        })
         //todo: 계속 while문이 돌면 위험한디.. job/join?.. async/await?.
         while (humorList.isEmpty()) {
             delay(100)
@@ -104,10 +101,44 @@ class GezipRepo {
             Log.d("Abcd","h is : ${h}")
             emit(h)
         }
+    }
+
+    //자료 가져오기
+    fun loadGezipContent(content:String) {
+        val humorList = mutableListOf<ContentModel>()
+        //페이지 + get 요청
+        val call = GezipClient.service.loadContent(content.toString())
+
+        var comuModel:ComuModel? = null
+
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (!response.isSuccessful) {
+                    Log.d("abcd","실패")
+                } else {
+
+                    try {
+                        val html = response.body()?.string()
+                        val document = Jsoup.parse(html)
+
+                        Log.d("abcd","document is : ${document.text()}")
+
+                    }catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                    Log.d("abcd","성공")
+                }
+
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d("abcd","retrofit failed error : ${t.message}")
+            }
 
 
+        })
 
-        }
+    }
 
 
 

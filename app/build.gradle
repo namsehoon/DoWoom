@@ -67,7 +67,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-storage-ktx'
 
-
     //MVVM 뷰모델
     kapt("androidx.lifecycle:lifecycle-compiler:2.2.0")
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
@@ -84,6 +83,7 @@ dependencies {
     //코루틴
     api  "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
     api  "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
 
     //glide
     implementation "com.github.bumptech.glide:glide:4.12.0"

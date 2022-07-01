@@ -21,25 +21,36 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
     val page = ObservableField<Int>(1)
 
 
+    init {
+       viewModelScope.launch {
+           getHumors()
+       }
+    }
+
+    /** 유머게시판 */
+
     private val _comuList = MutableLiveData<MutableList<ComuModel>>()
     val comuList: LiveData<MutableList<ComuModel>>
         get() = _comuList
 
-    init {
-        getHumors()
+    suspend fun getHumors() {
+        val data = repo.loadGezipNotice(1)
+        data
+            .onCompletion {
+            Log.d("abcd","ComuViewmodel - getHumors 로드 완료됨.")
+        }
+            .collect {
+                _comuList.value = _comuList.value?.apply { add(it) } ?: mutableListOf(it)
+            }
+
     }
 
-    fun getHumors() {
-        _comuList.value = mutableListOf()
+
+
+    /** 익명게시판 */
+    fun getGuest() {
         viewModelScope.launch {
-            val data = repo.loadGezipNotice(1)
-            data
-                .onCompletion {
-                //완료되면?
-            }
-                .collect {
-                    _comuList.value = _comuList.value?.apply { add(it) } ?: mutableListOf(it)
-                }
+
         }
     }
 }

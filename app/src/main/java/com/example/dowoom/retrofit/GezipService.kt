@@ -10,7 +10,9 @@ import retrofit2.http.Query
 interface GezipService {
     // 리스트
     @GET("board.php?bo_table=realtime") //요청 : get, 필수 파라미터
-    fun loadNotice(@Query("page") page:String) : Call<ResponseBody> //Call<> 안에 응답받을 Body 타입의 data class
+    fun loadPage(@Query("page") page:String) : Call<ResponseBody> //Call<> 안에 응답받을 Body 타입의 data class
 
     //콘텐츠
+    @GET("board.php?bo_table=realtime&")
+    fun loadContent(@Query("wr_id") content:String) : Call<ResponseBody>
 }

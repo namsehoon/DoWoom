@@ -104,8 +104,6 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
                 Log.d("abcd","gamecount in gamefrag is : ${gamecount}")
             })
         }
-
-
     }
 
 

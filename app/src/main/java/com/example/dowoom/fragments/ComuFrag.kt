@@ -8,9 +8,11 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
 import com.example.dowoom.Util.CustomAlertDialog
+import com.example.dowoom.activity.comu.GuestWriteActivity
 import com.example.dowoom.activity.game.PlayGameActivity
 import com.example.dowoom.adapter.ComuAdapter
 import com.example.dowoom.adapter.GameAdapter
@@ -53,9 +55,8 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         binding.vm = viewModel
         binding.lifecycleOwner = requireActivity()
 
-        viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
-            adapter.setContents(it)
-        })
+
+        observerData()
     }
 
     //버튼 리스너, recyclerview 어뎁터
@@ -69,12 +70,12 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         binding.rvComuList.adapter = adapter
 
 
-
         binding.tvHumor.setOnClickListener(this@ComuFrag)
         binding.tvBest.setOnClickListener(this@ComuFrag)
         binding.tvGuest.setOnClickListener(this@ComuFrag)
 
-
+        //글작성
+        binding.tvToWrite.setOnClickListener(this@ComuFrag)
 
     }
 
@@ -87,15 +88,40 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         val childManager = childFragmentManager.beginTransaction() //트랜잭션 객체 생성
         when(v?.id) {
             R.id.tvHumor -> {
+                //글작성
+                binding.llToWrite.visibility = View.GONE
+                //todo : 데이터 불러오기 1, 2, 3, 4, 5
+                viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
+                    adapter.setContents(it)
 
+                })
+                binding.rvComuList.layoutManager = LinearLayoutManager(this.context)
+                binding.rvComuList.adapter = adapter
             }
             R.id.tvBest -> {
 
-            }
-            R.id.tvGuest -> {
 
             }
+            R.id.tvGuest -> { //게스트
+                //글작성
+                binding.llToWrite.visibility = View.VISIBLE
+            }
 
+            //글작성하러가기
+            R.id.tvToWrite -> {
+                val intent = Intent(context, GuestWriteActivity::class.java)
+                context?.startActivity(intent)
+            }
+
+        }
+    }
+
+    private fun observerData() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
+                adapter.setContents(it)
+
+            })
         }
     }
 

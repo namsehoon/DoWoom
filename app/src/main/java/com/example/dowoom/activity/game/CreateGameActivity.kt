@@ -29,7 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임생성", R.layout.activity_create_game) {
+class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임생성 ac", R.layout.activity_create_game) {
 
     val viewModel: GameCreateViewModel by viewModels()
     val currentUser = FirebaseAuth.getInstance().currentUser

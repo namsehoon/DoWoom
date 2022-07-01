@@ -5,6 +5,7 @@ import com.google.firebase.database.Exclude
 
 //talk fragment
 data class ComuModel(
+    var uid:String? = null,
     var title:String? = null,
     var kindOf:Int?= null, // 베스트, 실시간게시판, 익명 중에
     var commentCount:Int? = null,
