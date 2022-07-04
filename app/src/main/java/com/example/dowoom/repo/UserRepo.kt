@@ -74,7 +74,7 @@ class userRepo {
                                     if (!getData?.uid.equals(auth?.uid) && !listData.contains(getData)) {
                                         listData.add(getData!!)
                                     }
-
+                                    listData.reverse()
                                     Log.d("abcd","listdata is empty? : ${listData.isEmpty()}")
                                     mutableData.value = listData
                                 }
@@ -110,6 +110,7 @@ class userRepo {
                                 } else {
                                     listData.remove(getData)
                                 }
+                                listData.reverse()
                                 Log.d("abcd","listdata is empty? : ${listData}")
                                 mutableData.value = listData
                             }

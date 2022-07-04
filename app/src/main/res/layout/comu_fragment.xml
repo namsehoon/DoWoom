@@ -78,12 +78,19 @@
            android:layout_width="match_parent"
            android:layout_height="match_parent">
 
-           <androidx.recyclerview.widget.RecyclerView
-               android:id="@+id/rvComuList"
+           <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+               android:id="@+id/refresh"
                android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:layout_marginVertical="8dp"
-               tools:listitem="@layout/comu_items" />
+               android:layout_height="match_parent">
+
+               <androidx.recyclerview.widget.RecyclerView
+                   android:id="@+id/rvComuList"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_marginVertical="8dp"
+                   tools:listitem="@layout/comu_items" />
+
+           </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
        </LinearLayout>
 
 <!--                <androidx.fragment.app.FragmentContainerView-->

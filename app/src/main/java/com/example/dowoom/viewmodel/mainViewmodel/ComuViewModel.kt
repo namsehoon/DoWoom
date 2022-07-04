@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.dowoom.model.comunityModel.ComuModel
 import com.example.dowoom.repo.ComuRepo
 import com.example.dowoom.retrofit.GezipRepo
+import com.example.dowoom.viewmodel.SingleLiveEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -32,6 +33,11 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
        }
     }
 
+    /** 프로세스(새로고침) */
+    private val _progress = MutableLiveData<Boolean>(true)
+    val progress: LiveData<Boolean>
+        get() = _progress
+
     /** 유머게시판 */
 
     private val _comuList = MutableLiveData<MutableList<ComuModel>>()
@@ -42,6 +48,7 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
         val data = repo.loadGezipNotice(1)
         data
             .onCompletion {
+                _progress.value = false
                 Log.d("abcd","ComuViewmodel - getHumors 로드 완료됨.")
             }
             .collect {
@@ -58,8 +65,10 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
 
     fun getGuest() {//todo: 여기서 개수 처리 하는게 나을 듯
         viewModelScope.launch {
+            _progress.value = true
             comuRepo.getGuestList().observeForever(Observer { result ->
                 _guestList.value = result
+                _progress.value = false
             })
         }
     }

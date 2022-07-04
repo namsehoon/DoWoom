@@ -17,7 +17,10 @@ import com.example.dowoom.fragments.childFragments.ComuHumor
 import com.example.dowoom.fragments.childFragments.ComuBest
 import com.example.dowoom.retrofit.GezipRepo
 import com.example.dowoom.viewmodel.mainViewmodel.ComuViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.comu_fragment), View.OnClickListener {
 
@@ -64,6 +67,8 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
         //글작성
         binding.tvToWrite.setOnClickListener(this@ComuFrag)
+
+
 
     }
 
@@ -117,6 +122,17 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 adapter.setContents(it)
 
             })
+
+            viewModel.progress.observe(viewLifecycleOwner, Observer { result ->
+                binding.refresh.isRefreshing = result
+            })
+
+            binding.refresh.setOnRefreshListener {
+                CoroutineScope(Dispatchers.Main).launch {
+                    viewModel.getHumors()
+                    viewModel.getGuest()
+                }
+            }
         }
     }
 
