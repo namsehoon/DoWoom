@@ -2,20 +2,14 @@ package com.example.dowoom.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
-import com.example.dowoom.Util.CustomAlertDialog
 import com.example.dowoom.activity.comu.GuestWriteActivity
-import com.example.dowoom.activity.game.PlayGameActivity
 import com.example.dowoom.adapter.ComuAdapter
-import com.example.dowoom.adapter.GameAdapter
 import com.example.dowoom.databinding.ComuFragmentBinding
 import com.example.dowoom.factory.ComuViewModelFactory
 import com.example.dowoom.fragments.childFragments.ComuGuest
@@ -23,13 +17,7 @@ import com.example.dowoom.fragments.childFragments.ComuHumor
 import com.example.dowoom.fragments.childFragments.ComuBest
 import com.example.dowoom.retrofit.GezipRepo
 import com.example.dowoom.viewmodel.mainViewmodel.ComuViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import org.jsoup.Jsoup
-import org.jsoup.select.Elements
-import java.lang.Exception
 
 class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.comu_fragment), View.OnClickListener {
 
@@ -92,6 +80,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 binding.llToWrite.visibility = View.GONE
                 //todo : 데이터 불러오기 1, 2, 3, 4, 5
                 viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
+                    adapter.comuList.clear()
                     adapter.setContents(it)
 
                 })
@@ -105,6 +94,12 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
             R.id.tvGuest -> { //게스트
                 //글작성
                 binding.llToWrite.visibility = View.VISIBLE
+                viewModel.guestList.observe(viewLifecycleOwner, Observer { it ->
+                    adapter.comuList.clear()
+                    adapter.setContents(it)
+                })
+                binding.rvComuList.layoutManager = LinearLayoutManager(this.context)
+                binding.rvComuList.adapter = adapter
             }
 
             //글작성하러가기

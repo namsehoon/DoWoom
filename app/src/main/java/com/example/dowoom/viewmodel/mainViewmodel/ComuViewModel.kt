@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dowoom.model.comunityModel.ComuModel
+import com.example.dowoom.repo.ComuRepo
 import com.example.dowoom.retrofit.GezipRepo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -18,12 +20,15 @@ import kotlinx.coroutines.launch
 class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
 
 
+    val comuRepo = ComuRepo()
+
     val page = ObservableField<Int>(1)
 
 
     init {
        viewModelScope.launch {
            getHumors()
+           getGuest()
        }
     }
 
@@ -37,20 +42,25 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
         val data = repo.loadGezipNotice(1)
         data
             .onCompletion {
-            Log.d("abcd","ComuViewmodel - getHumors 로드 완료됨.")
-        }
+                Log.d("abcd","ComuViewmodel - getHumors 로드 완료됨.")
+            }
             .collect {
                 _comuList.value = _comuList.value?.apply { add(it) } ?: mutableListOf(it)
             }
 
     }
 
-
-
     /** 익명게시판 */
-    fun getGuest() {
-        viewModelScope.launch {
 
+    private val _guestList = MutableLiveData<MutableList<ComuModel>>()
+    val guestList : LiveData<MutableList<ComuModel>>
+        get() = _guestList
+
+    fun getGuest() {//todo: 여기서 개수 처리 하는게 나을 듯
+        viewModelScope.launch {
+            comuRepo.getGuestList().observeForever(Observer { result ->
+                _guestList.value = result
+            })
         }
     }
 }

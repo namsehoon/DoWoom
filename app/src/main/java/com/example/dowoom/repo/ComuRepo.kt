@@ -7,6 +7,7 @@ import com.example.dowoom.model.comunityModel.Comment
 import com.example.dowoom.model.comunityModel.ComuModel
 import com.example.dowoom.model.comunityModel.ContentModel
 import com.example.dowoom.model.gameModel.GameModel
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class ComuRepo : repo {
@@ -34,9 +36,11 @@ class ComuRepo : repo {
         CoroutineScope(Dispatchers.IO).launch {
 
             guestRef.addChildEventListener(object : ChildEventListener {
-                override fun onChildAdded(guestList: DataSnapshot, previousChildName: String?) {
-                    if (guestList.exists()) {
-
+                override fun onChildAdded(guest: DataSnapshot, previousChildName: String?) {
+                    if (guest.exists()) {
+                        val getGuest = guest.getValue(ComuModel::class.java)
+                        guestList.add(getGuest!!)
+                        mutableData.value = guestList
                     }
                 }
 
@@ -69,24 +73,31 @@ class ComuRepo : repo {
             val comuUid = guestRef.push().key
             val contentUid = contentRef.push().key
 
+            //익명 게시판
             val comuModel = ComuModel(comuUid,subject,2,0,auth.uid,false, null)
+            //내용
             val contentModel = ContentModel(null,comuUid,contentUid,null,content,0,0)
 
-            val task = guestRef.child(comuUid!!).setValue(comuModel).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+            //내용 task
+            val taskTwo = contentRef.child(comuUid!!).setValue(contentModel)
+            //익게 task
+            val task = guestRef.child(comuUid).setValue(comuModel).continueWithTask { task ->
+                if (!task.isSuccessful) {
                     Log.d("abcd","ComuRepo - insertGuestWriteIn")
-                    contentRef.child(comuUid).setValue(contentModel).addOnCompleteListener {
-                        Log.d("abcd","게시판 글 작성 성공")
+                    task.exception?.let {
+                        Log.d("abcd","게시판 글 작성 실패")
+                        throw  it
                     }
-                } else {
-                    Log.d("abcd","게시판 글 작성 실패")
                 }
-
+                taskTwo
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("abcd","게시판 글 작성 성공")
+                }
             }
-            //todo :: task 관리좀 (false 뜸)
-            //todo :: task 관리좀 (false 뜸)
-            //todo :: task 관리좀 (false 뜸)
-            //todo :: task 관리좀 (false 뜸)
+
+            //todo : task 관리 해야함.. delay?.. runblocking?
+            kotlinx.coroutines.delay(500)
             if (task.isSuccessful) {
                 emit(true)
             } else {

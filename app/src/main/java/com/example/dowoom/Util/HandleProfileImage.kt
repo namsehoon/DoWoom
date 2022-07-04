@@ -30,7 +30,7 @@ class HandleProfileImage(val context: Context, val bitmap: Bitmap , val nickname
         //로그인한 유저 uid
         val uid = FirebaseAuth.getInstance().currentUser?.uid
 
-        //사진 업로드 and 위치 기억  /users/<userId>/profileImages/<image-file>
+        //사진 업로드 and 위치 기억  /users/<userId>/profileImages/uid.jpeg
         val storage = FirebaseStorage.getInstance().reference
             .child("User")
             .child(uid!!)
