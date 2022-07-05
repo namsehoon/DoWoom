@@ -18,15 +18,9 @@ import com.google.firebase.storage.StorageReference
 
 
 class ComuAdapter(val context: Context
-): RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
+, val contentClicked:(ComuModel, position:Int) -> Unit): RecyclerView.Adapter<ComuAdapter.ComuHolder>() {
 
     /** 변수 */
-
-
-    //todo : 1. 부모 프래그먼트에서 리스트 뿌릴거임 해당 버튼에 대한.
-    //todo : 2. 자식 프로그먼트에서 content 보여줄거임 (밑에 레이아웃 달아서 recyclerview 표시)
-
-
 
     // comu fragment
     var comuList = mutableListOf<ComuModel>()
@@ -43,30 +37,26 @@ class ComuAdapter(val context: Context
 
     /** implementation */
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComuAdapter.ComuHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.comu_items, parent, false)
         return ComuHolder(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ComuAdapter.ComuHolder, position: Int) {
         val comu = comuList[position]
 
 
 
-        val viewHolder = holder as ComuHolder
-
 //        viewHolder.comuBinding.tvComentCount.text = comu.commentCount.toString() ?: "카운터없음"
-            viewHolder.comuBinding.tvContentTitle.text = comu.title ?: "타이틀없음"
-            viewHolder.comuBinding.tvNickname.text = comu.creator ?: "닉없음"
+        holder.comuBinding.tvContentTitle.text = comu.title ?: "타이틀없음"
+        holder.comuBinding.tvNickname.text = comu.creator ?: "닉없음"
 
             //메세지 삭제
 
-//        viewHolder.itemView.setOnLongClickListener {
-//            msgClicked(message, position)
-//            false
-//        }
-            viewHolder.comuBinding.executePendingBindings()
-
+        holder.comuBinding.llContents.setOnClickListener {
+            contentClicked(comu, position)
+        }
+        holder.comuBinding.executePendingBindings()
 
 
 

@@ -15,8 +15,6 @@ class GameAdapter(val context: Context,val goIntoGameRoom:(GameModel) -> Unit) :
 
     var games = mutableListOf<GameModel>()
 
-
-
     // 사다리게임
     val LADDER_GAME = "사다리게임"
     // 돌림판
@@ -44,6 +42,7 @@ class GameAdapter(val context: Context,val goIntoGameRoom:(GameModel) -> Unit) :
         holder.gameBinding.tvLeftCount.text = game.leftCount.toString()
         holder.gameBinding.tvAcceptable.text = game.acceptable.toString()
         holder.gameBinding.tvGameTitle.text = game.title
+
 
         when(game.whatKindGame) {
             0 -> holder.gameBinding.tvWhatGame.text = LADDER_GAME

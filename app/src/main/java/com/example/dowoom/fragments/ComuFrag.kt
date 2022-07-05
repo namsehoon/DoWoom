@@ -2,7 +2,9 @@ package com.example.dowoom.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -55,7 +57,26 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         super.onViewCreated(view, savedInstanceState)
 
 
-        adapter = ComuAdapter(requireActivity())
+        adapter = ComuAdapter(requireActivity(), contentClicked = { comuModel, position ->
+            //자식 프로그먼트로 교체
+            Log.d("Abcd","ComuAdapter 클릭됨")
+
+            //현재 fragment recyclerview 숨기고, childfragment 보이게
+            binding.llComuList.visibility = View.GONE
+            binding.childFragment.visibility = View.VISIBLE
+
+            //child fragment에 데이터 보내기
+            humor.comuModel = comuModel
+            humor.position = position
+
+            //fragment commit
+            val childManager = childFragmentManager.beginTransaction() //트랜잭션 객체 생성
+            childManager
+                .replace(R.id.childFragment, humor)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit()
+
+        })
 
         binding.rvComuList.layoutManager = LinearLayoutManager(this.context)
         binding.rvComuList.adapter = adapter

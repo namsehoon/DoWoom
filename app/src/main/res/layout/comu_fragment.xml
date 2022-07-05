@@ -74,7 +74,19 @@
 
         </LinearLayout>
 
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/childFragment"
+            android:layout_width="match_parent"
+            android:layout_height="300sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarMain">
+        </androidx.fragment.app.FragmentContainerView>
+
        <LinearLayout
+           android:id="@+id/llComuList"
            android:layout_width="match_parent"
            android:layout_height="match_parent">
 
@@ -93,14 +105,6 @@
            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
        </LinearLayout>
 
-<!--                <androidx.fragment.app.FragmentContainerView-->
-<!--            android:id="@+id/childFragment"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/tabLayout"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/toolbarMain">-->
-<!--        </androidx.fragment.app.FragmentContainerView>-->
+
 </LinearLayout>
 </layout>
