@@ -42,6 +42,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
     var guest = ComuGuest()
 
 
+
     //관찰
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -59,22 +60,31 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
         adapter = ComuAdapter(requireActivity(), contentClicked = { comuModel, position ->
             //자식 프로그먼트로 교체
-            Log.d("Abcd","ComuAdapter 클릭됨")
+            Log.d("Abcd","부모에서 ComuAdapter 클릭됨")
 
-            //현재 fragment recyclerview 숨기고, childfragment 보이게
-            binding.llComuList.visibility = View.GONE
-            binding.childFragment.visibility = View.VISIBLE
+            binding.llComuList.visibility = View.GONE // recyclerview 숨기기
+            binding.childFragment.visibility = View.VISIBLE // child fragment 보이게
+            binding.llToWrite.visibility = View.GONE //글작성
 
             //child fragment에 데이터 보내기
             humor.comuModel = comuModel
             humor.position = position
 
-            //fragment commit
-            val childManager = childFragmentManager.beginTransaction() //트랜잭션 객체 생성
-            childManager
-                .replace(R.id.childFragment, humor)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit()
+            if (comuModel.kindOf == 1) {
+                //fragment commit
+                val childManager = childFragmentManager.beginTransaction() //트랜잭션 객체 생성
+                childManager
+                    .replace(R.id.childFragment, humor)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
+            } else {
+                //fragment commit
+                val childManager = childFragmentManager.beginTransaction() //트랜잭션 객체 생성
+                childManager
+                    .replace(R.id.childFragment, guest)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
+            }
 
         })
 
@@ -93,17 +103,12 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
     }
 
-    //자식 프로그먼트로 교체
-//    childManager
-//    .replace(R.id.childFragment, humor)
-//    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//    .commit()
     override fun onClick(v: View?) {
-        val childManager = childFragmentManager.beginTransaction() //트랜잭션 객체 생성
         when(v?.id) {
             R.id.tvHumor -> {
-                //글작성
-                binding.llToWrite.visibility = View.GONE
+                binding.llToWrite.visibility = View.GONE //글작성 버튼 숨기기
+                binding.childFragment.visibility = View.GONE //child frag 숨기기
+                binding.llComuList.visibility = View.VISIBLE
                 //todo : 데이터 불러오기 1, 2, 3, 4, 5
                 viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
                     adapter.comuList.clear()
@@ -120,6 +125,9 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
             R.id.tvGuest -> { //게스트
                 //글작성
                 binding.llToWrite.visibility = View.VISIBLE
+                binding.childFragment.visibility = View.GONE
+                binding.llComuList.visibility = View.VISIBLE
+
                 viewModel.guestList.observe(viewLifecycleOwner, Observer { it ->
                     adapter.comuList.clear()
                     adapter.setContents(it)

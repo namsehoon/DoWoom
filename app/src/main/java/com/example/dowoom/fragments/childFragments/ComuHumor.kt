@@ -7,10 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
+import com.example.dowoom.adapter.ComuAdapter
 import com.example.dowoom.databinding.ComuHumorFragmentBinding
 import com.example.dowoom.databinding.GameFragmentBinding
 import com.example.dowoom.factory.ComuViewModelFactory
@@ -36,6 +39,8 @@ class ComuHumor : BaseFragment<ComuHumorFragmentBinding>("유머게시판", R.la
     private val repository = GezipRepo()
     @ExperimentalCoroutinesApi
     private val viewModel: ComuViewModel by viewModels { ComuViewModelFactory(repository) }
+    //adapter
+    private lateinit var adapter: ComuAdapter
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -48,11 +53,23 @@ class ComuHumor : BaseFragment<ComuHumorFragmentBinding>("유머게시판", R.la
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        adapter = ComuAdapter(requireActivity(), contentClicked = { comuModel, position ->
+            //자식 프로그먼트로 교체
+            Log.d("Abcd","child에서 ComuAdapter 클릭됨")
+
+        })
+
+        binding.rvComuList.layoutManager = LinearLayoutManager(context)
+        binding.rvComuList.adapter = adapter
+
+
+
     }
     private fun observerData() {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
                 Log.d("abcd","child of child it is : ${it}")
+                adapter.setContents(it)
             })
 
         }
