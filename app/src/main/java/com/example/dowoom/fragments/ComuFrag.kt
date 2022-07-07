@@ -43,6 +43,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
 
 
+
     //관찰
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -67,24 +68,36 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
             binding.llToWrite.visibility = View.GONE //글작성
 
             //child fragment에 데이터 보내기
-            humor.comuModel = comuModel
-            humor.position = position
 
-            if (comuModel.kindOf == 1) {
-                //fragment commit
-                val childManager = childFragmentManager.beginTransaction() //트랜잭션 객체 생성
+            val childManager = childFragmentManager.beginTransaction()
+            if (comuModel.kindOf == 1) { // 유머게시판
+                Log.d("abcd", "comufrag - adapter - humor : 유머게시판으로 ")
+
+                //데이터 전송
+                humor.comuModelFromParent = comuModel
+                humor.position = position
+
+                //commit
                 childManager
                     .replace(R.id.childFragment, humor)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
-            } else {
-                //fragment commit
-                val childManager = childFragmentManager.beginTransaction() //트랜잭션 객체 생성
+
+            } else { // 익명 게시판
+                guest.comuModelFromParent = comuModel
+                guest.position = position
+                Log.d("abcd","comumodel content text is : ${comuModel.contentText}")
+                guest.contentTextFromParent = comuModel.contentText
+                Log.d("abcd", "comufrag - adapter - guest : 익명게시판으로 ")
+
+                 //트랜잭션 객체 생성
                 childManager
                     .replace(R.id.childFragment, guest)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
             }
+
+
 
         })
 
@@ -162,6 +175,11 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                     viewModel.getGuest()
                 }
             }
+
+        }
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.getHumors()
+            viewModel.getGuest()
         }
     }
 

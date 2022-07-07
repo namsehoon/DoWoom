@@ -1,6 +1,7 @@
 package com.example.dowoom.repo
 
 import android.util.Log
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dowoom.model.comunityModel.Comment
@@ -11,14 +12,12 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class ComuRepo : repo {
 
@@ -27,7 +26,7 @@ class ComuRepo : repo {
     val contentRef = rootRef.child("Content")
     val commentRef = rootRef.child("Comment")
 
-
+    /** 익명게시판 리스트 */
     fun getGuestList() : LiveData<MutableList<ComuModel>> {
 
         val mutableData = MutableLiveData<MutableList<ComuModel>>()
@@ -57,13 +56,30 @@ class ComuRepo : repo {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Log.d("abcd","")
+                    Log.d("abcd","ComuRepo - getGuestList - error : ${error}")
                 }
 
             })
         }
 
         return mutableData
+    }
+    /** 익명게시판 컨텐츠 */
+    fun getGuestContent(uid:String) : Flow<ContentModel> {
+
+        return flow {
+            val task = contentRef.child(uid).get().addOnFailureListener  { error ->
+                throw error
+            }
+
+            //todo : task 관리 해야함.. delay?.. runblocking?
+//            kotlinx.coroutines.delay(500)
+            if (task.isSuccessful) {
+                val result = task.result.getValue(ContentModel::class.java)
+                emit(result!!)
+            }
+        }
+
     }
 
     /** 게시판 글 쓰기 */
@@ -73,13 +89,11 @@ class ComuRepo : repo {
             val comuUid = guestRef.push().key
             val contentUid = contentRef.push().key
 
-            //익명 게시판
-            val comuModel = ComuModel(comuUid,subject,2,0,auth.uid,false, null)
-            //내용
-            val contentModel = ContentModel(null,comuUid,contentUid,null,content,0,0)
+            // 게시판
+            val comuModel = ComuModel(comuUid,subject,2,0,auth.uid,false, null,null,content,0,0)
 
             //내용 task
-            val taskTwo = contentRef.child(comuUid!!).setValue(contentModel)
+            val taskTwo = contentRef.child(comuUid!!).setValue(comuModel)
             //익게 task
             val task = guestRef.child(comuUid).setValue(comuModel).continueWithTask { task ->
                 if (!task.isSuccessful) {

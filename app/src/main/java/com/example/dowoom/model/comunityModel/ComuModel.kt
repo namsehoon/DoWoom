@@ -11,7 +11,11 @@ data class ComuModel(
     var commentCount:Int? = null,
     var creator:String? = null,
     var alreadySee:Boolean? = false, //만약 본거면 true 처리하면서 회색 ㄱ
-    var contentLocation:String? = null // 이미지 or gif 위치
+    var contentLocation:String? = null, // 이미지 or gif 위치
+    var contentImg:ArrayList<String>? = null, // img 있으면,,
+    var contentText:String? = null, // 익명 글
+    var recommend:Int? = null,
+    var searchCount:Int? = null,
 )
 
 
