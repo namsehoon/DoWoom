@@ -21,6 +21,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.InputStream
+import java.net.URL
+import java.net.URLConnection
 
 class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fragment) {
 
@@ -79,6 +82,8 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                 })
             }
         )
+
+
 
         binding.rvChatroom.layoutManager = LinearLayoutManager(this.context)
         binding.rvChatroom.adapter = adapter

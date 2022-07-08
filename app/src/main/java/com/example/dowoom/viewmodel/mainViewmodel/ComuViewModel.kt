@@ -61,6 +61,27 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
             }
 
     }
+    /** 유머 콘텐츠 */
+
+    private val _comuContent = MutableLiveData<ComuModel>()
+    val comuContent: LiveData<ComuModel>
+        get() = _comuContent
+
+    suspend fun getHumorContent(comuModel: ComuModel) {
+        val data = repo.loadGezipContent(comuModel = comuModel)
+        data
+            .onCompletion {
+                _progress.value = false
+                Log.d("abcd","ComuViewmodel - getHumors 로드 완료됨.")
+            }
+            .collect {
+                Log.d("abcd","viewmodel - getHumorContent : ${it} ")
+                _comuContent.value = it
+            }
+
+    }
+
+
 
     /** 익명게시판 */
 
@@ -70,16 +91,17 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
 
     fun getGuest() {//todo: 여기서 개수 처리 하는게 나을 듯
         viewModelScope.launch {
-            _progress.value = true
+            _progress.value = false
             comuRepo.getGuestList().observeForever(Observer { result ->
                 _guestList.value = result
                 if (result == null) {
-                    _progress.value = true
+                    _progress.value = false
                 }
-                _progress.value= true
+                _progress.value= false
             })
         }
     }
+
 
     /** 익명게시판 콘텐츠 가져오기 */
     private val _guestContent = MutableLiveData<ContentModel>()

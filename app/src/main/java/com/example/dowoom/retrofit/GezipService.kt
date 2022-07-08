@@ -9,10 +9,10 @@ import retrofit2.http.Query
 //개집 크롤링 인터페이스
 interface GezipService {
     // 리스트
-    @GET("board.php?bo_table=realtime") //요청 : get, 필수 파라미터
+    @GET("bbs/board.php?bo_table=realtime") //요청 : get, 필수 파라미터
     fun loadPage(@Query("page") page:String) : Call<ResponseBody> //Call<> 안에 응답받을 Body 타입의 data class
 
     //콘텐츠
-    @GET("board.php?bo_table=realtime&")
+    @GET("bbs/board.php?bo_table=realtime")
     fun loadContent(@Query("wr_id") content:String) : Call<ResponseBody>
 }
