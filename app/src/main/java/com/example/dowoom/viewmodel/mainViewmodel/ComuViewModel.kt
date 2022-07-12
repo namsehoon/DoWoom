@@ -1,5 +1,6 @@
 package com.example.dowoom.viewmodel.mainViewmodel
 
+import android.content.Context
 import android.graphics.Insets.add
 import android.os.Build
 import android.util.Log
@@ -10,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.dowoom.model.comunityModel.Comment
 import com.example.dowoom.model.comunityModel.ComuModel
 import com.example.dowoom.model.comunityModel.ContentModel
 import com.example.dowoom.repo.ComuRepo
@@ -30,13 +32,6 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
 
     val page = ObservableField<Int>(1)
 
-//
-//    init {
-//       viewModelScope.launch {
-//           getHumors()
-//           getGuest()
-//       }
-//    }
 
     /** 프로세스(새로고침) */
     private val _progress = MutableLiveData<Boolean>(true)
@@ -83,7 +78,7 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
 
 
 
-    /** 익명게시판 */
+    /** 익명게시판 콘텐츠 */
 
     private val _guestList = MutableLiveData<MutableList<ComuModel>>()
     val guestList : LiveData<MutableList<ComuModel>>
@@ -103,27 +98,27 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
     }
 
 
-    /** 익명게시판 콘텐츠 가져오기 */
-    private val _guestContent = MutableLiveData<ContentModel>()
-    val guestContent : LiveData<ContentModel>
-        get() = _guestContent
+    /** 댓글 리스트 */
 
+    private val _commentList = MutableLiveData<MutableList<Comment>>()
+    val commentList : LiveData<MutableList<Comment>>
+        get() = _commentList
 
-    private val _getFirstContent = MutableLiveData<String>()
-    val getFirstContent : LiveData<String>
-        get() = _getFirstContent
-
-    fun getGuestContent(uid:String) {
+    fun getComments(comuModel: ComuModel) {
         viewModelScope.launch {
-            comuRepo.getGuestContent(uid)
-                .onCompletion { Log.d("abcd", "ComuViewmodel - getGuestContent 로드 완료됨.") }
-                .catch { Log.d("abcd", "ComuViewmodel - getGuestContent error : ${it.message}") }
-                .collect {
-                    Log.d("abcd", "가져온 content is : ${it.contentText}")
-                    _guestContent.value = it
-                    _getFirstContent.value = it.contentText ?: ""
-                }
+            comuRepo.getComments(comuModel).observeForever(Observer {
+                _commentList.value = it
+            })
         }
     }
+
+
+    /**  댓글 추가  */
+    fun insertComment(comuModelId: String, commentText: String) {
+        viewModelScope.launch {
+            comuRepo.insertCommentWriteIn(comuModelId, commentText)
+        }
+    }
+
 
 }

@@ -10,9 +10,8 @@ import javax.net.ssl.*
 
 
 class HandleHttps {
-    fun getUnsafeOkHttpClient(): OkHttpClient? {
+    fun getUnsafeOkHttpClient(): OkHttpClient.Builder? {
         return try {
-            // Create a trust manager that does not validate certificate chains
             val trustAllCerts = arrayOf<TrustManager>(
                 object : X509TrustManager {
                     @Throws(CertificateException::class)
@@ -34,17 +33,13 @@ class HandleHttps {
                     }
                 }
             )
-
-            // Install the all-trusting trust manager
             val sslContext = SSLContext.getInstance("SSL")
             sslContext.init(null, trustAllCerts, SecureRandom())
-
-            // Create an ssl socket factory with our all-trusting manager
             val sslSocketFactory = sslContext.socketFactory
             val builder = OkHttpClient.Builder()
             builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
             builder.hostnameVerifier { hostname, session -> true }
-            builder.build()
+            builder
         } catch (e: Exception) {
             throw RuntimeException(e)
         }

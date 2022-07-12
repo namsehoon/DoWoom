@@ -2,6 +2,7 @@ package com.example.dowoom.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ class ComuAdapter(val context: Context
     fun setContents(comuModelList: MutableList<ComuModel>) {
         comuList.clear()
         comuList.addAll(comuModelList)
+        Log.d("abcd","recyclerview - setcontents is : $comuModelList")
         notifyDataSetChanged()
     }
 
@@ -54,7 +56,7 @@ class ComuAdapter(val context: Context
             //메세지 삭제
 
         holder.comuBinding.llContents.setOnClickListener {
-            contentClicked(comu, position)
+            contentClicked(comuList[position], position)
         }
         holder.comuBinding.executePendingBindings()
 

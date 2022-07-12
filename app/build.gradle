@@ -2,7 +2,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-
+    id 'kotlin-android-extensions'
 }
 // 데이터 바인딩
 apply plugin : 'kotlin-kapt'
@@ -68,7 +68,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx'
 
     //MVVM 뷰모델
-    kapt("androidx.lifecycle:lifecycle-compiler:2.2.0")
+    kapt("androidx.lifecycle:lifecycle-compiler:2.5.0")
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
@@ -87,7 +87,9 @@ dependencies {
 
     //glide
     implementation "com.github.bumptech.glide:glide:4.12.0"
-    kapt("com.github.bumptech.glide:compiler:4.12.0")
+    kapt "com.github.bumptech.glide:compiler:4.12.0"
+    //noinspection LifecycleAnnotationProcessorWithJava8
+    kapt "android.arch.lifecycle:compiler:1.1.1"
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
     //이미지 선택기
@@ -103,5 +105,6 @@ dependencies {
     //retrofit
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
-
+    //세션
+//    implementation "com.squareup.okhttp3:okhttp-urlconnection:4.9.1"
 }

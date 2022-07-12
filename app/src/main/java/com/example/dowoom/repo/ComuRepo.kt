@@ -26,7 +26,7 @@ class ComuRepo : repo {
     val contentRef = rootRef.child("Content")
     val commentRef = rootRef.child("Comment")
 
-    /** 익명게시판 리스트 */
+    /** 익명게시판 콘텐츠 리스트 */
     fun getGuestList() : LiveData<MutableList<ComuModel>> {
 
         val mutableData = MutableLiveData<MutableList<ComuModel>>()
@@ -35,28 +35,29 @@ class ComuRepo : repo {
         CoroutineScope(Dispatchers.IO).launch {
 
             guestRef.addChildEventListener(object : ChildEventListener {
-                override fun onChildAdded(guest: DataSnapshot, previousChildName: String?) {
-                    if (guest.exists()) {
-                        val getGuest = guest.getValue(ComuModel::class.java)
+                override fun onChildAdded(guests: DataSnapshot, previousChildName: String?) {
+                    if (guests.exists()) {
+                        Log.d("abcd","ComuRepo - getGuestList - onChildAdded : ${guests.ref}")
+                        val getGuest = guests.getValue(ComuModel::class.java)
                         guestList.add(getGuest!!)
                         mutableData.value = guestList
                     }
                 }
 
-                override fun onChildChanged(guestList: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
+                override fun onChildChanged(guests: DataSnapshot, previousChildName: String?) {
+                    Log.d("abcd","ComuRepo - getGuestList - onChildAdded : ${guests.ref}")
                 }
 
-                override fun onChildRemoved(guestList: DataSnapshot) {
-                    TODO("Not yet implemented")
+                override fun onChildRemoved(guests: DataSnapshot) {
+                    Log.d("abcd","ComuRepo - getGuestList - onChildRemoved : ${guests.ref}")
                 }
 
-                override fun onChildMoved(guestList: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
+                override fun onChildMoved(guests: DataSnapshot, previousChildName: String?) {
+                    Log.d("abcd","ComuRepo - getGuestList - onChildMoved : ${guests.ref}")
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Log.d("abcd","ComuRepo - getGuestList - error : ${error}")
+                    Log.d("abcd","ComuRepo - getGuestList - error : ${error.message}")
                 }
 
             })
@@ -64,22 +65,43 @@ class ComuRepo : repo {
 
         return mutableData
     }
-    /** 익명게시판 컨텐츠 */
-    fun getGuestContent(uid:String) : Flow<ContentModel> {
 
-        return flow {
-            val task = contentRef.child(uid).get().addOnFailureListener  { error ->
-                throw error
+
+    /** 댓글 리스트 */
+    fun getComments(comuModel: ComuModel) : LiveData<MutableList<Comment>> {
+
+        val mutableData = MutableLiveData<MutableList<Comment>>()
+        val commentList:MutableList<Comment> = mutableListOf<Comment>()
+
+        commentRef.child(comuModel.uid!!).addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(comments: DataSnapshot, previousChildName: String?) {
+                Log.d("abcd","ComuRepo - getComments - onChildAdded - ${comments.ref}")
+                if (comments.exists()) {
+                    val commentData = comments.getValue(Comment::class.java)
+                    commentList.add(commentData!!)
+                    mutableData.value = commentList
+                }
             }
 
-            //todo : task 관리 해야함.. delay?.. runblocking?
-//            kotlinx.coroutines.delay(500)
-            if (task.isSuccessful) {
-                val result = task.result.getValue(ContentModel::class.java)
-                emit(result!!)
+            override fun onChildChanged(comments: DataSnapshot, previousChildName: String?) {
+                Log.d("abcd","ComuRepo - getComments - onChildChanged - ${comments.ref}")
             }
-        }
 
+            override fun onChildRemoved(comments: DataSnapshot) {
+                Log.d("abcd","ComuRepo - getComments - onChildRemoved - ${comments.ref}")
+            }
+
+            override fun onChildMoved(comments: DataSnapshot, previousChildName: String?) {
+                Log.d("abcd","ComuRepo - getComments - onChildMoved - ${comments.ref}")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("abcd","ComuRepo - getComments - error - ${error.message}")
+            }
+
+        })
+
+        return mutableData
     }
 
     /** 게시판 글 쓰기 */
@@ -90,28 +112,28 @@ class ComuRepo : repo {
             val contentUid = contentRef.push().key
 
             // 게시판
-            val comuModel = ComuModel(comuUid,subject,2,0,auth.uid,false, null,null,content,0,0)
+            val comuModel = ComuModel(comuUid,subject,2,0,auth.uid,false, null,content,0,0)
 
             //내용 task
             val taskTwo = contentRef.child(comuUid!!).setValue(comuModel)
             //익게 task
             val task = guestRef.child(comuUid).setValue(comuModel).continueWithTask { task ->
                 if (!task.isSuccessful) {
-                    Log.d("abcd","ComuRepo - insertGuestWriteIn")
+                    Log.d("abcd","ComuRepo - insertGuestWriteIn 테스크 성공")
                     task.exception?.let {
-                        Log.d("abcd","게시판 글 작성 실패")
+                        Log.d("abcd","ComuRepo - insertGuestWriteIn - 게시판 글 작성 실패")
                         throw  it
                     }
                 }
                 taskTwo
             }.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d("abcd","게시판 글 작성 성공")
+                    Log.d("abcd","ComuRepo - insertGuestWriteIn - 게시판 글 작성 성공")
                 }
             }
 
             //todo : task 관리 해야함.. delay?.. runblocking?
-            kotlinx.coroutines.delay(500)
+            delay(500)
             if (task.isSuccessful) {
                 emit(true)
             } else {
@@ -119,4 +141,24 @@ class ComuRepo : repo {
             }
         }.flowOn(Dispatchers.IO)
     }
+
+    /** 댓글 작성 */
+    fun insertCommentWriteIn(contentUid:String, commentText:String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val key = commentRef.push().key
+
+            val comment = Comment(contentUid,key,auth.displayName,null,commentText)
+
+            commentRef.child(contentUid).child(key!!).setValue(comment).addOnCompleteListener {
+                Log.d("abcd","댓글 작성이 완료 되었습니다.")
+            }
+
+        }
+
+    }
 }
+
+
+
+
+
