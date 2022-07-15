@@ -32,14 +32,15 @@ class GezipRepo {
 
 
     //해당 페이지에 대한 '유머 리스트 가져오기'
-    fun loadGezipNotice(page:Int) : kotlinx.coroutines.flow.Flow<ComuModel> = flow {
+    fun loadGezipNotice(page:Int) : kotlinx.coroutines.flow.Flow<MutableList<ComuModel>> = flow {
 
-         val humorList = mutableSetOf<ComuModel>()
-            //페이지 + get 요청
-            val call = GezipClient().service.loadPage(page.toString())
-         Log.d("abcd","loadGezipNotice - 유머리스트 가져오기")
+        val humorList = mutableListOf<ComuModel>()
+        humorList.clear()
+        //페이지 + get 요청
+        val call = GezipClient().service.loadPage(page.toString())
+        Log.d("abcd","loadGezipNotice - 유머리스트 가져오기")
 
-         call.enqueue(object : Callback<ResponseBody> {
+        call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (!response.isSuccessful) {
                     Log.d("abcd","실패")
@@ -85,9 +86,9 @@ class GezipRepo {
         //todo : ConcurrentModificationException
         //todo : ConcurrentModificationException
         //todo : ConcurrentModificationException
-        for (content in humorList) {
-            emit(content)
-        }
+
+        emit(humorList)
+
 
     }.flowOn(Dispatchers.IO)
 

@@ -17,6 +17,8 @@ import com.example.dowoom.model.comunityModel.ContentModel
 import com.example.dowoom.repo.ComuRepo
 import com.example.dowoom.retrofit.GezipRepo
 import com.example.dowoom.viewmodel.SingleLiveEvent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -30,7 +32,86 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
 
     val comuRepo = ComuRepo()
 
-    val page = ObservableField<Int>(1)
+    var page = ObservableField<Int>(1)
+
+
+
+    /** 다음 콘텐츠 */
+    fun nextBtnClicked() {
+        Log.d("abcd","다음버튼 클릭 됨")
+        //현재 컨텐츠 리스트에 이 컨텐츠를 포함하고 있다면
+        if (uidLists.contains(comuContent.value?.uid)) {
+            //이 인덱스를 가져와서
+            val index = uidLists.indexOf(comuContent.value?.uid)
+
+            //다음 인덱스를 뿌려줄거임.. 만약 인덱스에 없으면
+            if (uidLists.size <= index.plus(1)) {
+                Log.d("abcd","여기까지")
+                page.set(page.get()?.plus(1))
+
+                _progress.value = true
+                CoroutineScope(Dispatchers.Main).launch {
+                    getHumors()
+                }
+
+                val firstContent = comuList.value?.get(1)
+                CoroutineScope(Dispatchers.Main).launch {
+                    getHumorContent(firstContent!!)
+                }
+            } else {
+               val nextContent = comuList.value?.get(index.plus(1))
+                CoroutineScope(Dispatchers.Main).launch {
+                    getHumorContent(nextContent!!)
+                }
+            }
+        } else {
+            Log.d("abcd","ComuViewModel - nextBtnClicked")
+        }
+
+    }
+// 1. 1페이지로 넘어옴, 1페이지의 첫번째 인덱스임. 첫번째 인덱스와 1페이지라면, = 첫번째 페이지입니다.
+    /** 이전 콘텐츠 */
+    fun beforeBtnClicked() {
+        Log.d("abcd","이전버튼 클릭 됨")
+        //현재 컨텐츠 리스트에 이 컨텐츠를 포함하고 있다면
+        if (uidLists.contains(comuContent.value?.uid)) {
+            //이 인덱스를 가져와서
+            val index = uidLists.indexOf(comuContent.value?.uid)
+
+            //현재 인덱스 -1이 0이고, 1페이지 라면
+            if (index.minus(1) == 0 && comuContent.value?.page?.toInt() == 1) {
+                Log.d("abcd","첫번째 페이지 입니다.")
+
+            } else if(index.minus(1) != 0) { // 앞에 콘텐츠가 더 있다면,
+
+                //페이지의 마지막 콘텐츠
+                val frontContent = comuList.value?.get(index.minus(1))
+                CoroutineScope(Dispatchers.Main).launch {
+                    getHumorContent(frontContent!!)
+                }
+            } else if(index.minus(1) == 0) {// 앞에 콘텐츠가 더 없다면,
+                //페이지 -1
+                page.set(page.get()?.minus(1))
+
+                _progress.value = true
+                //콘텐츠를 불러오기
+                CoroutineScope(Dispatchers.Main).launch {
+                    getHumors()
+                }
+                //페이지의 마지막 콘텐츠
+                val lastContent = comuList.value?.last()
+               CoroutineScope(Dispatchers.Main).launch {
+                    getHumorContent(lastContent!!)
+                }
+            }
+        } else {
+            Log.d("abcd","ComuViewModel - nextBtnClicked")
+        }
+    }
+
+    /** 인덱스 */
+    val uidLists:MutableList<String> = mutableListOf<String>()
+
 
 
     /** 프로세스(새로고침) */
@@ -38,21 +119,29 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
     val progress: LiveData<Boolean>
         get() = _progress
 
-    /** 유머게시판 */
+    /** 유머게시판 콘텐츠 들*/
 
     private val _comuList = MutableLiveData<MutableList<ComuModel>>()
     val comuList: LiveData<MutableList<ComuModel>>
         get() = _comuList
 
     suspend fun getHumors() {
-        val data = repo.loadGezipNotice(1)
+        uidLists.clear()
+        Log.d("abcd","contentuid is : ${uidLists.toString()}")
+        Log.d("abcd","getHumors - page is : ${page.get()}")
+        val data = repo.loadGezipNotice(page.get()!!)
         data
             .onCompletion {
                 _progress.value = false
                 Log.d("abcd","ComuViewmodel - getHumors 로드 완료됨.")
             }
             .collect {
-                _comuList.value = _comuList.value?.apply { add(it) } ?: mutableListOf(it)
+                _comuList.value = it
+                Log.d("abcd","_comuList.value.toString() is  :${_comuList.value.toString()}")
+               it.forEach { comuModel ->
+                   uidLists.add(comuModel.uid!!)
+               }
+                Log.d("Abcd","contentuid after that : ${uidLists}")
             }
 
     }
@@ -71,7 +160,9 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
             }
             .collect {
                 Log.d("abcd","viewmodel - getHumorContent : ${it} ")
-                _comuContent.value = it
+                if (it != null) {
+                    _comuContent.value = it
+                }
             }
 
     }
@@ -86,7 +177,6 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
 
     fun getGuest() {//todo: 여기서 개수 처리 하는게 나을 듯
         viewModelScope.launch {
-            _progress.value = false
             comuRepo.getGuestList().observeForever(Observer { result ->
                 _guestList.value = result
                 if (result == null) {

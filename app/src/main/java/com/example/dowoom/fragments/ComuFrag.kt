@@ -23,10 +23,7 @@ import com.example.dowoom.model.comunityModel.ComuModel
 import com.example.dowoom.retrofit.GezipRepo
 import com.example.dowoom.viewmodel.mainViewmodel.ComuViewModel
 import kotlinx.android.synthetic.main.comu_fragment.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.comu_fragment), View.OnClickListener {
 
@@ -57,7 +54,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
     //버튼 리스너, recyclerview 어뎁터
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)  {
-        super.onViewCreated(view, savedInstanceState)
+                   super.onViewCreated(view, savedInstanceState)
 
 
         adapter = ComuAdapter(requireActivity(), contentClicked = { comuModel, position ->
@@ -65,12 +62,13 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
             Log.d("Abcd","부모에서 ComuAdapter 클릭됨")
 
-            binding.llImages.removeAllViews()
+
 
             binding.llToWrite.visibility = View.GONE //글작성
             binding.llComuList.visibility = View.GONE // 컨텐츠 리스트 .. todo: no adapter onttach 에러 ;;
             binding.llconTents.visibility = View.VISIBLE // 컨텐츠 보여주는 뷰
 
+            //댓글 작성을 위한
             comuModelId = comuModel.uid
 
             //스크롤 맨위로
@@ -78,11 +76,14 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 //            binding.nestedParent.fullScroll(ScrollView.FOCUS_UP)
 
             //타이틀, 글쓴이
-            binding.tvTitle.text = comuModel.title.toString()
-            binding.tvCreator.text = comuModel.creator.toString()
+//            binding.tvTitle.text = comuModel.title.toString()
+//            binding.tvCreator.text = comuModel.creator.toString()
+
+            binding.comuModel = comuModel
 
             //child fragment에 데이터 보내기
             CoroutineScope(Dispatchers.Main).launch {
+                binding.llImages.removeAllViews()
                 viewModel.getComments(comuModel)
             }
 
@@ -152,7 +153,6 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 //todo : 데이터 불러오기 1, 2, 3, 4, 5
                 viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
                     adapter.setContents(it)
-
                 })
 
             }
@@ -189,6 +189,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
+                Log.d("abcd","it is : ${it}")
                 adapter.setContents(it)
 
             })
@@ -222,6 +223,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         //이미지 가져와서 추가
         viewModel.comuContent.observe(viewLifecycleOwner, Observer { comuModel ->
             Log.d("abcd","comuContent is : ${comuModel}")
+            binding.comuModel = comuModel
 
             if (comuModel.contentImg != null) {
                 addImageToll(comuModel)
@@ -233,6 +235,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
     //컨텐츠 이미지 추가
     fun addImageToll(comuModel: ComuModel) {
+        binding.llImages.removeAllViews()
         for (i in 0 until comuModel.contentImg?.count()!!) {
             val imgView = ImageView(context).apply {
                 adjustViewBounds = true
