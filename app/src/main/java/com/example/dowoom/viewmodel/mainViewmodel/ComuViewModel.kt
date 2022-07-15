@@ -17,14 +17,11 @@ import com.example.dowoom.model.comunityModel.ContentModel
 import com.example.dowoom.repo.ComuRepo
 import com.example.dowoom.retrofit.GezipRepo
 import com.example.dowoom.viewmodel.SingleLiveEvent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
@@ -40,6 +37,7 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
     fun nextBtnClicked() {
         Log.d("abcd","다음버튼 클릭 됨")
         //현재 컨텐츠 리스트에 이 컨텐츠를 포함하고 있다면
+        Log.d("Abcd","comu content is :${comuContent.value?.uid}")
         if (uidLists.contains(comuContent.value?.uid)) {
             //이 인덱스를 가져와서
             val index = uidLists.indexOf(comuContent.value?.uid)
@@ -51,13 +49,12 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
 
                 _progress.value = true
                 CoroutineScope(Dispatchers.Main).launch {
-                    getHumors()
+                    getHumors() //유머리스트 가져오기
+                    delay(1000) //딜레이
+                    val firstContent = comuList.value?.get(1) //두번째 콘텐츠
+                    getHumorContent(firstContent!!) // 가져오기
                 }
 
-                val firstContent = comuList.value?.get(1)
-                CoroutineScope(Dispatchers.Main).launch {
-                    getHumorContent(firstContent!!)
-                }
             } else {
                val nextContent = comuList.value?.get(index.plus(1))
                 CoroutineScope(Dispatchers.Main).launch {
@@ -97,12 +94,13 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
                 //콘텐츠를 불러오기
                 CoroutineScope(Dispatchers.Main).launch {
                     getHumors()
-                }
-                //페이지의 마지막 콘텐츠
-                val lastContent = comuList.value?.last()
-               CoroutineScope(Dispatchers.Main).launch {
+                    delay(1000)
+                    //페이지의 마지막 콘텐츠
+                    val lastContent = comuList.value?.last()
                     getHumorContent(lastContent!!)
+
                 }
+
             }
         } else {
             Log.d("abcd","ComuViewModel - nextBtnClicked")
