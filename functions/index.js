@@ -20,3 +20,23 @@ exports.everyDayTask = functions.pubsub.schedule("0 0 * * *")
             console.log("index js error is : ", error);
           });
     });
+
+
+exports.resetRandomId = functions.pubsub.schedule("0 0 * * *")
+    .onRun(async () => {
+      console.log("resetRandomId - starting ...");
+      const updates = {};
+      const db = admin.database();
+      const snapshot = await db.ref("User").once("value");
+      snapshot.forEach((childSnapshot) => {
+        const value = Math.random().toString(36).substring(2, 12);
+        console.log("child snap shot key is ", childSnapshot.key);
+        updates["/User/" + childSnapshot.key + "/guestId"] = value;
+      });
+      return db.ref().update(updates)
+          .then(() => {
+            console.log("schedule 작동 완료!");
+          }).catch((error) => {
+            console.log("index js error is : ", error);
+          });
+    });

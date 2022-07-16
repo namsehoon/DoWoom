@@ -221,9 +221,13 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
 
 
     /**  댓글 추가  */
-    fun insertComment(comuModelId: String, commentText: String) {
+    fun insertComment(comuModelId: String, commentText: String, password:String?) {
         viewModelScope.launch {
-            comuRepo.insertCommentWriteIn(comuModelId, commentText)
+            if (password == null) {
+                comuRepo.insertCommentWriteIn(comuModelId, commentText,null) //유머
+            } else {
+                comuRepo.insertCommentWriteIn(comuModelId, commentText, password) // 익명
+            }
         }
     }
 

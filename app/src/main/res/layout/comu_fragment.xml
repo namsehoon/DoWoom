@@ -173,21 +173,6 @@
                     android:visibility="gone"
                     android:layout_marginStart="8dp"
                     android:gravity="start">
-                    <TextView
-                        android:id="@+id/ss"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="이름 : " />
-
-                    <EditText
-                        android:id="@+id/editTextTextPersonName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="이름을 입력해주세요."
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="42dp"
-                        android:ems="10"
-                        android:inputType="textPersonName" />
 
                 </LinearLayout>
                 <LinearLayout
@@ -199,14 +184,14 @@
                     android:layout_marginStart="8dp"
                     android:gravity="center">
                     <TextView
-                        android:id="@+id/textView22"
+                        android:id="@+id/qweqw"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="비밀번호 : "
                         />
 
                     <EditText
-                        android:id="@+id/editTextTextPersonName2"
+                        android:id="@+id/etPassword"
                         android:layout_marginEnd="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -254,12 +239,6 @@
                     android:text="Button" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvAnother"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="유머게시판"/>
 
                <LinearLayout
 

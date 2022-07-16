@@ -143,7 +143,9 @@ class ComuRepo : repo {
     }
 
     /** 댓글 작성 */
-    fun insertCommentWriteIn(contentUid:String, commentText:String) {
+    //todo : 하루에 한번씩 랜덤으로 바꿔줘야할 듯 (자바 스크립트 랜덤 문자, 숫자 조합)
+    //todo : password == null : 유머게시판 , password != null : 익명게시판
+    fun insertCommentWriteIn(contentUid:String, commentText:String,password:String?) {
         CoroutineScope(Dispatchers.IO).launch {
             val key = commentRef.push().key
 

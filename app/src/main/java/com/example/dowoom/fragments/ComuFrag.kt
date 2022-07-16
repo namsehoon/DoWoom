@@ -46,6 +46,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
     val HUMOR = "유머게시판"
     val ANONYMOUS = "익명게시판"
     var comuModelId:String? = null
+    var kindOf : Int? = null
 
     //관찰
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -55,6 +56,12 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
         observerData()
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        comuModelId = null
+        kindOf = null
     }
 
     // 보일 때 : 뒤로가기 한번 누를 때,
@@ -79,6 +86,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
             //댓글 작성을 위한
             comuModelId = comuModel.uid
+            kindOf = comuModel.kindOf
 
             //스크롤 맨위로
             binding.scroll.fullScroll(View.FOCUS_UP)
@@ -97,7 +105,6 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
                 // 게시판 이름
                 binding.tvKindOf.text = HUMOR
-                binding.tvAnother.text = HUMOR
 
 
 
@@ -114,8 +121,6 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
                 // 게시판 이름
                 binding.tvKindOf.text = ANONYMOUS
-                binding.tvAnother.text = ANONYMOUS
-
 
             }
 
@@ -180,11 +185,26 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
             }
             //댓글 작성
             R.id.commentInsertBtn -> {
-                val commentText = binding.etComment.text.toString()
-                if (!commentText.isNullOrEmpty() && comuModelId != null) {
-                    viewModel.insertComment(comuModelId!!, commentText)
-                } else {
-                    Toast.makeText(context,"내용을 작성 해주세요.",Toast.LENGTH_SHORT).show()
+                if (kindOf != 0 && kindOf == 1) { // 유머게시판
+                    val commentText = binding.etComment.text.toString() // 내용
+                    if (!commentText.isNullOrEmpty() && comuModelId != null) {
+                        viewModel.insertComment(comuModelId!!, commentText,kindOf!!,null)
+                    } else {
+                        Toast.makeText(context,"내용을 작성 해주세요.",Toast.LENGTH_SHORT).show()
+                    }
+                } else { //익명 게시판
+                    val commentText = binding.etComment.text.toString() // 내용
+                    val passwordText = binding.etPassword.text.toString()
+                    if (!commentText.isNullOrEmpty() && comuModelId != null) {
+                        if (!passwordText.isNullOrEmpty() && passwordText != null) {
+                            viewModel.insertComment(comuModelId!!, commentText, kindOf!!, passwordText)
+
+                        } else {
+                            Toast.makeText(context,"패스워드를 입력 해주세요.",Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(context,"내용을 입력 해주세요.",Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
             //목록으로 돌아가기

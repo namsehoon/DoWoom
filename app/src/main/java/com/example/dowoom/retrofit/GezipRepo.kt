@@ -33,8 +33,9 @@ class GezipRepo {
 
     //해당 페이지에 대한 '유머 리스트 가져오기'
     fun loadGezipNotice(page:Int) : kotlinx.coroutines.flow.Flow<MutableList<ComuModel>> = flow {
-
+        var count = 0
         val humorList = mutableListOf<ComuModel>()
+
         humorList.clear()
         //페이지 + get 요청
         val call = GezipClient().service.loadPage(page.toString())
@@ -81,7 +82,11 @@ class GezipRepo {
         //todo: 계속 while문이 돌면 위험한디.. count 정해놔야함.. 사이트가 안들어가질 시.
         while (humorList.isEmpty()) {
             delay(1000)
+            count += 1
             Log.d("abcd","humorList.isEmpty()")
+            if (count == 5) {
+                break
+            }
         }
         //todo : ConcurrentModificationException
         //todo : ConcurrentModificationException
@@ -96,6 +101,7 @@ class GezipRepo {
 
     //자료 가져오기
     fun loadGezipContent(comuModel: ComuModel)  : kotlinx.coroutines.flow.Flow<ComuModel?> = flow {
+        var count = 0
         var updateComuModel:ComuModel? = null // imges 추가해줄
         val images: ArrayList<String> = ArrayList()
         //페이지 + get 요청
@@ -144,6 +150,10 @@ class GezipRepo {
         while (updateComuModel?.contentImg == null) {
             delay(500) //todo : 고쳐야함
             Log.d("abcd","updateComuModel?.contentImg == null")
+            count += 1
+            if (count == 5) {
+                break
+            }
         }
 
         emit(updateComuModel)
