@@ -15,12 +15,6 @@
             type="com.example.dowoom.model.comunityModel.ComuModel" />
     </data>
 
-<!--    <androidx.core.widget.NestedScrollView-->
-<!--        android:id="@+id/nestedParent"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:fillViewport="true">-->
-
     <RelativeLayout
         android:id="@+id/rll"
         android:layout_width="match_parent"
@@ -88,6 +82,7 @@
         <!--  시작 -->
 
         <ScrollView
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_below="@id/buttons"
             android:layout_height="wrap_content">
@@ -266,37 +261,57 @@
                 android:layout_marginTop="16dp"
                 android:text="유머게시판"/>
 
-            <LinearLayout
+               <LinearLayout
 
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp"
-                android:weightSum="2">
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:layout_marginBottom="50dp"
+                   android:weightSum="3">
 
-                <TextView
-                    android:id="@+id/tvBack"
-                    android:layout_weight="1"
-                    android:layout_marginHorizontal="36dp"
-                    android:gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:onClick="@{()->vm.beforeBtnClicked()}"
-                    android:layout_marginTop="16dp"
-                    android:text="이전"/>
+                   <TextView
+                       android:id="@+id/tvBack"
+                       android:layout_weight="1"
+                       android:layout_marginHorizontal="36dp"
+                       android:gravity="center"
+                       android:layout_width="wrap_content"
+                       android:background="@color/black"
+                       android:textColor="@color/white"
+                       android:layout_height="30dp"
+                       android:onClick="@{()->vm.beforeBtnClicked()}"
+                       android:layout_marginTop="16dp"
+                       android:text="이전"/>
 
-                <TextView
-                    android:id="@+id/tvNext"
-                    android:layout_weight="1"
-                    android:layout_marginHorizontal="36dp"
-                    android:gravity="center"
-                    android:layout_width="wrap_content"
-                    android:onClick="@{()->vm.nextBtnClicked()}"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="16dp"
-                    android:text="다음"/>
+                   <TextView
+                       android:id="@+id/tvBackToRv"
+                       android:layout_weight="1"
+                       android:layout_marginHorizontal="36dp"
+                       android:gravity="center"
+                       android:textColor="@color/white"
+                       android:background="@color/black"
+                       android:layout_width="wrap_content"
+                       android:layout_marginTop="16dp"
+                       android:layout_height="30dp"
+                       android:text="목록으로"/>
 
-            </LinearLayout>
+                   <TextView
+                       android:id="@+id/tvNext"
+                       android:layout_weight="1"
+                       android:layout_marginHorizontal="36dp"
+                       android:gravity="center"
+                       android:background="@color/black"
+                       android:textColor="@color/white"
+                       android:layout_width="wrap_content"
+                       android:onClick="@{()->vm.nextBtnClicked()}"
+                       android:layout_height="30dp"
+                       android:layout_marginTop="16dp"
+                       android:text="다음"/>
+
+
+               </LinearLayout>
+
+
+
         </LinearLayout>
 
         </ScrollView>
@@ -309,6 +324,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/buttons"
+            android:orientation="vertical"
             android:descendantFocusability="blocksDescendants">
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -324,12 +340,47 @@
                     tools:listitem="@layout/comu_items" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/llHandlePage"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_marginVertical="16dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tvBeforePage"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="4dp"
+                android:background="@color/black"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:onClick="@{() -> vm.beforePageBtnClicked()}"
+                android:gravity="center"
+                android:text="이전 페이지" />
+
+
+            <TextView
+                android:id="@+id/tvNextPage"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:background="@color/black"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:onClick="@{() -> vm.nextPageBtnClicked()}"
+                android:gravity="center"
+                android:text="다음 페이지" />
+        </LinearLayout>
 
     </RelativeLayout>
-
-
-<!--    </androidx.core.widget.NestedScrollView>-->
 
 </layout>

@@ -30,8 +30,27 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
     val comuRepo = ComuRepo()
 
     var page = ObservableField<Int>(1)
+    /** 다음 페이지 */
+    fun nextPageBtnClicked() {
+        page.set(page.get()?.plus(1))
+        CoroutineScope(Dispatchers.Main).launch {
+            getHumors() //유머리스트 가져오기
+            delay(1000) //딜레이
+        }
+    }
 
-
+    /** 이전 페이지 */
+    fun beforePageBtnClicked() {
+        if (page.get() != 1) {
+            page.set(page.get()?.minus(1))
+            CoroutineScope(Dispatchers.Main).launch {
+                getHumors() //유머리스트 가져오기
+                delay(1000) //딜레이
+            }
+        } else {
+            Log.d("abcd","첫번째 페이지 입니다.")
+        }
+    }
 
     /** 다음 콘텐츠 */
     fun nextBtnClicked() {

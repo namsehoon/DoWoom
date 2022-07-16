@@ -1,5 +1,6 @@
 package com.example.dowoom.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -24,6 +25,10 @@ import com.example.dowoom.retrofit.GezipRepo
 import com.example.dowoom.viewmodel.mainViewmodel.ComuViewModel
 import kotlinx.android.synthetic.main.comu_fragment.*
 import kotlinx.coroutines.*
+
+
+
+
 
 class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.comu_fragment), View.OnClickListener {
 
@@ -52,6 +57,9 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
     }
 
+    // 보일 때 : 뒤로가기 한번 누를 때,
+    // 숨겨 질 때 : 컨텐츠 누를 때
+
     //버튼 리스너, recyclerview 어뎁터
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)  {
                    super.onViewCreated(view, savedInstanceState)
@@ -62,22 +70,19 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
             Log.d("Abcd","부모에서 ComuAdapter 클릭됨")
 
-
-
             binding.llToWrite.visibility = View.GONE //글작성
             binding.llComuList.visibility = View.GONE // 컨텐츠 리스트 .. todo: no adapter onttach 에러 ;;
             binding.llconTents.visibility = View.VISIBLE // 컨텐츠 보여주는 뷰
+            // 이전 및 다음 페이지
+            binding.tvNextPage.visibility = View.GONE
+            binding.tvBeforePage.visibility = View.GONE
 
             //댓글 작성을 위한
             comuModelId = comuModel.uid
 
             //스크롤 맨위로
-//            binding.nestedParent.fullScroll(View.FOCUS_UP)
-//            binding.nestedParent.fullScroll(ScrollView.FOCUS_UP)
-
-            //타이틀, 글쓴이
-//            binding.tvTitle.text = comuModel.title.toString()
-//            binding.tvCreator.text = comuModel.creator.toString()
+            binding.scroll.fullScroll(View.FOCUS_UP)
+            binding.scroll.fullScroll(ScrollView.FOCUS_UP)
 
             binding.comuModel = comuModel
 
@@ -135,6 +140,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         binding.tvHumor.setOnClickListener(this@ComuFrag)
         binding.tvBest.setOnClickListener(this@ComuFrag)
         binding.tvGuest.setOnClickListener(this@ComuFrag)
+        binding.tvBackToRv.setOnClickListener(this@ComuFrag)
 
         //글작성
         binding.tvToWrite.setOnClickListener(this@ComuFrag)
@@ -181,7 +187,14 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                     Toast.makeText(context,"내용을 작성 해주세요.",Toast.LENGTH_SHORT).show()
                 }
             }
-
+            //목록으로 돌아가기
+            R.id.tvBackToRv -> {
+                Log.d("abcd","버튼 클릭됨")
+                binding.llconTents.visibility = View.GONE
+                binding.tvBeforePage.visibility = View.VISIBLE
+                binding.tvNextPage.visibility = View.VISIBLE
+                binding.llComuList.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -246,6 +259,8 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         }
 
     }
+
+
 
 
 }
