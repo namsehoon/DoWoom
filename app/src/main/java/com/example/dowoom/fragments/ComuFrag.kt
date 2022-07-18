@@ -191,6 +191,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 val commentText = binding.etComment.text.toString() // 내용
                 if (!commentText.isNullOrEmpty() && comuModelId != null && user != null) {
                     viewModel.insertComment(comuModelId!!, commentText,kindOf!!, user!!)
+                    binding.etComment.text.clear()
                 } else {
                     Toast.makeText(context,"내용을 작성 해주세요.",Toast.LENGTH_SHORT).show()
                 }

@@ -19,9 +19,6 @@ import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.activity.main.MainActivity
 import com.example.dowoom.databinding.ActivityCheckBinding
 import com.example.dowoom.viewmodel.registervm.CheckViewmodel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import android.graphics.ImageDecoder
 
 import android.os.Build
@@ -29,7 +26,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.dowoom.Util.CustomProgressDialog
 import com.example.dowoom.Util.HandleProfileImage
 import com.example.dowoom.Util.PermissionCheck
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.IOException
 
 
@@ -39,21 +36,15 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
     val viewModel : CheckViewmodel by viewModels()
 
     lateinit var datastore:DataStore
-    var nickname:String? = null
     var statusMsg:String? = null
     var spinnerText:String? = null
 
     lateinit var progressDialog:CustomProgressDialog
+    lateinit var intentFormain :Intent
 
     //start result for activity
     val TAKE_IMAGE_CODE = 10001
 
-    override fun onDestroy() {
-        super.onDestroy()
-        nickname = null
-        statusMsg = null
-        spinnerText = null
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,15 +83,26 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
                         //false = 사용중인 유저 없음
                         Log.d("abcd","사용할 수 없습니다.")
                         binding.nextBtn.visibility = View.INVISIBLE
-                        showToast("사용할 수 없습니다.")
+                        showToast("닉네임을 사용할 수 없습니다.")
                     } else {
                         //true = 사용중인 유저 있음
                         Log.d("abcd","사용할 수 있습니다.")
                         binding.nextBtn.visibility = View.VISIBLE
-                        showToast("사용할 수 있습니다.")
+                        showToast("닉네임을 사용할 수 있습니다.")
                     }
                 } else {
                     Log.d("abcd","버튼을 다시 클릭해주세요.")
+                }
+            })
+
+            insertComplete.observe(this@CheckActivity, Observer { result ->
+                if (result) {
+                    Log.d("Abcd","여기까지옴 ? 222")
+
+                    startActivity(intentFormain)
+                    finish()
+                } else {
+                    Log.d("abcd","서버와의 통신이 원할하지 않습니다.")
                 }
             })
 
@@ -142,31 +144,17 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
             //다음으로 넘어감
             binding.nextBtn ->  {
                 //DataStore 저장
-                val progressDialog = CustomProgressDialog(this@CheckActivity)
-                progressDialog.start()
-//                saveData(statusMsg!!,spinnerText!!)
 
                 //task내에 해당 속성이 적용된 activity부터 top activity까지 모두 제거한 뒤 해당 activity를 활성화하여 top이 되도록 함
-                val intent = Intent(this,MainActivity::class.java).apply { Intent.FLAG_ACTIVITY_CLEAR_TOP }
-                //닉네임 넘겨서 닉네임 없으면 다시 로그인
-                intent.putExtra("nickname",binding.etNickname.text.toString())
+                intentFormain =  Intent(this,MainActivity::class.java).apply { Intent.FLAG_ACTIVITY_CLEAR_TOP }
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    val getIntentFromRegister = getIntent()
-                    val uid = getIntentFromRegister.getStringExtra("uid")
-                    val phoneNum = getIntentFromRegister.getStringExtra("phoneNumber") ?: " "
+                //닉네임 넘겨서 닉네임 없으면 다시 로그인 //todo :뭔 개소리야?
+                intentFormain.putExtra("nickname",binding.etNickname.text.toString())
+
+                CoroutineScope(Dispatchers.Main).launch {
                     val sOrB = spinnerText.equals("서포터")
-                    val nick  = binding.etNickname.text.toString()
-                    withContext(Dispatchers.Main) {
-                        Log.d("Abcd","uid : ${uid} , phonenum : ${phoneNum} , nickname : ${nickname} , statusmsg : ${statusMsg} , sorb : ${sOrB} ")
-                        viewModel.userInsert(uid!!,phoneNum,nick, statusMsg!!,sOrB)
-                    }
-
-                }.isCompleted.let {
-                    progressDialog.dismiss()
-                    startActivity(intent)
-                    finish()
-
+                    Log.d("Abcd",", statusmsg : ${statusMsg} , sorb : ${sOrB} ")
+                    viewModel.userInsert(statusMsg!!,sOrB)
                 }
             }
         }
@@ -205,8 +193,7 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
                         e.printStackTrace()
                     }
                     binding.ivProfile.setImageBitmap(bitmap!!)
-
-                    HandleProfileImage(context,bitmap,binding.etNickname.text.toString())
+                    HandleProfileImage(context,bitmap)
                         .let { progressDialog.dismiss() }
                 }
 

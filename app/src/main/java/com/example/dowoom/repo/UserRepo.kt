@@ -5,8 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dowoom.model.gameModel.GameCount
 import com.example.dowoom.model.User
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
@@ -202,33 +205,63 @@ class userRepo {
 
 
     /** insert new user */
-    suspend fun insertNewUser(uid:String, number: String, nickname: String,stateMsg:String,sOrB:Boolean) : Flow<Boolean> {
+    suspend fun insertNewUser(nickname: String,stateMsg:String,sOrB:Boolean) : LiveData<Boolean> {
+        val mutableData = MutableLiveData<Boolean>(false)
+        CoroutineScope(Dispatchers.IO).launch {
 
-        return flow {
-            var result = false
+            Log.d("abcd","여기까지 옴")
+            var count = 0
+            val uid = auth?.uid
+
             val profileImg = auth?.photoUrl.toString() ?: null
             val user = User(uid,0,nickname,stateMsg,0,false,null,sOrB,profileImg)
-            //게임 카운터
-            val userCount = GameCount(uid, 0)
-            myRef
-                .child(uid)
-                .setValue(user)
-                .addOnSuccessListener {
-                    Log.d("abcd","사용자가 추가 되었습니다. in userrepo")
 
-                    result = true
+            //새로운 유저
+            myRef.child(uid!!).setValue(user).continueWithTask {task ->
+                task.exception?.let {
+                    Log.d("abcd","ComuRepo - insertGuestWriteIn - 게시판 글 작성 실패")
+                    throw  it
                 }
-                .addOnFailureListener{ error ->
-                    Log.d("abcd", "error in user repo : "+error.message)
+                registGameCount(uid)
+            }.addOnCompleteListener { it ->
+                it.exception?.let {
+                    Log.d("abcd","게임 카운터 setvalue 실패 in userrepo")
                 }
-            myRef.child("GameCount").child(uid).setValue(userCount).addOnSuccessListener {
-                Log.d("abcd","game count가 추가 되었습니다. in userrepo")
+                updateUser(nickname).addOnCompleteListener {
+                    Log.d("abcd","사용자가 추가 되었습니다. in userrepo")
+                    mutableData.value = true
+                }
             }
-            delay(500)
-            this.emit(result)
-        }.flowOn(Dispatchers.IO)
+
+            while (mutableData.value!!) {
+                delay(1000)
+                count += 1
+                Log.d("abcd","count : $count")
+                if (count == 5) {
+                    break
+                }
+            }
+        }
+        return mutableData
+
     }
 
+    private fun updateUser(nickname: String): Task<Void> {
+        //유저 업데이트
+        val updateProfile = userProfileChangeRequest {
+            displayName = nickname
+        }
+
+        return auth!!.updateProfile(updateProfile)
+    }
+
+    //게임 카운터 등록
+    private fun registGameCount(uid: String): Task<Void> {
+        //게임 카운터
+        val userCount = GameCount(uid, 0)
+
+        return rootRef.child("GameCount").child(uid).setValue(userCount)
+    }
 
 
 

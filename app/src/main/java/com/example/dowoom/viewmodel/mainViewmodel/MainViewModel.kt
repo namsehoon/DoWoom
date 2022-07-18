@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.example.dowoom.model.User
 import com.example.dowoom.model.comunityModel.ComuModel
 import com.example.dowoom.viewmodel.BaseViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
@@ -17,12 +18,28 @@ class MainViewModel : ViewModel() {
     val database: FirebaseDatabase
         get() = FirebaseDatabase.getInstance()
 
-    val auth: FirebaseUser
-        get() = Firebase.auth.currentUser!!
+    val auth: FirebaseAuth
+        get() = Firebase.auth
 
     //root
     val rootRef : DatabaseReference
         get() = database.reference
+
+
+    //로그아웃
+    fun logout() {
+        auth.signOut()
+    }
+
+    //현재 유저 있는지
+
+    private val _hasUser = MutableLiveData<Boolean>()
+    val hasUser : LiveData<Boolean>
+        get() = _hasUser
+
+    fun observeHasCurrentUser() {
+        _hasUser.value = auth.currentUser != null
+    }
 
 
     /** 현재 로그인된 유저 */
@@ -32,7 +49,7 @@ class MainViewModel : ViewModel() {
 
 
     fun getUserInfo()  {
-        rootRef.child("User").child(auth.uid).addListenerForSingleValueEvent(object : ValueEventListener {
+        rootRef.child("User").child(auth.currentUser!!.uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     val user = snapshot.getValue(User::class.java)

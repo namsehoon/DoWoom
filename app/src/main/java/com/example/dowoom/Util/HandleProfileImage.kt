@@ -15,7 +15,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 
-class HandleProfileImage(val context: Context, val bitmap: Bitmap , val nickname:String) {
+class HandleProfileImage(val context: Context, val bitmap: Bitmap) {
 
     init {
         handleUpload(bitmap)
@@ -61,11 +61,7 @@ class HandleProfileImage(val context: Context, val bitmap: Bitmap , val nickname
         val user = FirebaseAuth.getInstance().currentUser
         Log.d("abcd","setUserProfileurl in handleProfileimage() is : ${uri}")
 
-        var nick:String? = null
-        nick = nickname
-
         val profileUpdate = userProfileChangeRequest {
-            displayName = nick
             photoUri = uri
         }
 

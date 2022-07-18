@@ -42,11 +42,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
 
     override fun onStart() {
         super.onStart()
-        val intent = intent
-        if (viewModel.auth == null && intent.getStringExtra("nickname") == null) {
-            startNextActivity(StartActivity::class.java)
-            finish()
-        }
     }
 
     override fun onDestroy() {
@@ -151,28 +146,39 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        return when(item.itemId) {
             R.id.notiItem -> {
                 Log.d("abcd","notiItem 클릭됨")
-                return super.onOptionsItemSelected(item)
+                super.onOptionsItemSelected(item)
             }
             R.id.filterItem -> {
                 Log.d("abcd","filterItem 클릭됨")
-                return  super.onOptionsItemSelected(item)
+                viewModel.logout()
+                super.onOptionsItemSelected(item)
             }
             R.id.settingItem -> {
-                Log.d("abcd","settingItem 클릭됨")
-                return super.onOptionsItemSelected(item)
+
+                super.onOptionsItemSelected(item)
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
 
     }
 
     private fun observeUser() {
         viewModel.currentUser.observe(this, Observer {
-            Log.d("abcd","user is : ${it}")
-            comuFrag.user = it
+            comuFrag.user = it //유저 정보 보내기 ()
+        })
+
+        viewModel.hasUser.observe(this, Observer { bool ->
+            if (!bool) { //유저 로그인 되어 있음
+                val intent = intent
+                if (viewModel.auth == null && intent.getStringExtra("nickname") == null) {
+                    startNextActivity(StartActivity::class.java)
+                    finish()
+                }
+            }
+
         })
     }
 

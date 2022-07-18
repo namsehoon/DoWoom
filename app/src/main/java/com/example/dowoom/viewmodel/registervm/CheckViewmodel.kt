@@ -1,6 +1,7 @@
 package com.example.dowoom.viewmodel.registervm
 
 import android.util.Log
+import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.example.dowoom.repo.userRepo
 import kotlinx.coroutines.Dispatchers
@@ -16,9 +17,9 @@ class CheckViewmodel : ViewModel() {
 
 
     //닉네임
-    var etNickname = MutableLiveData<String>("")
+    var etNickname = ObservableField<String>("")
     //상태메세지
-    var etStateMsg = MutableLiveData<String>("")
+    var etStateMsg = ObservableField<String>("")
 
 
 
@@ -31,9 +32,9 @@ class CheckViewmodel : ViewModel() {
 
     suspend fun nicknameAvailable()  {
         viewModelScope.launch {
-            if (!etNickname.value?.isNullOrEmpty()!!) {
-                Log.d("Abcd","etNickname : "+etNickname.value)
-                val nickname = etNickname.value.toString()
+            if (!etNickname.get().toString().isNullOrEmpty()) {
+                Log.d("Abcd","etNickname : "+etNickname.get().toString())
+                val nickname = etNickname.get().toString()
                 repo.checkData(nickname).observeForever { result ->
                     _requestOkOrNot.value = result
                 }
@@ -47,17 +48,19 @@ class CheckViewmodel : ViewModel() {
 
     //insert
     private val _insertComplete = MutableLiveData<Boolean>()
+    val insertComplete:LiveData<Boolean> get() = _insertComplete
 
 
     //todo = 사용자가 이미 존재해도 데이터 업데이트 됨.
-    suspend fun userInsert(uid:String, phoneNum:String,nickname:String,statusMsg:String,sOrB:Boolean) {
+    suspend fun userInsert(statusMsg:String,sOrB:Boolean) {
         viewModelScope.launch {
-            repo.insertNewUser(uid,phoneNum,nickname,statusMsg,sOrB)
-                .catch {  e ->
-                    Log.d("abcd", "error in reguster viewmodel is :" + e.message)
-                }.collect {
-                    _insertComplete.value = it
-                }
+            if (!etNickname.get().toString().isNullOrEmpty()) {
+                Log.d("abcd","nickname in viewmodel is : ${etNickname.get().toString()}")
+                repo.insertNewUser(etNickname.get().toString(),statusMsg,sOrB).observeForever(
+                    Observer {
+                        _insertComplete.value = it
+                    })
+            }
 
         }
     }

@@ -154,7 +154,7 @@ class ComuRepo : repo {
             val key = commentRef.push().key
 
             comment = if (kindOf == 1) { //유머 게시판
-                Comment(contentUid,key,user.nickname,null,commentText)
+                Comment(contentUid,key,auth.displayName,null,commentText)
             } else {
                 Comment(contentUid,key,user.guestId,null,commentText)
 
