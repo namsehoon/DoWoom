@@ -39,13 +39,16 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
     var statusMsg:String? = null
     var spinnerText:String? = null
 
-    lateinit var progressDialog:CustomProgressDialog
+    var progressDialog:CustomProgressDialog? = null
     lateinit var intentFormain :Intent
 
     //start result for activity
     val TAKE_IMAGE_CODE = 10001
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        progressDialog = null
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //viewmodel에 파라미터(repository)들어갈 경우, factory 만들어줘야함.
@@ -98,7 +101,7 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
             insertComplete.observe(this@CheckActivity, Observer { result ->
                 if (result) {
                     Log.d("Abcd","여기까지옴 ? 222")
-
+                    progressDialog?.dismiss()
                     startActivity(intentFormain)
                     finish()
                 } else {
@@ -144,7 +147,8 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
             //다음으로 넘어감
             binding.nextBtn ->  {
                 //DataStore 저장
-
+                progressDialog = CustomProgressDialog(this)
+                progressDialog!!.start()
                 //task내에 해당 속성이 적용된 activity부터 top activity까지 모두 제거한 뒤 해당 activity를 활성화하여 top이 되도록 함
                 intentFormain =  Intent(this,MainActivity::class.java).apply { Intent.FLAG_ACTIVITY_CLEAR_TOP }
 
@@ -178,7 +182,7 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
                     //progress 다이어로그
                     val context = this@CheckActivity
                     progressDialog = CustomProgressDialog(context)
-                    progressDialog.start()
+                    progressDialog!!.start()
 
                     //프로필 사진 설정
                     var bitmap:Bitmap? = null
@@ -194,7 +198,7 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
                     }
                     binding.ivProfile.setImageBitmap(bitmap!!)
                     HandleProfileImage(context,bitmap)
-                        .let { progressDialog.dismiss() }
+                        .let { progressDialog!!.dismiss() }
                 }
 
             }

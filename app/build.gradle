@@ -105,6 +105,5 @@ dependencies {
     //retrofit
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
-    //세션
-//    implementation "com.squareup.okhttp3:okhttp-urlconnection:4.9.1"
+
 }
