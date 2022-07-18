@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.dowoom.model.User
 import com.example.dowoom.model.comunityModel.Comment
 import com.example.dowoom.model.comunityModel.ComuModel
 import com.example.dowoom.model.comunityModel.ContentModel
@@ -211,9 +212,9 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
     val commentList : LiveData<MutableList<Comment>>
         get() = _commentList
 
-    fun getComments(comuModel: ComuModel) {
+    fun getComments(comuUid: String) {
         viewModelScope.launch {
-            comuRepo.getComments(comuModel).observeForever(Observer {
+            comuRepo.getComments(comuUid).observeForever(Observer {
                 _commentList.value = it
             })
         }
@@ -221,13 +222,10 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
 
 
     /**  댓글 추가  */
-    fun insertComment(comuModelId: String, commentText: String, password:String?) {
+    fun insertComment(comuModelId: String, commentText: String, kindOf:Int, user: User) {
         viewModelScope.launch {
-            if (password == null) {
-                comuRepo.insertCommentWriteIn(comuModelId, commentText,null) //유머
-            } else {
-                comuRepo.insertCommentWriteIn(comuModelId, commentText, password) // 익명
-            }
+            comuRepo.insertCommentWriteIn(comuModelId, commentText,kindOf,user) //유머
+
         }
     }
 

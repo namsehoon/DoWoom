@@ -51,6 +51,8 @@ class userRepo {
 
 
 
+
+
     //참고 : https://mailmail.tistory.com/44
     /** 온라인 유저 불러오기 */ //todo : 이 func은 온라인과 오프라인만 관리함. userdata 변경에 대한건 관리 안함 : 프로필 activity 할때 생각해보자
      suspend fun getData(): LiveData<MutableList<User>> {

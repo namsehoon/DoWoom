@@ -13,7 +13,8 @@ data class User(
     var status: Boolean? = false,
     var email: String? = null,
     var sOrB: Boolean? = true,
-    var profileImg:String? = null
+    var profileImg:String? = null,
+    var guestId:String? = null
 
 
 
@@ -44,7 +45,6 @@ data class updateUser( //(update?)
         )
     }
 }
-
 
 //
 //data class User (var number:String? = null, var age:String? = null, var nickname:String? = null, var email:String? = null, var introduce:String? = null,

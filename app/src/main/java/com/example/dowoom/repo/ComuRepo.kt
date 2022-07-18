@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.dowoom.model.User
 import com.example.dowoom.model.comunityModel.Comment
 import com.example.dowoom.model.comunityModel.ComuModel
 import com.example.dowoom.model.comunityModel.ContentModel
@@ -68,12 +69,12 @@ class ComuRepo : repo {
 
 
     /** 댓글 리스트 */
-    fun getComments(comuModel: ComuModel) : LiveData<MutableList<Comment>> {
+    fun getComments(comuUid: String) : LiveData<MutableList<Comment>> {
 
         val mutableData = MutableLiveData<MutableList<Comment>>()
         val commentList:MutableList<Comment> = mutableListOf<Comment>()
 
-        commentRef.child(comuModel.uid!!).addChildEventListener(object : ChildEventListener {
+        commentRef.child(comuUid).addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(comments: DataSnapshot, previousChildName: String?) {
                 Log.d("abcd","ComuRepo - getComments - onChildAdded - ${comments.ref}")
                 if (comments.exists()) {
@@ -104,7 +105,7 @@ class ComuRepo : repo {
         return mutableData
     }
 
-    /** 게시판 글 쓰기 */
+    /** 익명게시판 글 쓰기 */
 
     fun insertGuestWriteIn(subject: String, content: String) : Flow<Boolean> {
         return flow {
@@ -145,15 +146,24 @@ class ComuRepo : repo {
     /** 댓글 작성 */
     //todo : 하루에 한번씩 랜덤으로 바꿔줘야할 듯 (자바 스크립트 랜덤 문자, 숫자 조합)
     //todo : password == null : 유머게시판 , password != null : 익명게시판
-    fun insertCommentWriteIn(contentUid:String, commentText:String,password:String?) {
+    fun insertCommentWriteIn(contentUid:String, commentText:String,kindOf:Int?,user: User) {
         CoroutineScope(Dispatchers.IO).launch {
+
+            var comment:Comment? = null
+
             val key = commentRef.push().key
 
-            val comment = Comment(contentUid,key,auth.displayName,null,commentText)
+            comment = if (kindOf == 1) { //유머 게시판
+                Comment(contentUid,key,user.nickname,null,commentText)
+            } else {
+                Comment(contentUid,key,user.guestId,null,commentText)
+
+            }
 
             commentRef.child(contentUid).child(key!!).setValue(comment).addOnCompleteListener {
                 Log.d("abcd","댓글 작성이 완료 되었습니다.")
             }
+
 
         }
 

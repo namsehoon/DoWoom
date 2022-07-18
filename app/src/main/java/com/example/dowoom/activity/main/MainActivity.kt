@@ -9,7 +9,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.example.dowoom.R
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.activity.login.StartActivity
@@ -17,7 +19,9 @@ import com.example.dowoom.activity.register.RegisterActivity
 import com.example.dowoom.dataStore.DataStoreST
 import com.example.dowoom.fragments.*
 import com.example.dowoom.databinding.ActivityMainBinding
+import com.example.dowoom.model.User
 import com.example.dowoom.viewmodel.mainViewmodel.MainViewModel
+import com.example.dowoom.viewmodel.registervm.CheckViewmodel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
@@ -34,13 +38,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
     lateinit var comuFrag: ComuFrag
     lateinit var settingFrag: SettingFrag
 
-    var database: FirebaseDatabase? = null
-    var auth: FirebaseUser? = null
+    val viewModel : MainViewModel by viewModels()
 
     override fun onStart() {
         super.onStart()
         val intent = intent
-        if (auth == null && intent.getStringExtra("nickname") == null) {
+        if (viewModel.auth == null && intent.getStringExtra("nickname") == null) {
             startNextActivity(StartActivity::class.java)
             finish()
         }
@@ -48,7 +51,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
 
     override fun onDestroy() {
         super.onDestroy()
-        val connect = database!!.reference.child("Connect/${auth!!.uid}/connected")
+        val connect = viewModel.database.reference.child("Connect/${viewModel.auth.uid}/connected")
         connect.setValue(false).addOnFailureListener {
             Log.d("abcd", " it.message is : " + it.message)
         }
@@ -56,7 +59,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
     //온라인
     override fun onResume() {
         super.onResume()
-        val connect = database!!.reference.child("Connect/${auth!!.uid}/connected")
+        val connect = viewModel.database.reference.child("Connect/${viewModel.auth.uid}/connected")
         connect.setValue(true).addOnFailureListener {
             Log.d("abcd", " it.message is : " + it.message)
         }
@@ -67,6 +70,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
 
         //초기화
         initialized()
+        observeUser()
+
 
         //텝 리스너
         binding.tabLayout.addOnTabSelectedListener(object :
@@ -100,16 +105,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-        Log.d("abcd","auth uid in mainac : "+auth!!.uid)
+        Log.d("abcd","auth uid in mainac : "+viewModel.auth.uid)
     }
 
     //시작시에,
     fun initialized() {
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+
+        //유저 정보 가져오기
+        viewModel.getUserInfo()
 
         //로그인 안되어있으면, 회원가입 창으로
-        val uid = auth?.uid
-
-        if (uid == null) {
+        if (viewModel.auth == null) {
             val intent = Intent(this, RegisterActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
@@ -121,6 +129,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
         talkFrag = TalkFrag()
         settingFrag = SettingFrag()
 
+
+
+
         //처음 시작시 보여지는 프래그먼트
         supportFragmentManager.beginTransaction().add(R.id.frameLayout, homeFrag).commit()
 
@@ -131,9 +142,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
             it.setDisplayShowTitleEnabled(false)
         }
 
-         database = Firebase.database
-
-        auth = Firebase.auth.currentUser
 
         val dataStore = DataStoreST.getInstance(this)
         lifecycleScope.launch {
@@ -159,6 +167,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
             else -> return super.onOptionsItemSelected(item)
         }
 
+    }
+
+    private fun observeUser() {
+        viewModel.currentUser.observe(this, Observer {
+            Log.d("abcd","user is : ${it}")
+            comuFrag.user = it
+        })
     }
 
 

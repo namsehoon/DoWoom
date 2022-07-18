@@ -20,6 +20,7 @@ import com.example.dowoom.adapter.CommentAdapter
 import com.example.dowoom.adapter.ComuAdapter
 import com.example.dowoom.databinding.ComuFragmentBinding
 import com.example.dowoom.factory.ComuViewModelFactory
+import com.example.dowoom.model.User
 import com.example.dowoom.model.comunityModel.ComuModel
 import com.example.dowoom.retrofit.GezipRepo
 import com.example.dowoom.viewmodel.mainViewmodel.ComuViewModel
@@ -47,6 +48,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
     val ANONYMOUS = "익명게시판"
     var comuModelId:String? = null
     var kindOf : Int? = null
+    var user:User? = null
 
     //관찰
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -58,11 +60,8 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        comuModelId = null
-        kindOf = null
-    }
+
+
 
     // 보일 때 : 뒤로가기 한번 누를 때,
     // 숨겨 질 때 : 컨텐츠 누를 때
@@ -97,7 +96,9 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
             //child fragment에 데이터 보내기
             CoroutineScope(Dispatchers.Main).launch {
                 binding.llImages.removeAllViews()
-                viewModel.getComments(comuModel)
+                commentAdapter.commentList.clear()
+                commentAdapter.notifyDataSetChanged()
+                viewModel.getComments(comuModel.uid!!)
             }
 
             if (comuModel.kindOf == 1) { // 유머게시판
@@ -117,7 +118,6 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 Log.d("abcd", "comufrag - adapter - guest : 익명게시판으로 ")
 
                 binding.llName.visibility = View.VISIBLE //익명 : 이름
-                binding.llPassword.visibility = View.VISIBLE// 익명 : 패스워드
 
                 // 게시판 이름
                 binding.tvKindOf.text = ANONYMOUS
@@ -129,13 +129,13 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
 
         //댓글 어뎁터
-        commentAdapter = CommentAdapter(requireContext())
+        commentAdapter = CommentAdapter(requireActivity())
 
         binding.rvMainComuList.adapter = adapter
         binding.rvComment.adapter = commentAdapter
 
-        binding.rvMainComuList.setHasFixedSize(true)
-        binding.rvComment.setHasFixedSize(true)
+//        binding.rvMainComuList.setHasFixedSize(true)
+//        binding.rvComment.setHasFixedSize(true)
 
         binding.rvMainComuList.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         binding.rvComment.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
@@ -184,27 +184,15 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 context?.startActivity(intent)
             }
             //댓글 작성
+            //1. 유머 게시판 : 내용만 써서
+            //2. 익명 게시판 : 패스워드랑 같이 작성
             R.id.commentInsertBtn -> {
-                if (kindOf != 0 && kindOf == 1) { // 유머게시판
-                    val commentText = binding.etComment.text.toString() // 내용
-                    if (!commentText.isNullOrEmpty() && comuModelId != null) {
-                        viewModel.insertComment(comuModelId!!, commentText,kindOf!!,null)
-                    } else {
-                        Toast.makeText(context,"내용을 작성 해주세요.",Toast.LENGTH_SHORT).show()
-                    }
-                } else { //익명 게시판
-                    val commentText = binding.etComment.text.toString() // 내용
-                    val passwordText = binding.etPassword.text.toString()
-                    if (!commentText.isNullOrEmpty() && comuModelId != null) {
-                        if (!passwordText.isNullOrEmpty() && passwordText != null) {
-                            viewModel.insertComment(comuModelId!!, commentText, kindOf!!, passwordText)
-
-                        } else {
-                            Toast.makeText(context,"패스워드를 입력 해주세요.",Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        Toast.makeText(context,"내용을 입력 해주세요.",Toast.LENGTH_SHORT).show()
-                    }
+                Log.d("abcd","user is : ${user?.guestId}")
+                val commentText = binding.etComment.text.toString() // 내용
+                if (!commentText.isNullOrEmpty() && comuModelId != null && user != null) {
+                    viewModel.insertComment(comuModelId!!, commentText,kindOf!!, user!!)
+                } else {
+                    Toast.makeText(context,"내용을 작성 해주세요.",Toast.LENGTH_SHORT).show()
                 }
             }
             //목록으로 돌아가기
@@ -241,6 +229,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
             }
 
             viewModel.commentList.observe(viewLifecycleOwner, Observer { comments ->
+
                 commentAdapter.setComments(comments)
 
             })

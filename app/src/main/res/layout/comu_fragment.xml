@@ -175,34 +175,6 @@
                     android:gravity="start">
 
                 </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/llPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="gone"
-                    android:layout_marginStart="8dp"
-                    android:gravity="center">
-                    <TextView
-                        android:id="@+id/qweqw"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="비밀번호 : "
-                        />
-
-                    <EditText
-                        android:id="@+id/etPassword"
-                        android:layout_marginEnd="8dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:ems="10"
-                        android:inputType="numberPassword"
-                        android:gravity="start"
-                        android:layout_gravity="end"
-                        android:text="1234"
-                        />
-                </LinearLayout>
 
 
                 <LinearLayout
@@ -236,7 +208,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_gravity="center"
-                    android:text="Button" />
+                    android:text="댓글 등록" />
             </LinearLayout>
 
 
