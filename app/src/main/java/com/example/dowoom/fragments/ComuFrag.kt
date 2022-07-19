@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
 import com.example.dowoom.Util.GlideApp
 import com.example.dowoom.activity.comu.GuestWriteActivity
+import com.example.dowoom.activity.main.MainActivity
 import com.example.dowoom.adapter.CommentAdapter
 import com.example.dowoom.adapter.ComuAdapter
 import com.example.dowoom.databinding.ComuFragmentBinding
@@ -27,13 +28,8 @@ import com.example.dowoom.viewmodel.mainViewmodel.ComuViewModel
 import kotlinx.android.synthetic.main.comu_fragment.*
 import kotlinx.coroutines.*
 
-
-
-
-
-class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.comu_fragment), View.OnClickListener {
-
-
+class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.comu_fragment), View.OnClickListener, MainActivity.onBackPressedListener {
+    
     companion object {
         fun newInstance() = ComuFrag()
     }
@@ -59,12 +55,6 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         observerData()
 
     }
-
-
-
-
-    // 보일 때 : 뒤로가기 한번 누를 때,
-    // 숨겨 질 때 : 컨텐츠 누를 때
 
     //버튼 리스너, recyclerview 어뎁터
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)  {
@@ -107,8 +97,6 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 // 게시판 이름
                 binding.tvKindOf.text = HUMOR
 
-
-
                 CoroutineScope(Dispatchers.Main).launch {
                     viewModel.getHumorContent(comuModel)
                 }
@@ -123,19 +111,13 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 binding.tvKindOf.text = ANONYMOUS
 
             }
-
-
         })
-
-
+        
         //댓글 어뎁터
         commentAdapter = CommentAdapter(requireActivity())
 
         binding.rvMainComuList.adapter = adapter
         binding.rvComment.adapter = commentAdapter
-
-//        binding.rvMainComuList.setHasFixedSize(true)
-//        binding.rvComment.setHasFixedSize(true)
 
         binding.rvMainComuList.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         binding.rvComment.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
@@ -150,9 +132,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         //글작성
         binding.tvToWrite.setOnClickListener(this@ComuFrag)
         binding.commentInsertBtn.setOnClickListener(this@ComuFrag)
-
-
-
+        
     }
 
     override fun onClick(v: View?) {
@@ -270,8 +250,16 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
     }
 
+    //뒤로 가기 클릭 시,
+    override fun onBackPressed() {
+        //콘텐츠 view
+        binding.llconTents.visibility = View.GONE
+        //콘텐츠 목록
+        binding.llComuList.visibility = View.VISIBLE
+        //이전 및 다음 페이지
+        binding.tvNextPage.visibility = View.VISIBLE
+        binding.tvBeforePage.visibility = View.VISIBLE
 
-
-
+    }
 }
 

@@ -30,6 +30,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import android.widget.Toast
+
+import com.example.dowoom.activity.main.MainActivity.onBackPressedListener
+
+
+
 
 //baseActivity() 상속 (intent, replaceFragment startNextActivity(클래스::class.java). todo binding 추가 예정)
 class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.layout.activity_main) {
@@ -41,6 +47,33 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
     lateinit var settingFrag: SettingFrag
 
     val viewModel : MainViewModel by viewModels()
+    private var lastTimeBackPressed: Long = 0
+
+    //뒤로가기 버튼
+    interface onBackPressedListener {
+        fun onBackPressed()
+    }
+
+    override fun onBackPressed()
+    {
+        //프래그먼트 onBackPressedListener사용
+        val fragmentList = supportFragmentManager.fragments
+        for (fragment in fragmentList) {
+            if (fragment is onBackPressedListener) {
+                (fragment as onBackPressedListener).onBackPressed()
+                return
+            }
+        }
+
+        //두 번 클릭시 어플 종료
+        if (System.currentTimeMillis() - lastTimeBackPressed < 1500) {
+            finish()
+            return
+        }
+        lastTimeBackPressed = System.currentTimeMillis()
+        Toast.makeText(this, "'뒤로' 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+        super.onBackPressed()
+    }
 
     override fun onStart() {
         super.onStart()
