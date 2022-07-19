@@ -1,5 +1,6 @@
 package com.example.dowoom.model.talkModel
 
+import android.net.Uri
 import com.google.firebase.database.Exclude
 
 //talk fragment

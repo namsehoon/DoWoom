@@ -213,8 +213,8 @@ class userRepo {
             var count = 0
             val uid = auth?.uid
 
-            val profileImg = auth?.photoUrl.toString() ?: null
-            val user = User(uid,0,nickname,stateMsg,0,false,null,sOrB,profileImg)
+            val profileImg = auth?.photoUrl
+            val user = User(uid,0,nickname,stateMsg,0,false,null,sOrB,profileImg.toString())
 
             //새로운 유저
             myRef.child(uid!!).setValue(user).continueWithTask {task ->

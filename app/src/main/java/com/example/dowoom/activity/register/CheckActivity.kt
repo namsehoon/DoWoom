@@ -22,10 +22,19 @@ import com.example.dowoom.viewmodel.registervm.CheckViewmodel
 import android.graphics.ImageDecoder
 
 import android.os.Build
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.collection.arraySetOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.example.dowoom.Util.CustomProgressDialog
 import com.example.dowoom.Util.HandleProfileImage
 import com.example.dowoom.Util.PermissionCheck
+import com.google.firebase.database.MutableData
+import com.zhihu.matisse.Matisse
+import com.zhihu.matisse.MimeType
+import com.zhihu.matisse.engine.impl.GlideEngine
 import kotlinx.coroutines.*
 import java.io.IOException
 
@@ -34,7 +43,6 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
 
 
     val viewModel : CheckViewmodel by viewModels()
-
     lateinit var datastore:DataStore
     var statusMsg:String? = null
     var spinnerText:String? = null
@@ -42,8 +50,14 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
     var progressDialog:CustomProgressDialog? = null
     lateinit var intentFormain :Intent
 
+    /** 이미지 */
+
     //start result for activity
     val TAKE_IMAGE_CODE = 10001
+    //start result for activity
+    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    //이미지
+    var uriList : MutableList<Uri> = mutableListOf<Uri>()
 
     override fun onDestroy() {
         super.onDestroy()
@@ -64,16 +78,25 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
             //권한 획득
             PermissionCheck(this@CheckActivity).checkPermission()
 
-            Log.d("abcd","클릭 됨")
-            // 모든 사진에 사용하는 공통 위치, 모든 음악과 오디오 파일에 사용하는 또 다른 공통 위치 등이 있습니다.
-            // 앱은 플랫폼의 MediaStore API를 사용하여 이 콘텐츠에 액세스할 수 있습니다."
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-                .apply { type = MediaStore.Images.Media.CONTENT_TYPE }
-
-            //startActivity(intent) 를 실행하기 전 해당 intent를 실행시킬 수 있는지 체크할 필요가 있습니다.
-            // 만일 기기에 인텐트를 처리할 수 있는 앱이 존재하지 않으면 비정상 종료되기 때문입니다.
-            startActivityForResult(intent, TAKE_IMAGE_CODE)
+            //이미지 타입
+            val mimeType = arraySetOf<MimeType>(MimeType.JPEG, MimeType.PNG)
+            //이미지 선택기 라이브러리
+            Matisse.from(this@CheckActivity)
+                .choose(mimeType) //이미지 타입
+                .countable(true) //이미지 카운터
+                .maxSelectable(1) //이미지 선택 최대 개수
+                .thumbnailScale(1f)
+                .imageEngine(GlideEngine())
+                .showPreview(false)
+                .forResult(TAKE_IMAGE_CODE)
         }
+
+        //start for result
+        activityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+            ActivityResultCallback { result ->
+
+            })
     }
 
 
@@ -176,33 +199,32 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == TAKE_IMAGE_CODE) {
-            when(resultCode) {
-                RESULT_OK -> {
-                    //progress 다이어로그
-                    val context = this@CheckActivity
-                    progressDialog = CustomProgressDialog(context)
-                    progressDialog!!.start()
+        if (requestCode == TAKE_IMAGE_CODE && resultCode == RESULT_OK) {
+            //progress 다이어로그
+            uriList.clear()
+            val context = this@CheckActivity
+            progressDialog = CustomProgressDialog(context)
+            progressDialog!!.start()
+            uriList = Matisse.obtainResult(data)
+            var bitmap:Bitmap? = null
 
-                    //프로필 사진 설정
-                    var bitmap:Bitmap? = null
-                    val uri:Uri = data?.data!!
-                    try {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver,uri))
-                        } else {
-                            bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
-                        }
-                    } catch (e:IOException) {
-                        e.printStackTrace()
+            if (uriList.isNotEmpty()) {
+                try {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver,uriList[0]))
+                    } else {
+                        bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uriList[0])
                     }
-                    binding.ivProfile.setImageBitmap(bitmap!!)
-                    HandleProfileImage(context,bitmap)
-                        .let { progressDialog!!.dismiss() }
+                } catch (e:IOException) {
+                    e.printStackTrace()
                 }
-
+                binding.ivProfile.setImageBitmap(bitmap!!)
+                HandleProfileImage(context,bitmap)
+                    .let { progressDialog!!.dismiss() }
             }
         }
+
     }
 }
 

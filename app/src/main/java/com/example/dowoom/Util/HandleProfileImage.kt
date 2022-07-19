@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.ContactsContract
 import android.util.Log
+import com.example.dowoom.dataStore.DataStore
+import com.example.dowoom.dataStore.DataStoreST
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -13,12 +15,19 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
 class HandleProfileImage(val context: Context, val bitmap: Bitmap) {
 
+    var datastore: DataStore? = null
+
     init {
         handleUpload(bitmap)
+        datastore = DataStoreST.getInstance(context)
+
     }
 
 
@@ -50,16 +59,18 @@ class HandleProfileImage(val context: Context, val bitmap: Bitmap) {
 
     fun getDownloadUrl(reference: StorageReference) {
         //downloadUrl : 객체를 다운로드하는 데 사용할 수 있는 URL
-        reference.downloadUrl
-            .addOnSuccessListener(OnSuccessListener {  uri ->
-                Log.d("abcd","프로필사진 uri is : ${uri}")
-                setUserProfileurl(uri)
-            })
+        CoroutineScope(Dispatchers.IO).launch {
+            reference.downloadUrl
+                .addOnSuccessListener(OnSuccessListener {  uri ->
+                    Log.d("abcd","프로필사진 uri is : ${uri}")
+                    setUserProfileurl(uri)
+                })
+
+        }
     }
 
     fun setUserProfileurl(uri: Uri) {
         val user = FirebaseAuth.getInstance().currentUser
-        Log.d("abcd","setUserProfileurl in handleProfileimage() is : ${uri}")
 
         val profileUpdate = userProfileChangeRequest {
             photoUri = uri
@@ -73,4 +84,5 @@ class HandleProfileImage(val context: Context, val bitmap: Bitmap) {
                 Log.d("abcd","프로필 업데이트 실패 : ${error.message}")
             }
     }
+
 }

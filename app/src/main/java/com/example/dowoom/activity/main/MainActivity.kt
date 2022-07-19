@@ -8,6 +8,7 @@ import com.google.android.material.tabs.TabLayout
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.MotionEvent
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.dowoom.R
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.activity.login.StartActivity
+import com.example.dowoom.activity.register.CheckActivity
 import com.example.dowoom.activity.register.RegisterActivity
 import com.example.dowoom.dataStore.DataStoreST
 import com.example.dowoom.fragments.*
@@ -42,6 +44,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
 
     override fun onStart() {
         super.onStart()
+        if (viewModel.auth.currentUser == null) {
+            val intent = Intent(this, RegisterActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+        } else if(viewModel.auth.currentUser?.displayName.isNullOrEmpty()) {
+            val intent = Intent(this, CheckActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+        } else {
+            Log.d("asbcd","display name is : ${viewModel.auth.currentUser!!.displayName}")
+            Log.d("abcd", "else 임")
+        }
     }
 
     override fun onDestroy() {
@@ -112,10 +128,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
         viewModel.getUserInfo()
 
         //로그인 안되어있으면, 회원가입 창으로
-        if (viewModel.auth == null) {
-            val intent = Intent(this, RegisterActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
+
 
         //프레그먼트
         homeFrag = HomeFrag()

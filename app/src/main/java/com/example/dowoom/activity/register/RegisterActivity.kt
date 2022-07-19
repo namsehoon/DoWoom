@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -55,7 +56,6 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
 
         initialized()
     }
-
 
 
     fun initialized() {
