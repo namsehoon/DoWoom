@@ -3,6 +3,7 @@ package com.example.dowoom.repo
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.dowoom.firebase.Ref
 import com.example.dowoom.model.gameModel.GameCount
 import com.example.dowoom.model.User
 import com.google.android.gms.tasks.Task
@@ -25,14 +26,6 @@ import kotlinx.coroutines.flow.flowOn
 4.데이터 변경을 관찰하고 데이터를 자동으로 업데이트한다.
  **/
 class userRepo {
-
-    //firebase 인스턴스 및 참조
-    val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    val auth:FirebaseUser? = Firebase.auth.currentUser
-    val rootRef : DatabaseReference = database.reference
-    val myRef: DatabaseReference = rootRef.child("User")
-    val conRef: DatabaseReference = rootRef.child("Connect")
-
 
     /** 유저 phone number(id) 가져오기 */
     suspend fun getfireabseUserId() : Flow<String> {
@@ -65,18 +58,18 @@ class userRepo {
         val mutableData = MutableLiveData<MutableList<User>>()
 
         CoroutineScope(Dispatchers.IO).launch {
-            conRef.orderByChild("connected").equalTo(true).addChildEventListener(object : ChildEventListener {
+            Ref().connectRef().orderByChild("connected").equalTo(true).addChildEventListener(object : ChildEventListener {
                 //항목 목록을 검색하거나 항목 목록에 대한 추가를 수신 대기
                 override fun onChildAdded(connects: DataSnapshot, previousChildName: String?) {
                     if (connects.exists()) {
                         //유저
                         Log.d("abcd","userRepo - onChildAdded")
-                        myRef.child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
+                        Ref().userRef().child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(users: DataSnapshot) {
                                 if (users.exists()) {
                                     val getData = users.getValue(User::class.java)
                                     //나는 나를 볼 수 없게.
-                                    if (!getData?.uid.equals(auth?.uid) && !listData.contains(getData)) {
+                                    if (!getData?.uid.equals(Ref().auth.uid) && !listData.contains(getData)) {
                                         listData.add(getData!!)
                                     }
                                     listData.reverse()
@@ -102,7 +95,7 @@ class userRepo {
                         //유저
                             Log.d("abcd","userRepo - onChildChanged")
 
-                        myRef.child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
+                        Ref().userRef().child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(users: DataSnapshot) {
 
                                 Log.d("abcd","userRepo - onChildChanged")
@@ -110,7 +103,7 @@ class userRepo {
                                 val getData = users.getValue(User::class.java)
 
                                 //유저가 '나' 이거나, 이미 리스트에 포함 되어있다면 뺌
-                                if (!getData?.uid.equals(auth?.uid) && !listData.contains(getData)) {
+                                if (!getData?.uid.equals(Ref().auth.uid) && !listData.contains(getData)) {
                                     listData.add(getData!!)
                                 } else {
                                     listData.remove(getData)
@@ -136,7 +129,7 @@ class userRepo {
                         Log.d("abcd","userRepo - onChildRemoved")
 
 
-                        myRef.child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
+                        Ref().userRef().child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(users: DataSnapshot) {
 
                                 val getData = users.getValue(User::class.java)
@@ -177,7 +170,7 @@ class userRepo {
     suspend fun autoLogin() : Flow<Boolean> {
         return flow {
             var logined = false
-            val user = auth
+            val user = Ref().auth
             if (user != null) {
                 logined = true
             }
@@ -191,7 +184,7 @@ class userRepo {
         val mutableData = MutableLiveData<Boolean>()
         //유저들 -> 하위노드 (유저) -> nickname -> 값이 nickname과 같은 쿼리
         CoroutineScope(Dispatchers.IO).launch {
-            myRef.orderByChild("nickname").equalTo(nickname).get()
+            Ref().userRef().orderByChild("nickname").equalTo(nickname).get()
                 .addOnCompleteListener {
                     Log.d("abcd","it.result.exists() is : ${it.result.exists()}")
                     mutableData.value = it.result.exists()
@@ -211,13 +204,13 @@ class userRepo {
 
             Log.d("abcd","여기까지 옴")
             var count = 0
-            val uid = auth?.uid
+            val uid = Ref().auth.uid
 
-            val profileImg = auth?.photoUrl
+            val profileImg = Ref().auth.photoUrl
             val user = User(uid,0,nickname,stateMsg,0,false,null,sOrB,profileImg.toString())
 
             //새로운 유저
-            myRef.child(uid!!).setValue(user).continueWithTask {task ->
+            Ref().userRef().child(uid!!).setValue(user).continueWithTask {task ->
                 task.exception?.let {
                     Log.d("abcd","ComuRepo - insertGuestWriteIn - 게시판 글 작성 실패")
                     throw  it
@@ -252,7 +245,7 @@ class userRepo {
             displayName = nickname
         }
 
-        return auth!!.updateProfile(updateProfile)
+        return Ref().auth.updateProfile(updateProfile)
     }
 
     //게임 카운터 등록
@@ -260,7 +253,7 @@ class userRepo {
         //게임 카운터
         val userCount = GameCount(uid, 0)
 
-        return rootRef.child("GameCount").child(uid).setValue(userCount)
+        return Ref().userRef().child("GameCount").child(uid).setValue(userCount)
     }
 
 

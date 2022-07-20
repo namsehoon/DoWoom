@@ -20,7 +20,7 @@ import java.io.File
 import java.util.concurrent.Flow
 
 
-class HandleImage(val uri: Uri,val chatId:String)  {
+class HandleImage(val uri: Uri,val from:String,val to:String)  {
 
 
     fun handleUpload() : String {
@@ -30,7 +30,8 @@ class HandleImage(val uri: Uri,val chatId:String)  {
             val time = System.currentTimeMillis()
 
             val storage = FirebaseStorage.getInstance().reference
-            val fileRef = "Chat/${chatId}/${time}.jpeg"
+            //파일 경로
+            val fileRef = "Chat/${from}/${to}/${time}.jpeg"
             val imageRef = storage
                 .child(fileRef)
 

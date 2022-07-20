@@ -3,6 +3,7 @@ package com.example.dowoom.repo
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.dowoom.firebase.Ref
 import com.example.dowoom.model.gameModel.GameCount
 import com.example.dowoom.model.gameModel.GameModel
 import com.example.dowoom.model.gameModel.GameResultModel
@@ -11,20 +12,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class GameRepo : repo {
+class GameRepo {
 
-    val gameRef = rootRef.child("Game")
-
-    //사다리게임
-    val ladderRef = rootRef.child("Game/Ladder")
-
-    //돌림판
-    val circleRef = rootRef.child("Game/Circle")
-
-    //선착순
-    val fasterRef = rootRef.child("Game/Faster")
-
-    val resultRef = rootRef.child("Game/Result")
 
     /** 게임 생성 */
     suspend fun createGame(whatKindGame: Int, resultList: ArrayList<Int>, gameUid: String, gameTitle: String) {
@@ -37,8 +26,8 @@ class GameRepo : repo {
 
                 Log.d("abcd","여기까지는 오냐?")
                 //게임 모델
-                val gameModel = GameModel(gameTitle, auth.displayName!!,gameid,0,6,true,whatKindGame,result)
-                ladderRef.child(gameid).setValue(gameModel).addOnSuccessListener {
+                val gameModel = GameModel(gameTitle, Ref().auth.displayName,gameid,0,6,true,whatKindGame,result)
+                Ref().gameLadderRef().child(gameid).setValue(gameModel).addOnSuccessListener {
                     Log.d("abcd","game repo 게임 만들기 성공!!")
 
                 }
@@ -55,7 +44,7 @@ class GameRepo : repo {
         val idList:MutableList<String> = mutableListOf<String>()
 
         CoroutineScope(Dispatchers.IO).launch {
-            ladderRef.addChildEventListener(object : ChildEventListener {
+            Ref().gameLadderRef().addChildEventListener(object : ChildEventListener {
                 override fun onChildAdded(ladders: DataSnapshot, previousChildName: String?) {
                     if (ladders.exists()) {
                         Log.d("abcd","gamerepo - getGameList - onChildAdded")
@@ -109,7 +98,7 @@ class GameRepo : repo {
 
             //이미 다른사용자가 선택한 것은 버튼 선택 할 수 없게 하기
             CoroutineScope(Dispatchers.IO).launch {
-                ladderRef.orderByKey().equalTo(gameId).addChildEventListener(object  : ChildEventListener {
+                Ref().gameLadderRef().orderByKey().equalTo(gameId).addChildEventListener(object  : ChildEventListener {
                     override fun onChildAdded(choices: DataSnapshot, previousChildName: String?) {
                         if (choices.exists()) {
                             Log.d("abcd", "gamerepo - observeFinishedGame - onChildAdded")
@@ -159,12 +148,12 @@ class GameRepo : repo {
 
         CoroutineScope(Dispatchers.IO).launch {
             //게임결과
-            ladderRef.child(gameId).child("gameResult").child(result).addListenerForSingleValueEvent(object : ValueEventListener {
+            Ref().gameLadderRef().child(gameId).child("gameResult").child(result).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(gameResult: DataSnapshot) {
                     val gameResultData = gameResult.getValue()
                     Log.d("abcd","gameresult data(게임 선택에 대한 결과) is : ${gameResultData}")
                     //선물
-                    resultRef.child(gameId).child(gameResultData.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
+                    Ref().gameResultRef().child(gameId).child(gameResultData.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
                         override fun onDataChange(present: DataSnapshot) {
                             Log.d("abcd","present is : ${present.ref}")
                             val gamePresent = present.getValue()
@@ -198,7 +187,7 @@ class GameRepo : repo {
         val mutableData = MutableLiveData<Boolean>()
 
         CoroutineScope(Dispatchers.IO).launch {
-            rootRef.child("GameCount").child(auth.uid).addValueEventListener(object : ValueEventListener {
+            Ref().gameCountRef().child(Ref().auth.uid).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(gameCount: DataSnapshot) {
                     val gameCountData = gameCount.getValue(GameCount::class.java)
                     //유저의 게임 count가 1보다 낮으면 true, 아니면 else
@@ -218,8 +207,8 @@ class GameRepo : repo {
 
     suspend fun addGameCount(gameuid:String) {
         CoroutineScope(Dispatchers.IO).launch {
-            rootRef.child("GameCount").child(auth.uid).child("count").setValue(ServerValue.increment(1))
-            ladderRef.child(gameuid).child("leftCount").setValue(ServerValue.increment(-1))
+            Ref().gameCountRef().child(Ref().auth.uid).child("count").setValue(ServerValue.increment(1))
+            Ref().gameLadderRef().child(gameuid).child("leftCount").setValue(ServerValue.increment(-1))
         }
     }
 
@@ -229,7 +218,7 @@ class GameRepo : repo {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            ladderRef.child(gameId).addListenerForSingleValueEvent(object : ValueEventListener {
+            Ref().gameCountRef().child(gameId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(game: DataSnapshot) {
                     if (game.exists()) {
                         Log.d("abcd","delte result snapshot.ref is : ${game.ref}")
@@ -243,7 +232,7 @@ class GameRepo : repo {
                                     //만약, 0이라면, 게임 없애기
                                     game.ref.removeValue().addOnCompleteListener { Log.d("abcd","게임이 삭제 되었습니다.") }
                                     // 결과 삭제
-                                    resultRef.child(gameId).removeValue().addOnCompleteListener { Log.d("abcd","결과가 삭제 되었습니다.") }
+                                    Ref().gameResultRef().child(gameId).removeValue().addOnCompleteListener { Log.d("abcd","결과가 삭제 되었습니다.") }
                                 }
                                 Log.d("abcd","게임 삭제완료 ${gameId} , result : ${result}")
                             }

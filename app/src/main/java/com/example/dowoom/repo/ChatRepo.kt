@@ -3,6 +3,7 @@ package com.example.dowoom.repo
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.dowoom.firebase.Ref
 import com.example.dowoom.model.talkModel.ChatRoom
 import com.example.dowoom.model.talkModel.Message
 import com.example.dowoom.model.User
@@ -15,15 +16,9 @@ import com.google.firebase.database.*
 import kotlinx.coroutines.*
 import java.util.*
 
-class ChatRepo : repo {
+class ChatRepo {
 
 
-    //채팅 fragment
-    val talkRef = rootRef.child("ChatRoom")
-
-
-    //채팅방 내 메세지
-    val messageRef = rootRef.child("Message")
 
     /** 만약 채팅 멤버 한명만 null이면, 메세지 작성 및 버튼 비활성화 */
 
@@ -34,7 +29,7 @@ class ChatRepo : repo {
 
 
         CoroutineScope(Dispatchers.IO).launch {
-            talkRef.child(chatId).child("member").addListenerForSingleValueEvent(object : ValueEventListener {
+            Ref().chatroomRef().child(chatId).child("member").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     Log.d("abcd", "checkChatRoomMemberOneNull ref is : ${snapshot.ref}")
                     val mem = snapshot.getValue(Member::class.java)
@@ -61,7 +56,7 @@ class ChatRepo : repo {
         //chatid 구하기
         CoroutineScope(Dispatchers.IO).launch {
 
-            val updateMsg = messageRef.child(chatId).child(messageId)
+            val updateMsg = Ref().messageRef().child(chatId).child(messageId)
 
             val childUpdates = hashMapOf<String, Any>(
                 "message" to "삭제되었습니다."
@@ -138,7 +133,7 @@ class ChatRepo : repo {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val key = messageRef.push().key
+            val key = Ref().messageRef().push().key
             val time = System.currentTimeMillis()/1000
             var message:Message? = null
             if (imageUrl == null) {
@@ -150,7 +145,7 @@ class ChatRepo : repo {
             }
 
 
-            messageRef.child(from).child(to).child(key!!).setValue(message)
+            Ref().messageRef().child(from).child(to).child(key!!).setValue(message)
                 .addOnCompleteListener {
                     Log.d("abcd","chatRepo - sendMessage - 메세지 전송 성공")
                     updateChatRoom(from,to,message)
@@ -174,12 +169,12 @@ class ChatRepo : repo {
 
         )
         //내가 상대방에게
-        talkRef.child(from).child(to).updateChildren(childUpdates).addOnCompleteListener {
+        Ref().chatroomRef().child(from).child(to).updateChildren(childUpdates).addOnCompleteListener {
             Log.d("abcd", "chatRepo - updateChatRoom - 나")
         }
 
         //상대방이 나에게
-        talkRef.child(to).child(from).updateChildren(childUpdates).addOnCompleteListener {
+        Ref().chatroomRef().child(to).child(from).updateChildren(childUpdates).addOnCompleteListener {
             Log.d("abcd", "chatRepo - updateChatRoom - 상대방")
         }
 
@@ -197,7 +192,7 @@ class ChatRepo : repo {
         val idList:MutableList<String> = mutableListOf<String>()
 
            //대화방 메시지 -> 각 대화방의 멤버를 찾아서 넣어줌
-           messageRef.child(from).child(to).addChildEventListener(object : ChildEventListener {
+        Ref().messageRef().child(from).child(to).addChildEventListener(object : ChildEventListener {
                override fun onChildAdded(messages: DataSnapshot, previousChildName: String?) {
                    if (messages.exists()) {
                        Log.d("Abcd","chatRepo - observeMessage - onChildAdded")

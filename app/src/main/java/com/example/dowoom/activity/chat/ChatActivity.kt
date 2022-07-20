@@ -187,7 +187,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 //
 //                        //사진 to db
 //                        CoroutineScope(Dispatchers.IO).launch {
-//                            val result = HandleImage(uri, viewModel.chatId.value.toString()).handleUpload()
+//                            val result = HandleImage(uri).handleUpload()
 //                            Log.d("abcd"," path : ${result} ,,,, chatid : ${viewModel.chatId.value.toString()}")
 //                            withContext(Dispatchers.Main) {
 //                                context.viewModel.insertMessage(result,"photo",myUid!!,part!!,otherNickname!!)

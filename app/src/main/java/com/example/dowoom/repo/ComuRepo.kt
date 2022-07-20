@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.dowoom.firebase.Ref
 import com.example.dowoom.model.User
 import com.example.dowoom.model.comunityModel.Comment
 import com.example.dowoom.model.comunityModel.ComuModel
@@ -20,12 +21,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 
-class ComuRepo : repo {
+class ComuRepo {
 
-
-    val guestRef = rootRef.child("Comu/Guest")
-    val contentRef = rootRef.child("Content")
-    val commentRef = rootRef.child("Comment")
 
     /** 익명게시판 콘텐츠 리스트 */
     fun getGuestList() : LiveData<MutableList<ComuModel>> {
@@ -35,7 +32,7 @@ class ComuRepo : repo {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            guestRef.addChildEventListener(object : ChildEventListener {
+            Ref().guestRef().addChildEventListener(object : ChildEventListener {
                 override fun onChildAdded(guests: DataSnapshot, previousChildName: String?) {
                     if (guests.exists()) {
                         Log.d("abcd","ComuRepo - getGuestList - onChildAdded : ${guests.ref}")
@@ -74,7 +71,7 @@ class ComuRepo : repo {
         val mutableData = MutableLiveData<MutableList<Comment>>()
         val commentList:MutableList<Comment> = mutableListOf<Comment>()
 
-        commentRef.child(comuUid).addChildEventListener(object : ChildEventListener {
+        Ref().commentRef().child(comuUid).addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(comments: DataSnapshot, previousChildName: String?) {
                 Log.d("abcd","ComuRepo - getComments - onChildAdded - ${comments.ref}")
                 if (comments.exists()) {
@@ -109,16 +106,16 @@ class ComuRepo : repo {
 
     fun insertGuestWriteIn(subject: String, content: String) : Flow<Boolean> {
         return flow {
-            val comuUid = guestRef.push().key
-            val contentUid = contentRef.push().key
+            val comuUid = Ref().guestRef().push().key
+            val contentUid = Ref().contentRef().push().key
 
             // 게시판
-            val comuModel = ComuModel(comuUid,subject,2,0,auth.uid,false, null,content,0,0)
+            val comuModel = ComuModel(comuUid,subject,2,0,Ref().auth.uid,false, null,content,0,0)
 
             //내용 task
-            val taskTwo = contentRef.child(comuUid!!).setValue(comuModel)
+            val taskTwo = Ref().contentRef().child(comuUid!!).setValue(comuModel)
             //익게 task
-            val task = guestRef.child(comuUid).setValue(comuModel).continueWithTask { task ->
+            val task = Ref().guestRef().child(comuUid).setValue(comuModel).continueWithTask { task ->
                 if (!task.isSuccessful) {
                     Log.d("abcd","ComuRepo - insertGuestWriteIn 테스크 성공")
                     task.exception?.let {
@@ -151,16 +148,16 @@ class ComuRepo : repo {
 
             var comment:Comment? = null
 
-            val key = commentRef.push().key
+            val key = Ref().commentRef().push().key
 
             comment = if (kindOf == 1) { //유머 게시판
-                Comment(contentUid,key,auth.displayName,null,commentText)
+                Comment(contentUid,key,user.nickname,null,commentText)
             } else {
                 Comment(contentUid,key,user.guestId,null,commentText)
 
             }
 
-            commentRef.child(contentUid).child(key!!).setValue(comment).addOnCompleteListener {
+            Ref().commentRef().child(contentUid).child(key!!).setValue(comment).addOnCompleteListener {
                 Log.d("abcd","댓글 작성이 완료 되었습니다.")
             }
 
