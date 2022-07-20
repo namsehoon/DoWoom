@@ -61,7 +61,7 @@ class chatMsgAdatper(val context: Context,
         val user = FirebaseAuth.getInstance().currentUser?.uid
         val message = messages[position]
         //만약 내 uid와 message sender의 uid가 동일하다면 ITEM_SENT
-        return if (user == message.sender) {
+        return if (user == message.from) {
             ITEM_SENT
         } else {
             ITEM_RECEIVE

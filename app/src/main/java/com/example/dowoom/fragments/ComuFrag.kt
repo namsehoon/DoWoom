@@ -132,7 +132,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         //글작성
         binding.tvToWrite.setOnClickListener(this@ComuFrag)
         binding.commentInsertBtn.setOnClickListener(this@ComuFrag)
-        
+
     }
 
     override fun onClick(v: View?) {
@@ -184,6 +184,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 binding.tvNextPage.visibility = View.VISIBLE
                 binding.llComuList.visibility = View.VISIBLE
             }
+
         }
     }
 

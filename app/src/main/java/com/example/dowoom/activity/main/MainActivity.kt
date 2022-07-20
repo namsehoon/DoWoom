@@ -47,6 +47,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
     lateinit var settingFrag: SettingFrag
 
     val viewModel : MainViewModel by viewModels()
+    //
     private var lastTimeBackPressed: Long = 0
 
     //뒤로가기 버튼

@@ -5,6 +5,9 @@ import androidx.lifecycle.*
 import com.example.dowoom.model.talkModel.Message
 import com.example.dowoom.repo.ChatRepo
 import kotlinx.coroutines.*
+import androidx.lifecycle.MediatorLiveData
+import kotlinx.coroutines.flow.*
+
 
 class ChatViewmodel : ViewModel() {
 
@@ -26,69 +29,67 @@ class ChatViewmodel : ViewModel() {
         })
     }
 
-    /** chatid 가져오기 */
 
-    val _chatId = MutableLiveData<String>()
-    val chatId : LiveData<String> get() = _chatId
-
-    suspend fun getChatId(otherUid: String)  {
-        viewModelScope.launch {
-            chatRepo.getChatIdRepo(otherUid).observeForever(Observer { id ->
-                _chatId.value = id
-            })
-        }
-    }
-
-
-
-    /** 메세지 추가 (채팅룸 업데이트)*/
+    /** 메세지 보내기 (채팅룸 업데이트)*/
 
     val _message = MutableLiveData<Message>()
     val message : LiveData<Message> get() = _message
 
-    suspend fun insertMessage(ImageUri:String?, message:String, sender:String, otherUid: String, otherNickname:String)  {
+    suspend fun insertMessage(imageUrl:String?, message:String, from:String, to: String)  {
         viewModelScope.launch {
-            //메세지 insert
-            val time = System.currentTimeMillis()/1000
-            if (!chatId.value.toString().isNullOrEmpty()) {
-                val chat = chatId.value.toString()
-                Log.d("abcd","chatid is in viewmodel insertmessage() : ${chat}")
-                chatRepo.insertMessage(ImageUri,sender, otherUid, message, time, otherNickname,chat).observeForever(
-                    Observer { result ->
-                        _message.value = result
-                    })
-            }
-
+            //메세지 보내기
+            chatRepo.sendMessage(imageUrl,from, to, message)
         }
+
     }
+
+
+
 
     /** 메세지 삭제 */
-    suspend fun deleteMessage(
-        messageId: String
-    ) {
-        viewModelScope.launch {
-            if (chatId.value.toString() != null) {
-                chatRepo.deleteMessage(messageId,chatId.value.toString())
+//    suspend fun deleteMessage(
+//        messageId: String
+//    ) {
+//        viewModelScope.launch {
+//            if (chatId.value.toString() != null) {
+//                chatRepo.deleteMessage(messageId,chatId.value.toString())
+//            }
+//        }
+//    }
+
+
+    fun <T> merge(vararg flows: Flow<T>): Flow<T> = channelFlow {
+        val flowJobs = flows.map { flow ->
+            GlobalScope.launch { flow.collect { send(it) } }
+        }
+        flowJobs.joinAll()
+    }
+
+    /** 전체 메세지 관찰 */
+    @ExperimentalCoroutinesApi
+    suspend fun observeMessage(from: String, to: String) : Flow<Message> {
+
+        val ff = flow<Message> {
+            chatRepo.observeMessage(from, to).asFlow().collect {
+                emit(it)
+            }
+        }
+        val gg = flow<Message> {
+            chatRepo.observeMessage(to, from).asFlow().collect {
+                emit(it)
+            }
+        }
+        val together: Flow<Message> = merge(ff,gg)
+
+        return flow {
+
+            together.collect { it ->
+                Log.d("abcd","it is :${it}")
+                emit(it)
             }
         }
     }
 
-
-    /** 전체 메세지 관찰 */
-    suspend fun observeMessage(): LiveData<MutableList<Message>> {
-        val messages = MutableLiveData<MutableList<Message>>()
-        delay(500)
-        if (!chatId.value.toString().isNullOrEmpty()) {
-            val chat = chatId.value.toString()
-
-            Log.d("abcd","chatid is in getmessagedata is  22 : ${chat} ")
-
-            chatRepo.getMessageData(chat).observeForever(Observer { it ->
-                messages.value = it
-            })
-        }
-        return messages
-    }
 }
 
 

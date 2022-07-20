@@ -52,34 +52,24 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         talkClick = { user ->
             CoroutineScope(Dispatchers.Main).launch {
 
-            //todo 프로필 이미지 추가
-            //todo : 문제다.. 문제.. userChat이 늦게 만들어지면 message 로드 할때 못찾음
-            // 2. 둘 대화방 삭제하고, 다시 대화 시작하면 checkedChat() 메소드 실행이 안됨
-            viewModel.checkedChat(user)
 
             //채팅방 ac으로 이동
             intent = Intent(context, ChatActivity::class.java)
 
-
             //상대방 uid
-            intent.putExtra("otherUid", user.uid)
+            intent.putExtra("partnerId", user.uid)
+//                intent.putExtra("",user.age) // todo : 나이 추가할 때
             //상대방 nickname
-            intent.putExtra("otherNickname", user.nickname)
+            intent.putExtra("partnerNickname", user.nickname)
             intent.putExtra("profileImg", user.profileImg)
 
             val alertDialog = CustomAlertDialog(requireActivity())
-            alertDialog.start(user.nickname.plus("님과 대화하시겠습니까?"))
+            alertDialog.start(user.nickname.plus("님과 대화를 시작하시겠습니까?"))
             //대화생성 ok 클릭 시,
             alertDialog.onOkClickListener(object : CustomAlertDialog.onDialogCustomListener {
                 override fun onClicked() {
 
-
-
-                    CoroutineScope(Dispatchers.Main).launch {
-                        delay(500)
-                    }
                     context?.startActivity(intent)
-
 
 
                 }

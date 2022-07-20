@@ -68,7 +68,7 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                         Log.d("abcd","삭제 확인 누름")
                         CoroutineScope(Dispatchers.IO).launch {
 
-                            viewModel.deleteChatRoom(chatRoom.chatId!!,chatRoom.member!!)
+//                            viewModel.deleteChatRoom(chatRoom.chatId!!,chatRoom.member!!)
 
                             withContext(Dispatchers.Main) {
                                 adapter.chatRooms.removeAt(position)
@@ -102,14 +102,14 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
     fun observerData() {
         //대화 recycler 만들기
 
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            viewModel.observeChat().observe(viewLifecycleOwner, Observer { it ->
-                Log.d("abcd","it chat is : "+it.toString())
-                adapter.setChatroom(it)
-            })
+//        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+//            viewModel.observeChat().observe(viewLifecycleOwner, Observer { it ->
+//                Log.d("abcd","it chat is : "+it.toString())
+//                adapter.setChatroom(it)
+//            })
 
-        }
     }
+
 
 
 

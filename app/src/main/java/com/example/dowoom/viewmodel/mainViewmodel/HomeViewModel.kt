@@ -41,18 +41,18 @@ class HomeViewModel : ViewModel() {
     val getChatId:LiveData<String> get() = _getChatId
 
 
-    //대화 생성완료
-    suspend fun checkedChat(user:User) {
-        viewModelScope.launch {
-             chatRepo.checkedChat(user).observeForever(Observer { result ->
-                if (result != null) {
-                    _getChatId.value = result
-                    onEndLive.value = true
-                }
-            })
-
-        }
-    }
+//    //대화 생성완료
+//    suspend fun checkedChat(user:User) {
+//        viewModelScope.launch {
+//             chatRepo.checkedChat(user).observeForever(Observer { result ->
+//                if (result != null) {
+//                    _getChatId.value = result
+//                    onEndLive.value = true
+//                }
+//            })
+//
+//        }
+//    }
 
     private val onEndLive = MutableLiveData<Boolean>(false)
 

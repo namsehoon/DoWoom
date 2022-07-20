@@ -12,21 +12,21 @@ class TalkViewModel : ViewModel() {
 
     /** 채팅룸 전체 관찰*/
 
-    suspend fun observeChat(): LiveData<MutableList<ChatRoom>> {
-        val chatList = MutableLiveData<MutableList<ChatRoom>>()
-            chatRepo.getChatRoomData().observeForever(Observer { it ->
-                chatList.value = it
-            })
-
-        return chatList
-
-    }
+//    suspend fun observeChat(): LiveData<MutableList<ChatRoom>> {
+//        val chatList = MutableLiveData<MutableList<ChatRoom>>()
+//            chatRepo.getChatRoomData().observeForever(Observer { it ->
+//                chatList.value = it
+//            })
+//
+//        return chatList
+//
+//    }
 
     /** 채팅룸 삭제*/
 
-    suspend fun deleteChatRoom(chatId: String, member: Member) {
-        viewModelScope.launch {
-            chatRepo.deleteChatRoom(chatId, member)
-        }
-    }
+//    suspend fun deleteChatRoom(chatId: String, member: Member) {
+//        viewModelScope.launch {
+//            chatRepo.deleteChatRoom(chatId, member)
+//        }
+//    }
 }

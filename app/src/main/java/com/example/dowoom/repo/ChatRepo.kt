@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.coroutines.*
+import java.util.*
 
 class ChatRepo : repo {
 
@@ -20,54 +21,9 @@ class ChatRepo : repo {
     //채팅 fragment
     val talkRef = rootRef.child("ChatRoom")
 
+
     //채팅방 내 메세지
     val messageRef = rootRef.child("Message")
-
-    //chatId
-    val userChatRef = rootRef.child("UserChat")
-
-    val myuid = FirebaseAuth.getInstance().currentUser?.uid
-
-    /** chat id 가져오기 */
-    suspend fun getChatIdRepo(otherUid: String) : LiveData<String> {
-        val _chatId = MutableLiveData<String>()
-        val chatId : LiveData<String>  = _chatId
-
-        CoroutineScope(Dispatchers.IO).launch {
-            userChatRef.child(myuid!!).addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        for (child in snapshot.children) {
-
-                            val getChatid = child.getValue(UserChat::class.java)
-
-                            //만약 "내"가 제공한 내 uid를 사용하여 "상대방"의 uid가 같다면, chatid 리턴
-                            if (getChatid?.otherUid.equals(otherUid)) {
-                                _chatId.value = getChatid?.chatId.toString()
-                                checkChatRoomMemberOneNull(getChatid?.chatId.toString())
-                                Log.d("abcd","get chatid in viewmodel getChatid() is : ${getChatid?.chatId}")
-                            } else {
-                                Log.d("Abcd","다릅니다")
-                            }
-                            Log.d("abcd","getchatid is : ${getChatid}")
-                        }
-                    } else {
-                        Log.d("abcd","getChatIdRepo()의 결과가 존재하지 않습니다. in ChatViewModel ")
-                    }
-
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Log.d("abcd","error in chatviewmodel is :${error.message}")
-                }
-
-            })
-
-        }
-
-
-        return chatId
-    }
 
     /** 만약 채팅 멤버 한명만 null이면, 메세지 작성 및 버튼 비활성화 */
 
@@ -121,171 +77,137 @@ class ChatRepo : repo {
 
     //todo : 터미널 에러 : Ignoring header X-Firebase-Locale because its value was null.
     /** 채팅방 삭제 */
-    suspend fun deleteChatRoom(
-        chatId: String,
-        member: Member,
-    ) {
-        //각 사용자가 대화방 나갈 때
-        CoroutineScope(Dispatchers.IO).launch {
-            Log.d("abcd","여기까지 옴")
-            if (member.user1 == auth.uid) { // user1이 나라면,
-
-                // userChat chatid 삭제
-                userChatRef.child(member.user1!!).child(chatId).removeValue()
-                    .addOnCompleteListener {
-                        Log.d("abcd","(deleteChatRoom) userChat chaid 삭제")
-                        //상대방 uid로 검색해서 상대방도 null이면 db에서 삭제
-                        checkChatRoomMemberBothNull(chatId, member.user2!!)
-                    }
-                //1. member : false, 메세지 et : disabled -> messageinsert()
-            } else {
-
-                userChatRef.child(member.user2!!).child(chatId).removeValue()
-                    .addOnCompleteListener {
-                        Log.d("abcd","(deleteChatRoom) userChat chaid 삭제")
-                        checkChatRoomMemberBothNull(chatId, member.user1!!)
-                    }
-            }
-        }
-    }
+//    suspend fun deleteChatRoom(
+//        chatId: String,
+//        member: Member,
+//    ) {
+//        //각 사용자가 대화방 나갈 때
+//        CoroutineScope(Dispatchers.IO).launch {
+//            Log.d("abcd","여기까지 옴")
+//            if (member.user1 == auth.uid) { // user1이 나라면,
+//
+//                // userChat chatid 삭제
+//                userChatRef.child(member.user1!!).child(chatId).removeValue()
+//                    .addOnCompleteListener {
+//                        Log.d("abcd","(deleteChatRoom) userChat chaid 삭제")
+//                        //상대방 uid로 검색해서 상대방도 null이면 db에서 삭제
+//                        checkChatRoomMemberBothNull(chatId, member.user2!!)
+//                    }
+//                //1. member : false, 메세지 et : disabled -> messageinsert()
+//            } else {
+//
+//                userChatRef.child(member.user2!!).child(chatId).removeValue()
+//                    .addOnCompleteListener {
+//                        Log.d("abcd","(deleteChatRoom) userChat chaid 삭제")
+//                        checkChatRoomMemberBothNull(chatId, member.user1!!)
+//                    }
+//            }
+//        }
+//    }
 
     /** 만약 채팅 멤버가 둘다 null 이면, chatroom, message 삭제 */
-     fun checkChatRoomMemberBothNull(chatId: String, otherUid: String) {
-        //상대방 uid로 검색해서 상대방도 null이면 db에서 삭제
-        CoroutineScope(Dispatchers.IO).launch {
-            userChatRef.child(otherUid).child(chatId).addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (!snapshot.exists()) {
-                        talkRef.child(chatId).removeValue().addOnCompleteListener {
-                            Log.d("abcd","DB에서 채팅룸 삭제")
-                        }
-                        messageRef.child(chatId).removeValue().addOnCompleteListener {
-                            Log.d("abcd","DB에서 메세지 삭제")
-                        }
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-
-            })
-        }
-    }
-
-
+//     fun checkChatRoomMemberBothNull(chatId: String, otherUid: String) {
+//        //상대방 uid로 검색해서 상대방도 null이면 db에서 삭제
+//        CoroutineScope(Dispatchers.IO).launch {
+//            userChatRef.child(otherUid).child(chatId).addListenerForSingleValueEvent(object : ValueEventListener {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    if (!snapshot.exists()) {
+//                        talkRef.child(chatId).removeValue().addOnCompleteListener {
+//                            Log.d("abcd","DB에서 채팅룸 삭제")
+//                        }
+//                        messageRef.child(chatId).removeValue().addOnCompleteListener {
+//                            Log.d("abcd","DB에서 메세지 삭제")
+//                        }
+//                    }
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//                    TODO("Not yet implemented")
+//                }
+//
+//            })
+//        }
+//    }
 
 
 
-    /** 메세지 추가 */
-    suspend fun insertMessage(
-        ImageUri: String? = null,
-        sender: String,
-        otherUid: String,
-        newMessage: String? = null,
-        timestamp: Long,
-        otherNickname: String,
-        chatId: String) : LiveData<Message> {
 
-        val _message = MutableLiveData<Message>()
-        val mutable : LiveData<Message> = _message
 
-        Log.d("abcd","chatId is : ${chatId}")
+    /** 메세지 보내기 */
+    suspend fun sendMessage(imageUrl: String? = null, from: String, to: String, text: String? = null) {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            userChatRef.child(otherUid).child(chatId).addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(result: DataSnapshot) {
-                    //처음 대화
-                    if (!result.exists()) {
-                        val otherUserChat = UserChat(chatId, otherUid, auth.uid)
-
-                        userChatRef.child(otherUid).child(chatId).setValue(otherUserChat)
-                            .addOnCompleteListener {  Log.d("abcd", "상대방 userChat 성공") }
-                            .addOnFailureListener {Log.d("abcd", "상대방 userChat 실패")}
-
-                    }
-
-                    val messageId = messageRef.push().key
-                    lateinit var message: Message
+            val key = messageRef.push().key
+            val time = System.currentTimeMillis()/1000
+            var message:Message? = null
+            if (imageUrl == null) {
+                //텍스트
+                message = Message(from,to,null,text,key,time,false)
+            } else {
+                //사진
+                message = Message(from,to,imageUrl,"이미지",key,time,false)
+            }
 
 
-                    if (newMessage == "photo" && ImageUri !== null) {
-                        //사진 보내기
-                        message = Message(sender, otherUid, ImageUri, "photo", messageId, timestamp, false)
-
-                    } else {
-                        //메세지만 보내기
-                        message = Message(sender, otherUid, null, newMessage, messageId, timestamp, false)
-                    }
-
-                    messageRef.child(chatId).child(messageId!!).setValue(message)
-                        .addOnCompleteListener {
-                            Log.d("Abcd", "메세지 보내기 성공 : ${messageId} ")
-                            updateChatRoom(newMessage!!,timestamp,chatId)
-                        }
-                        .addOnFailureListener { Log.d("Abcd", "메세지 보내기 실패 : ${messageId} ") }
-
+            messageRef.child(from).child(to).child(key!!).setValue(message)
+                .addOnCompleteListener {
+                    Log.d("abcd","chatRepo - sendMessage - 메세지 전송 성공")
+                    updateChatRoom(from,to,message)
                 }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Log.d("abcd","error in insert message : ${error.message}")
-                }
-
-            })
-
 
         }
 
-        return  mutable
 
     }
 
 
     /** 채팅룸 업데이트 : lastmessage 및 timeStamp */
-    fun updateChatRoom(
-        lastMessage: String,
-        timestamp: Long,
-        chatId:String
-    ) {
-
-        //db 참조
-        val updateTalkRef = talkRef.child(chatId)
+    fun updateChatRoom(from:String, to:String, message: Message) {
 
         val childUpdates = hashMapOf<String,Any>(
-             "lastMessage" to lastMessage,
-            "timeStamp" to timestamp
-        )
+            "from" to from,
+            "date" to message.date!!,
+            "to" to to,
+            "message" to message.message!!,
+            "read" to message.read
 
-        updateTalkRef.updateChildren(childUpdates).addOnCompleteListener {
-            Log.d("abcd", "chatroom update 성공")
+        )
+        //내가 상대방에게
+        talkRef.child(from).child(to).updateChildren(childUpdates).addOnCompleteListener {
+            Log.d("abcd", "chatRepo - updateChatRoom - 나")
+        }
+
+        //상대방이 나에게
+        talkRef.child(to).child(from).updateChildren(childUpdates).addOnCompleteListener {
+            Log.d("abcd", "chatRepo - updateChatRoom - 상대방")
         }
 
     }
 
-    /** 내 채팅방내 메세지 가져오기 */
-    suspend fun getMessageData(chatId:String): LiveData<MutableList<Message>> {
+
+
+    /** 메세지 가져오기 */
+    suspend fun observeMessage(from: String,to: String): LiveData<Message> {
 
         val listData: MutableList<Message> = mutableListOf<Message>()
-        val mutableData = MutableLiveData<MutableList<Message>>()
+        val mutableData = MutableLiveData<Message>()
 
         //key 담기
         val idList:MutableList<String> = mutableListOf<String>()
 
-        Log.d("abcd","chatid is in getmessagedata is  33 : ${chatId} ")
-
-       CoroutineScope(Dispatchers.IO).launch {
-
            //대화방 메시지 -> 각 대화방의 멤버를 찾아서 넣어줌
-           messageRef.child(chatId).addChildEventListener(object : ChildEventListener {
+           messageRef.child(from).child(to).addChildEventListener(object : ChildEventListener {
                override fun onChildAdded(messages: DataSnapshot, previousChildName: String?) {
                    if (messages.exists()) {
-                       val addedMessageData = messages.getValue(Message::class.java)
-                       Log.d("abcd","addedMessageData is : ${addedMessageData}")
-                       listData.add(addedMessageData!!)
-                       //changed 구분하기 위해
-                       idList.add(addedMessageData.messageId!!)
-                       mutableData.value = listData
+                       Log.d("Abcd","chatRepo - observeMessage - onChildAdded")
+
+                       val messageData = messages.getValue(Message::class.java)
+                       Log.d("abcd","messagedata is :${messages.ref}")
+
+                       idList.add(messageData?.messageId!!)
+
+                       mutableData.value = messageData!!
                    } else {
                        Log.d("abcd","load할 메세지가 없습니다.")
                    }
@@ -294,228 +216,98 @@ class ChatRepo : repo {
                //메세지가 새로 추가되거나, 메세지 삭제버튼을 눌러서 "message text 변경"
                override fun onChildChanged(messages: DataSnapshot, previousChildName: String?) {
                    if (messages.exists()) {
-                      val changedMessageData = messages.getValue(Message::class.java)
-                       Log.d("abcd","changedMessageData is ${changedMessageData}")
-                       Log.d("abcd","previousChildName is : ${previousChildName}")
-                       if (!changedMessageData?.message.equals("삭제되었습니다.")) {
-                           listData.add(changedMessageData!!)
-                           idList.add(changedMessageData.messageId!!)
-                       } else {
-                           //messageid의 인덱스
-                           val index = idList.indexOf(changedMessageData?.messageId)
-                           if (index > -1) {
-                               listData[index] = changedMessageData!!
-                           }
-                       }
-                       mutableData.value = listData
+                       Log.d("Abcd","chatRepo - observeMessage - onChildChanged")
+//                      val changedMessageData = messages.getValue(Message::class.java)
+//                       Log.d("abcd","changedMessageData is ${changedMessageData}")
+//                       Log.d("abcd","previousChildName is : ${previousChildName}")
+//                       if (!changedMessageData?.message.equals("삭제되었습니다.")) {
+//                           listData.add(changedMessageData!!)
+//                           idList.add(changedMessageData.messageId!!)
+//                       } else {
+//                           //messageid의 인덱스
+//                           val index = idList.indexOf(changedMessageData?.messageId)
+//                           if (index > -1) {
+//                               listData[index] = changedMessageData!!
+//                           }
+//                       }
+//                       mutableData.value = listData
 
                    }
                }
 
                override fun onChildRemoved(snapshot: DataSnapshot) {
-                   Log.d("abcd","getMessageData onChildRemoved is : "+snapshot.ref)
+                   Log.d("Abcd","chatRepo - observeMessage - onChildRemoved")
                }
 
                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                   Log.d("abcd","getMessageData onChildMoved is : "+snapshot.ref)
+                   Log.d("Abcd","chatRepo - observeMessage - onChildMoved")
                }
 
                override fun onCancelled(error: DatabaseError) {
-                   Log.d("abcd","error in getMessageData  is : "+error.message)
+                   Log.d("abcd","chatRepo - observeMessage - error : "+error.message)
                }
 
            })
-
-       }
-
-
         return mutableData
     }
-    /** chatid들 가져오기 */
-    suspend fun observeChatId(): LiveData<MutableList<String>> {
-        val mutableData = MutableLiveData<MutableList<String>>()
-        val listData: MutableList<String> = mutableListOf<String>()
 
-        CoroutineScope(Dispatchers.IO).launch {
 
-            userChatRef.child(auth.uid).addChildEventListener(object : ChildEventListener{
-                override fun onChildAdded(chatIds: DataSnapshot, previousChildName: String?) {
-                    if (chatIds.exists()) {
 
-                        listData.add(chatIds.key!!)
-                        mutableData.value = listData
-                    }
-                }
-
-                override fun onChildChanged(chatIds: DataSnapshot, previousChildName: String?) {
-
-                    if (chatIds.exists()) {
-
-                        Log.d("abcd","observeChatId() onChildChanged is : ${chatIds.key}")
-
-                    }
-                }
-
-                override fun onChildRemoved(chatIds: DataSnapshot) {
-                    if (chatIds.exists()) {
-                        listData.remove(chatIds.key)
-                        mutableData.value = listData
-                    }
-                }
-
-                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Log.d("abcd", "error in observeChatId is : ${error.message}")
-                }
-            })
-        }
-
-        return mutableData
-    }
 
 
     /** 채팅방 가져오기 */
-    suspend fun getChatRoomData(): LiveData<MutableList<ChatRoom>> {
-
-        val mutableData = MutableLiveData<MutableList<ChatRoom>>()
-        val listData: MutableList<ChatRoom> = mutableListOf<ChatRoom>()
-
-//onChildAdded(): 리스트의 아이템을 검색하거나 아이템의 추가가 있을때 수신합니다.
-//onChildChanged(): 아이템의 변화가 있을때 수신합니다.
-//onChildRemoved(): 아이템이 삭제되었을때 수신합니다.
-//onChildMoved(): 순서가 있는 리스트에서 순서가 변경되었을때 수신합니다.
-
-//todo  사진 저장
-
-
-            //유저 각자 가지고 있는 chat id들을 가져옴
-            observeChatId().observeForever(androidx.lifecycle.Observer {  chatIdList ->
-
-                Log.d("abcd", "chatIdList in getChatRoomData is : ${chatIdList.toString()}")
-
-                chatIdList.forEach { chatId ->
-
-                    Log.d("abcd", "chatId in getChatRoomData is : ${chatId.toString()}")
-
-                        //각 chatid의 채팅룸을 채팅리스트에 뽑아줌 //todo 이게 최선?... ValueEventListener??..
-                        talkRef.child(chatId).addValueEventListener(object : ValueEventListener {
-                            override fun onDataChange(chatRoom: DataSnapshot) {
-                                if (chatRoom.exists()) {
-                                    listData.clear()
-
-                                    val chatRoomValue = chatRoom.getValue(ChatRoom::class.java)
-                                    listData.add(chatRoomValue!!)
-                                    mutableData.value = listData
-                                } else {
-                                    Log.d("abcd","없음")
-                                }
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                Log.d("abcd","채팅리스트 에러 : ${error.message}")
-                            }
-
-                        })
-
-
-                }
-            })
-
-
-
-        //  5/9 2:52
-        return mutableData
-
-    }
-
-    /** 채팅 시작 */
-    suspend fun checkedChat(user: User): LiveData<String> {
-
-            val otherUid = user.uid
-            val myUid = auth.uid
-
-            val _result = MutableLiveData<String>()
-            val result : LiveData<String> = _result
-
-            CoroutineScope(Dispatchers.IO).launch {
-                userChatRef.child(myUid).addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(userChats: DataSnapshot) {
-
-                        if (userChats.exists()) {
-                            for (userChat in userChats.children) {
-                                Log.d("abcd", "userChat.value is : " + userChat.value)
-                                val getUserChat = userChat.getValue(UserChat::class.java)
-
-                                Log.d("abcd","getuserChat value is : ${getUserChat}")
-                                //똑같은 멤버로 구성된 채팅방이 있는지 보기
-                                if (getUserChat?.otherUid == otherUid && getUserChat?.myUid == myUid) {
-                                    Log.d("abcd","여기??? 1")
-                                    _result.value = getUserChat.chatId!!
-
-                                } else { //새로운 채팅방
-                                    Log.d("abcd","여기??? 2")
-                                    _result.value = initialChat(myUid, user)
-                                }
-                            }
-                        } else {
-                            Log.d("abcd","여기??? 3")
-                            _result.value = initialChat(myUid, user)
-                        }
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        Log.d("abcd", "fuck away from me in ChatRepo : " + error.message)
-                    }
-
-
-                })
-            }
-
-
-        return result
-    }
-
-    //user : 상대방임
-      fun initialChat(myUid:String,user:User) : String {
-
-
-            val chatId = userChatRef.push().key
-
-
-            val time = System.currentTimeMillis()/1000
-
-            val member = Member(myUid, user.uid)
-            val chatRoom = ChatRoom(user.profileImg,user.uid ,user.nickname, "안녕하세요.", time, false, chatId, member)
-            val myUserChat = UserChat(chatId!!, myUid, user.uid)
-
-            CoroutineScope(Dispatchers.IO).launch {
-                //나
-                val task =userChatRef.child(myUid).child(chatId).setValue(myUserChat)
-                    .addOnCompleteListener {Log.d("abcd", "내 userChat 성공")}
-                    .addOnFailureListener { Log.d("abcd", "내 userChat 실패") }
-                //채팅룸
-                val task2 = talkRef.child(chatId).setValue(chatRoom)
-                    .addOnCompleteListener { Log.d("abcd", "chat 성공") }
-                    .addOnFailureListener { Log.d("abcd", "chat 실패") }
-
-                val task3 = messageRef.setValue(chatId)
-                    .addOnCompleteListener { Log.d("abcd", "message 성공") }
-                    .addOnFailureListener { Log.d("abcd", "message 실패") }
-
-                val tasks = mutableListOf<Task<Void>>()
-                tasks.add(task)
-                tasks.add(task2)
-                tasks.add(task3)
-
-                Tasks.whenAllComplete(tasks).addOnCompleteListener {
-                    Log.d("abcd","채팅시작 task 완료 in initialChat()")
-                }
-            }
-        return chatId
-    }
+//    suspend fun getChatRoomData(): LiveData<MutableList<ChatRoom>> {
+//
+//        val mutableData = MutableLiveData<MutableList<ChatRoom>>()
+//        val listData: MutableList<ChatRoom> = mutableListOf<ChatRoom>()
+//
+////onChildAdded(): 리스트의 아이템을 검색하거나 아이템의 추가가 있을때 수신합니다.
+////onChildChanged(): 아이템의 변화가 있을때 수신합니다.
+////onChildRemoved(): 아이템이 삭제되었을때 수신합니다.
+////onChildMoved(): 순서가 있는 리스트에서 순서가 변경되었을때 수신합니다.
+//
+////todo  사진 저장
+//
+//
+//            //유저 각자 가지고 있는 chat id들을 가져옴
+//            observeChatId().observeForever(androidx.lifecycle.Observer {  chatIdList ->
+//
+//                Log.d("abcd", "chatIdList in getChatRoomData is : ${chatIdList.toString()}")
+//
+//                chatIdList.forEach { chatId ->
+//
+//                    Log.d("abcd", "chatId in getChatRoomData is : ${chatId.toString()}")
+//
+//                        //각 chatid의 채팅룸을 채팅리스트에 뽑아줌 //todo 이게 최선?... ValueEventListener??..
+//                        talkRef.child(chatId).addValueEventListener(object : ValueEventListener {
+//                            override fun onDataChange(chatRoom: DataSnapshot) {
+//                                if (chatRoom.exists()) {
+//                                    listData.clear()
+//
+//                                    val chatRoomValue = chatRoom.getValue(ChatRoom::class.java)
+//                                    listData.add(chatRoomValue!!)
+//                                    mutableData.value = listData
+//                                } else {
+//                                    Log.d("abcd","없음")
+//                                }
+//                            }
+//
+//                            override fun onCancelled(error: DatabaseError) {
+//                                Log.d("abcd","채팅리스트 에러 : ${error.message}")
+//                            }
+//
+//                        })
+//
+//
+//                }
+//            })
+//
+//
+//
+//        //  5/9 2:52
+//        return mutableData
+//
+//    }
 
 
 
