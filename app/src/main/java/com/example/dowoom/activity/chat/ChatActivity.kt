@@ -10,8 +10,13 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.collection.arraySetOf
 import androidx.lifecycle.Observer
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,14 +29,16 @@ import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.adapter.chatMsgAdatper
 
 import com.example.dowoom.databinding.ActivityChatBinding
+import com.example.dowoom.firebase.Ref
 import com.example.dowoom.model.talkModel.Message
+import com.example.dowoom.repo.ChatRepo
 import com.example.dowoom.viewmodel.chatviewmodel.ChatViewmodel
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.zhihu.matisse.Matisse
+import com.zhihu.matisse.MimeType
+import com.zhihu.matisse.engine.impl.GlideEngine
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 
@@ -39,17 +46,19 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
     val viewModel: ChatViewmodel by viewModels()
     private lateinit var adapter: chatMsgAdatper
-    var listdata = mutableListOf<MutableList<Message>>()
 
     //todo global하게 쓰이는 변수, 클래스들 null처리 해줘야 함.
     var myUid:String? = null
     var partnerId:String? = null
     var partnerNickname:String? = null
     var profileImg:String? = null
-    val auth = FirebaseAuth.getInstance().currentUser?.uid
 
     //start result for activity
     val TAKE_IMAGE_CODE = 10001
+    //start result for activity
+    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    //이미지 리스트
+    var uriList : MutableList<Uri> = mutableListOf<Uri>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,10 +77,10 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
             binding.ivSendMsg.setOnClickListener {
 
                 val message = viewModel.etMessage.value.toString()
-                Log.d("Abcd","message is : $message, $myUid, $partnerId")
+                Log.d("Abcd","insertMessage - message is : $message")
                 if (!message.isNullOrEmpty()) {
                     CoroutineScope(Dispatchers.Main).launch {
-                        viewModel.insertMessage(null ,message, myUid!!,partnerId!!)
+                        viewModel.insertMessage( message, Ref().auth.uid,partnerId!!)
                     }
                 } else {
                     binding.ivSendMsg.isEnabled = false
@@ -85,32 +94,43 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
                 //권한 체크
                 PermissionCheck(this@ChatActivity).checkPermission()
 
-                val mimeType = arrayOf<String>("image/jpeg","image/png")
+                val mimeType = arraySetOf<MimeType>(MimeType.JPEG, MimeType.PNG)
+                //이미지 선택기 라이브러리
+                Matisse.from(this@ChatActivity)
+                    .choose(mimeType) //이미지 타입
+                    .countable(true) //이미지 카운터
+                    .maxSelectable(6) //이미지 선택 최대 개수
+                    .thumbnailScale(1f)
+                    .imageEngine(GlideEngine())
+                    .showPreview(false)
+                    .forResult(TAKE_IMAGE_CODE)
 
-                val intent = Intent(Intent.ACTION_PICK)
-                    .apply { type = "image/*"
-                        putExtra(Intent.EXTRA_MIME_TYPES,mimeType)
-                    }
-
-                this@ChatActivity.startActivityForResult(Intent.createChooser(intent, "앨범 가져오기"),TAKE_IMAGE_CODE)
 
             }
         }
 
+        //start for result
+        activityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+            ActivityResultCallback { result ->
+
+            })
+
     }
+
+
 
     fun initialViewModel() {
 
         lifecycleScope.launchWhenResumed {
-            //메세지 관찰 : 내가 상대방에게
-            val listData: MutableList<Message> = mutableListOf<Message>()
-            viewModel.observeMessage(auth!!,partnerId!!).onCompletion {
-                Log.d("abcd","observeMessage 끝" )
-            }.collect {
-                Log.d("Abcd","it ititit is :${it.from}")
-                listData.add(it)
-                adapter.setMessage(listData)
-            }
+
+            ChatRepo().observeMessage(Ref().auth.uid,partnerId!!).observe(this@ChatActivity, Observer {
+                adapter.addMessage(it)
+            })
+
+            ChatRepo().observeMessage(partnerId!!,Ref().auth.uid).observe(this@ChatActivity, Observer {
+                adapter.addMessage(it)
+            })
 
             //메세지 추가
             viewModel.message.observe(this@ChatActivity, Observer { result ->
@@ -133,8 +153,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
     fun initialized() {
         val i = intent
 
-        //내 uids
-        myUid = FirebaseAuth.getInstance().currentUser?.uid
+
         //상대방 uid
         partnerId = i.getStringExtra("partnerId")
         //상대방 닉네임
@@ -171,37 +190,20 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         initialViewModel()
 
     }
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == TAKE_IMAGE_CODE) {
-//            val context = this@ChatActivity
-//
-//            when(resultCode) {
-//                RESULT_OK -> {
-//                    val activity = this@ChatActivity
-//                    val progressDialog = CustomProgressDialog(activity)
-//                    progressDialog.start()
-//
-//                        val uri:Uri = data?.data!!
-//
-//
-//                        //사진 to db
-//                        CoroutineScope(Dispatchers.IO).launch {
-//                            val result = HandleImage(uri).handleUpload()
-//                            Log.d("abcd"," path : ${result} ,,,, chatid : ${viewModel.chatId.value.toString()}")
-//                            withContext(Dispatchers.Main) {
-//                                context.viewModel.insertMessage(result,"photo",myUid!!,part!!,otherNickname!!)
-//                            }
-//                        }
-//                    progressDialog.dismiss()
-//
-//                }
-//                else -> {
-//                    Toast.makeText(context, "사진을 가져오지 못했습니다.",Toast.LENGTH_SHORT).show()
-//                }
-//
-//            }
-//        }
-//    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == TAKE_IMAGE_CODE && resultCode == RESULT_OK) {
+            uriList = Matisse.obtainResult(data)
+
+            if (uriList.isEmpty()) {
+                Toast.makeText(this@ChatActivity, "사진을 선택해 주세요.",Toast.LENGTH_SHORT).show()
+            } else {
+                //사진 to db
+                CoroutineScope(Dispatchers.IO).launch {
+                    HandleImage(uriList, Ref().auth.uid,partnerId!!).handleUpload()
+                }
+            }
+        }
+    }
 
 }

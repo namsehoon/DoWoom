@@ -16,8 +16,8 @@ import com.google.firebase.database.*
 import kotlinx.coroutines.*
 import java.util.*
 
-class ChatRepo {
 
+class ChatRepo {
 
 
     /** 만약 채팅 멤버 한명만 null이면, 메세지 작성 및 버튼 비활성화 */
@@ -129,20 +129,15 @@ class ChatRepo {
 
 
     /** 메세지 보내기 */
-    suspend fun sendMessage(imageUrl: String? = null, from: String, to: String, text: String? = null) {
+    suspend fun sendMessage( from: String, to: String, text: String? = null) {
 
         CoroutineScope(Dispatchers.IO).launch {
 
             val key = Ref().messageRef().push().key
             val time = System.currentTimeMillis()/1000
             var message:Message? = null
-            if (imageUrl == null) {
-                //텍스트
-                message = Message(from,to,null,text,key,time,false)
-            } else {
-                //사진
-                message = Message(from,to,imageUrl,"이미지",key,time,false)
-            }
+
+            message = Message(from,to,null,text,key,time,false)
 
 
             Ref().messageRef().child(from).child(to).child(key!!).setValue(message)
@@ -198,10 +193,8 @@ class ChatRepo {
                        Log.d("Abcd","chatRepo - observeMessage - onChildAdded")
 
                        val messageData = messages.getValue(Message::class.java)
-                       Log.d("abcd","messagedata is :${messages.ref}")
-
                        idList.add(messageData?.messageId!!)
-
+                        listData.add(messageData)
                        mutableData.value = messageData!!
                    } else {
                        Log.d("abcd","load할 메세지가 없습니다.")

@@ -35,15 +35,13 @@ class ChatViewmodel : ViewModel() {
     val _message = MutableLiveData<Message>()
     val message : LiveData<Message> get() = _message
 
-    suspend fun insertMessage(imageUrl:String?, message:String, from:String, to: String)  {
+    suspend fun insertMessage(message:String, from:String, to: String)  {
         viewModelScope.launch {
             //메세지 보내기
-            chatRepo.sendMessage(imageUrl,from, to, message)
+            chatRepo.sendMessage(from, to, message)
         }
 
     }
-
-
 
 
     /** 메세지 삭제 */
@@ -63,31 +61,6 @@ class ChatViewmodel : ViewModel() {
             GlobalScope.launch { flow.collect { send(it) } }
         }
         flowJobs.joinAll()
-    }
-
-    /** 전체 메세지 관찰 */
-    @ExperimentalCoroutinesApi
-    suspend fun observeMessage(from: String, to: String) : Flow<Message> {
-
-        val ff = flow<Message> {
-            chatRepo.observeMessage(from, to).asFlow().collect {
-                emit(it)
-            }
-        }
-        val gg = flow<Message> {
-            chatRepo.observeMessage(to, from).asFlow().collect {
-                emit(it)
-            }
-        }
-        val together: Flow<Message> = merge(ff,gg)
-
-        return flow {
-
-            together.collect { it ->
-                Log.d("abcd","it is :${it}")
-                emit(it)
-            }
-        }
     }
 
 }

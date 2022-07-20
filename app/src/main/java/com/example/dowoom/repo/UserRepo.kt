@@ -210,7 +210,7 @@ class userRepo {
             val user = User(uid,0,nickname,stateMsg,0,false,null,sOrB,profileImg.toString())
 
             //새로운 유저
-            Ref().userRef().child(uid!!).setValue(user).continueWithTask {task ->
+            Ref().userRef().child(uid).setValue(user).continueWithTask {task ->
                 task.exception?.let {
                     Log.d("abcd","ComuRepo - insertGuestWriteIn - 게시판 글 작성 실패")
                     throw  it

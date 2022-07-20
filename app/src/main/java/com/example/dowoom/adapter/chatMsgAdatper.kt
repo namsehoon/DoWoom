@@ -2,6 +2,7 @@ package com.example.dowoom.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.dowoom.R
 import com.example.dowoom.databinding.ReceivemsgItemBinding
 import com.example.dowoom.databinding.SendmsgItemBinding
+import com.example.dowoom.firebase.Ref
 import com.example.dowoom.model.talkModel.Message
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
@@ -23,20 +25,14 @@ class chatMsgAdatper(val context: Context,
 
     //메세지
     var messages = mutableListOf<Message>()
-    //todo : @string 만들어서 보안 관련 코드들 넣어두기
-    private val storage: FirebaseStorage = FirebaseStorage.getInstance()
-    private val storageRef: StorageReference = storage.reference
+    var from = mutableListOf<Message>()
+    var to = mutableListOf<Message>()
 
-    //메세지 set
-    @SuppressLint("NotifyDataSetChanged")
-    fun setMessage(messageList: MutableList<Message>) {
-        messages.clear()
-        messages.addAll(messageList)
-        notifyDataSetChanged()
-    }
 
     fun addMessage(message: Message) {
         messages.add(message)
+        messages.sortByDescending { it.date }
+        messages.reverse()
         notifyItemInserted(messages.count())
     }
 
@@ -76,23 +72,17 @@ class chatMsgAdatper(val context: Context,
             val viewHolder = holder as SendMsgHolder
 
             //이미지 처리
-            if (message.message.equals("photo")) {
+            if (message.message.equals("이미지")) {
                 viewHolder.sendBinding.llMsgSend.visibility = View.GONE
                 viewHolder.sendBinding.llImgSend.visibility = View.VISIBLE
                 viewHolder.sendBinding.imgSend.visibility = View.VISIBLE
 
-                storageRef.child(message.imageUrl!!).downloadUrl.addOnCompleteListener { task ->
-                    if (task.isComplete) {
-                        Glide.with(context)
-                            .load(task.result) // 이미지를 로드
-                            .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
-                            .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
-                            .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
-                            .into(viewHolder.sendBinding.imgSend) //이미지를 보여줄 view를 지정
-                    }
-                }
-
-
+                Glide.with(context)
+                    .load(message.imageUrl) // 이미지를 로드
+                    .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
+                    .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
+                    .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
+                    .into(viewHolder.sendBinding.imgSend) //이미지를 보여줄 view를 지정
             }
 
             //메세지
@@ -108,6 +98,21 @@ class chatMsgAdatper(val context: Context,
         } else {
             /** 상대방  */
             val viewHolder = holder as ReceiveMsgHolder
+
+            //이미지 처리
+            if (message.message.equals("이미지")) {
+                viewHolder.receiveBinding.llMsgReceive.visibility = View.GONE
+                viewHolder.receiveBinding.llImgReceive.visibility = View.VISIBLE
+                viewHolder.receiveBinding.imgReceive.visibility = View.VISIBLE
+
+                Glide.with(context)
+                    .load(message.imageUrl) // 이미지를 로드
+                    .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
+                    .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
+                    .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
+                    .into(viewHolder.receiveBinding.imgReceive) //이미지를 보여줄 view를 지정
+            }
+
             //일반
             viewHolder.receiveBinding.msgReceive.text = message.message
 

@@ -1,6 +1,7 @@
 package com.example.dowoom.adapter
 
 import android.content.Context
+import android.content.res.Resources
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dowoom.model.User
 import com.example.dowoom.R
+import com.example.dowoom.Util.GlideApp
 import com.example.dowoom.databinding.ItemRecyclerBinding
 //private val itemClickListener:(User) -> Unit
 class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talkClick:(User) -> Unit) : RecyclerView.Adapter<HomeAdapter.UserHolder>() {
@@ -42,21 +44,17 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
        //databinding한 useritem에 users의 positoin에 맞게 뿌려줌
         val user = users[position]
         val viewHolder = holder as UserHolder
+        Log.d("abcd","user.profile : ${user.profileImg.toString()}")
+        if (user.profileImg.isNullOrEmpty()) {
+            val res = R.drawable.ic_baseline_person_24
+            viewHolder.binding.imageView.setImageDrawable(context.getDrawable(res))
 
-        if (user.profileImg != null) {
-            Glide.with(context)
-                .load(user.profileImg) // 이미지를 로드
-                .override(100,100)
-                .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
-                .error(R.drawable.ic_baseline_person_24) // 불러오다가 에러발생
-                .into(viewHolder.binding.imageView) //이미지를 보여줄 view를 지정
         } else {
-            Glide.with(context)
+            GlideApp.with(context)
                 .load(user.profileImg) // 이미지를 로드
-                .override(100,100)
+                .override(80,80)
                 .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
                 .error(R.drawable.ic_baseline_person_24) // 불러오다가 에러발생
-                .fallback(R.drawable.ic_baseline_person_24) // 이미지가 null
                 .into(viewHolder.binding.imageView) //이미지를 보여줄 view를 지정
         }
 

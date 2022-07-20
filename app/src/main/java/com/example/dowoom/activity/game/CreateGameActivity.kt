@@ -168,7 +168,7 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
                     uriList = Matisse.obtainResult(data)
 
                     if (uriList.isEmpty()) { //만약 사진이 한장도 없다면,,
-                        Toast.makeText(this@CreateGameActivity,"사진을 선택 해주세요.",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@CreateGameActivity,"사진을 선택해 주세요.",Toast.LENGTH_SHORT).show()
                     } else {
                         //adapter 설정
                         adapter = MultiImageAdapter(uriList, this@CreateGameActivity, deleteClicked =  { uri, position ->
