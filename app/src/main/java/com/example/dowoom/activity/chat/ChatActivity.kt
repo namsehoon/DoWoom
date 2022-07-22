@@ -47,8 +47,6 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
     val viewModel: ChatViewmodel by viewModels()
     private lateinit var adapter: chatMsgAdatper
 
-    //todo global하게 쓰이는 변수, 클래스들 null처리 해줘야 함.
-    var myUid:String? = null
     var partnerId:String? = null
     var partnerNickname:String? = null
     var profileImg:String? = null
@@ -89,7 +87,6 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
             }
 
 
-            //todo 이미지 보내기
             binding.ivSendImg.setOnClickListener {
                 //권한 체크
                 PermissionCheck(this@ChatActivity).checkPermission()
@@ -138,7 +135,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
                 adapter.addMessage(result)
                 binding.rvChatRoom.scrollToPosition(adapter.messages.size -1)
             })
-            //todo 메세지 삭제, 사진 저장
+            //todo 사진 저장
 
             viewModel.memberCheck.observe(this@ChatActivity, Observer { result ->
                 if (result) { // 둘 중 하나가 null 이라면,
@@ -162,6 +159,8 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         profileImg = i.getStringExtra("profileImg")
 
 
+        Log.d("Abcd","partnerId : $partnerId")
+
         //어뎁터 설정
         adapter = chatMsgAdatper(this@ChatActivity, msgClicked =  { message, position ->
             //메세지 삭제
@@ -183,7 +182,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
                 }
             })
-        })
+        }, profileImg)
         binding.rvChatRoom.layoutManager = LinearLayoutManager(this@ChatActivity)
         binding.rvChatRoom.adapter = adapter
 

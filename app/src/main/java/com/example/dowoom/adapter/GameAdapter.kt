@@ -37,7 +37,6 @@ class GameAdapter(val context: Context,val goIntoGameRoom:(GameModel) -> Unit) :
     override fun onBindViewHolder(holder: GameAdapter.GameViewHolder, position: Int) {
         val game = games[position]
 
-        //todo : 닉네임 처리 해야 되는데? 왜 displayname을 안가져올까?
         holder.gameBinding.tvCreatorName.text = game.nickname
         holder.gameBinding.tvLeftCount.text = game.leftCount.toString()
         holder.gameBinding.tvAcceptable.text = game.acceptable.toString()

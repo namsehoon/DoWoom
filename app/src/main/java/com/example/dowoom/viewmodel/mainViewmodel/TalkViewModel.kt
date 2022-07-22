@@ -1,6 +1,7 @@
 package com.example.dowoom.viewmodel.mainViewmodel
 
 import androidx.lifecycle.*
+import com.example.dowoom.firebase.Ref
 import com.example.dowoom.model.talkModel.ChatRoom
 import com.example.dowoom.model.talkModel.Member
 import com.example.dowoom.repo.ChatRepo
@@ -10,17 +11,21 @@ class TalkViewModel : ViewModel() {
 
     private val chatRepo = ChatRepo()
 
-    /** 채팅룸 전체 관찰*/
+    init {
+        viewModelScope.launch {
+            observeChat(Ref().auth.uid)
+        }
+    }
 
-//    suspend fun observeChat(): LiveData<MutableList<ChatRoom>> {
-//        val chatList = MutableLiveData<MutableList<ChatRoom>>()
-//            chatRepo.getChatRoomData().observeForever(Observer { it ->
-//                chatList.value = it
-//            })
-//
-//        return chatList
-//
-//    }
+    val _observeChat = MutableLiveData<MutableList<ChatRoom>>()
+    val observeChat:LiveData<MutableList<ChatRoom>> get() = _observeChat
+
+    /** 채팅룸 전체 관찰*/
+    suspend fun observeChat(uid:String) {
+        chatRepo.getChatRoomData(uid).observeForever(Observer { it ->
+            _observeChat.value = it
+        })
+    }
 
     /** 채팅룸 삭제*/
 

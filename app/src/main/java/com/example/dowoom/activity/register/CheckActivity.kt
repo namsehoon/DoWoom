@@ -175,7 +175,7 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
                 //task내에 해당 속성이 적용된 activity부터 top activity까지 모두 제거한 뒤 해당 activity를 활성화하여 top이 되도록 함
                 intentFormain =  Intent(this,MainActivity::class.java).apply { Intent.FLAG_ACTIVITY_CLEAR_TOP }
 
-                //닉네임 넘겨서 닉네임 없으면 다시 로그인 //todo :뭔 개소리야?
+                //닉네임 넘겨서 닉네임 없으면 다시 로그인
                 intentFormain.putExtra("nickname",binding.etNickname.text.toString())
 
                 CoroutineScope(Dispatchers.Main).launch {

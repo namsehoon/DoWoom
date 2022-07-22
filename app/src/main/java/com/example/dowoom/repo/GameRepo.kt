@@ -78,7 +78,7 @@ class GameRepo {
                 }
 
                 override fun onChildMoved(ladders: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
+
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -128,7 +128,7 @@ class GameRepo {
                     }
 
                     override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                        TODO("Not yet implemented")
+
                     }
 
                     override fun onCancelled(error: DatabaseError) {

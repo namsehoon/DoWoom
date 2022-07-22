@@ -53,8 +53,8 @@
         <entry key="app/src/main/res/layout/my_dialog.xml" value="0.33" />
         <entry key="app/src/main/res/layout/progress.xml" value="0.16944444444444445" />
         <entry key="app/src/main/res/layout/progress_img.xml" value="0.16944444444444445" />
-        <entry key="app/src/main/res/layout/receivemsg_item.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/sendmsg_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/receivemsg_item.xml" value="0.4103019538188277" />
+        <entry key="app/src/main/res/layout/sendmsg_item.xml" value="0.46452964591196655" />
         <entry key="app/src/main/res/layout/setting_fragment.xml" value="0.20885416666666667" />
         <entry key="app/src/main/res/layout/talk_fragment.xml" value="0.20885416666666667" />
         <entry key="app/src/main/res/layout/toolbar_main.xml" value="0.21197916666666666" />

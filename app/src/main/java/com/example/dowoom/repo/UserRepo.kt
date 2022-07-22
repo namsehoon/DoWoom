@@ -166,7 +166,7 @@ class userRepo {
 
     }
 
-    /** 자동 로그인 */ //todo : singleLiveEvent로 변경
+    /** 자동 로그인 */
     suspend fun autoLogin() : Flow<Boolean> {
         return flow {
             var logined = false

@@ -126,9 +126,9 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
                 createLadderGame(gameUid)
 
             } else if (whatKindGame == 2) { // 돌림판
-                //todo
+                //todo (not now!)
             } else if(whatKindGame == 3) {
-                //todo
+                //todo (not now!)
             }
         }
 

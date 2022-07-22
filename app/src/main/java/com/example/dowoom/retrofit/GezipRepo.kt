@@ -79,7 +79,6 @@ class GezipRepo {
 
 
         })
-        //todo: 계속 while문이 돌면 위험한디.. count 정해놔야함.. 사이트가 안들어가질 시.
         while (humorList.isEmpty()) {
             delay(1000)
             count += 1
@@ -88,8 +87,6 @@ class GezipRepo {
                 break
             }
         }
-        //todo : ConcurrentModificationException
-        //todo : ConcurrentModificationException
         //todo : ConcurrentModificationException
 
         emit(humorList)
@@ -148,7 +145,7 @@ class GezipRepo {
 
         })
         while (updateComuModel?.contentImg == null) {
-            delay(500) //todo : 고쳐야함
+            delay(500)
             Log.d("abcd","updateComuModel?.contentImg == null")
             count += 1
             if (count == 5) {

@@ -37,7 +37,7 @@ import com.example.dowoom.activity.main.MainActivity.onBackPressedListener
 
 
 
-//baseActivity() 상속 (intent, replaceFragment startNextActivity(클래스::class.java). todo binding 추가 예정)
+//baseActivity() 상속 (intent, replaceFragment startNextActivity(클래스::class.java).
 class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.layout.activity_main) {
 
     lateinit var homeFrag: HomeFrag

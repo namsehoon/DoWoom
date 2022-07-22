@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.coroutines.*
 import java.util.*
+import kotlin.math.log
 
 
 class ChatRepo {
@@ -24,7 +25,7 @@ class ChatRepo {
 
     val _memberResult = MutableLiveData<Boolean>()
     val memberResult : LiveData<Boolean>  = _memberResult
-//todo : 수정
+
     fun checkChatRoomMemberOneNull(chatId: String) : LiveData<Boolean> {
 
 
@@ -48,29 +49,8 @@ class ChatRepo {
     }
 
 
-    /** 메세지 삭제 */
-    suspend fun deleteMessage(
-        messageId: String,
-        chatId:String,
-    ) {
-        //chatid 구하기
-        CoroutineScope(Dispatchers.IO).launch {
-
-            val updateMsg = Ref().messageRef().child(chatId).child(messageId)
-
-            val childUpdates = hashMapOf<String, Any>(
-                "message" to "삭제되었습니다."
-            )
-            Log.d("abcd","message id : ${messageId}, chatId is : ${chatId}")
-            updateMsg.updateChildren(childUpdates)
-                .addOnCompleteListener { Log.d("abcd", "메세지 삭제 성공.") }
-                .addOnFailureListener { Log.d("abcd", "메세지 삭제 실패.") }
-
-        }
-    }
 
 
-    //todo : 터미널 에러 : Ignoring header X-Firebase-Locale because its value was null.
     /** 채팅방 삭제 */
 //    suspend fun deleteChatRoom(
 //        chatId: String,
@@ -117,14 +97,11 @@ class ChatRepo {
 //                }
 //
 //                override fun onCancelled(error: DatabaseError) {
-//                    TODO("Not yet implemented")
 //                }
 //
 //            })
 //        }
 //    }
-
-
 
 
 
@@ -155,7 +132,7 @@ class ChatRepo {
     /** 채팅룸 업데이트 : lastmessage 및 timeStamp */
     fun updateChatRoom(from:String, to:String, message: Message) {
 
-        val childUpdates = hashMapOf<String,Any>(
+        val fromTochildUpdates = hashMapOf<String,Any>(
             "from" to from,
             "date" to message.date!!,
             "to" to to,
@@ -163,13 +140,22 @@ class ChatRepo {
             "read" to message.read
 
         )
+        val toFromchildUpdates = hashMapOf<String,Any>(
+            "from" to to,
+            "date" to message.date!!,
+            "to" to from,
+            "message" to message.message!!,
+            "read" to message.read
+
+        )
+
         //내가 상대방에게
-        Ref().chatroomRef().child(from).child(to).updateChildren(childUpdates).addOnCompleteListener {
+        Ref().chatroomRef().child(from).child(to).updateChildren(fromTochildUpdates).addOnCompleteListener {
             Log.d("abcd", "chatRepo - updateChatRoom - 나")
         }
 
         //상대방이 나에게
-        Ref().chatroomRef().child(to).child(from).updateChildren(childUpdates).addOnCompleteListener {
+        Ref().chatroomRef().child(to).child(from).updateChildren(toFromchildUpdates).addOnCompleteListener {
             Log.d("abcd", "chatRepo - updateChatRoom - 상대방")
         }
 
@@ -205,21 +191,6 @@ class ChatRepo {
                override fun onChildChanged(messages: DataSnapshot, previousChildName: String?) {
                    if (messages.exists()) {
                        Log.d("Abcd","chatRepo - observeMessage - onChildChanged")
-//                      val changedMessageData = messages.getValue(Message::class.java)
-//                       Log.d("abcd","changedMessageData is ${changedMessageData}")
-//                       Log.d("abcd","previousChildName is : ${previousChildName}")
-//                       if (!changedMessageData?.message.equals("삭제되었습니다.")) {
-//                           listData.add(changedMessageData!!)
-//                           idList.add(changedMessageData.messageId!!)
-//                       } else {
-//                           //messageid의 인덱스
-//                           val index = idList.indexOf(changedMessageData?.messageId)
-//                           if (index > -1) {
-//                               listData[index] = changedMessageData!!
-//                           }
-//                       }
-//                       mutableData.value = listData
-
                    }
                }
 
@@ -244,58 +215,57 @@ class ChatRepo {
 
 
     /** 채팅방 가져오기 */
-//    suspend fun getChatRoomData(): LiveData<MutableList<ChatRoom>> {
-//
-//        val mutableData = MutableLiveData<MutableList<ChatRoom>>()
-//        val listData: MutableList<ChatRoom> = mutableListOf<ChatRoom>()
-//
-////onChildAdded(): 리스트의 아이템을 검색하거나 아이템의 추가가 있을때 수신합니다.
-////onChildChanged(): 아이템의 변화가 있을때 수신합니다.
-////onChildRemoved(): 아이템이 삭제되었을때 수신합니다.
-////onChildMoved(): 순서가 있는 리스트에서 순서가 변경되었을때 수신합니다.
-//
-////todo  사진 저장
-//
-//
-//            //유저 각자 가지고 있는 chat id들을 가져옴
-//            observeChatId().observeForever(androidx.lifecycle.Observer {  chatIdList ->
-//
-//                Log.d("abcd", "chatIdList in getChatRoomData is : ${chatIdList.toString()}")
-//
-//                chatIdList.forEach { chatId ->
-//
-//                    Log.d("abcd", "chatId in getChatRoomData is : ${chatId.toString()}")
-//
-//                        //각 chatid의 채팅룸을 채팅리스트에 뽑아줌 //todo 이게 최선?... ValueEventListener??..
-//                        talkRef.child(chatId).addValueEventListener(object : ValueEventListener {
-//                            override fun onDataChange(chatRoom: DataSnapshot) {
-//                                if (chatRoom.exists()) {
-//                                    listData.clear()
-//
-//                                    val chatRoomValue = chatRoom.getValue(ChatRoom::class.java)
-//                                    listData.add(chatRoomValue!!)
-//                                    mutableData.value = listData
-//                                } else {
-//                                    Log.d("abcd","없음")
-//                                }
-//                            }
-//
-//                            override fun onCancelled(error: DatabaseError) {
-//                                Log.d("abcd","채팅리스트 에러 : ${error.message}")
-//                            }
-//
-//                        })
-//
-//
-//                }
-//            })
-//
-//
-//
-//        //  5/9 2:52
-//        return mutableData
-//
-//    }
+    suspend fun getChatRoomData(uid:String): LiveData<MutableList<ChatRoom>> {
+
+        val mutableData = MutableLiveData<MutableList<ChatRoom>>()
+        val listData: MutableList<ChatRoom> = mutableListOf<ChatRoom>()
+
+        Ref().chatroomRef().child(uid).addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.d("Abcd","ChatRepo - getChatRoomData - onChildAdded")
+                if (snapshot.exists()) {
+                    Log.d("abcd","chatroom is : ${snapshot.ref}")
+
+                    val chatroom = snapshot.getValue(ChatRoom::class.java)
+
+                    Ref().userRef().child(snapshot.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                           val user = snapshot.getValue(User::class.java)
+                            chatroom?.user = user
+                            listData.add(chatroom!!)
+                            mutableData.value = listData
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.d("Abcd","ChatRepo - getChatRoomData - onChildAdded - error : ${error.message}")
+                        }
+
+                    })
+                }
+
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.d("Abcd","ChatRepo - getChatRoomData - onChildChanged")
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                Log.d("Abcd","ChatRepo - getChatRoomData - onChildRemoved")
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.d("Abcd","ChatRepo - getChatRoomData - onChildMoved")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("Abcd","ChatRepo - getChatRoomData - error : ${error.message}")
+            }
+
+        })
+
+        return mutableData
+
+    }
 
 
 

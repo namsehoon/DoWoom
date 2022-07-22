@@ -13,6 +13,7 @@ import com.example.dowoom.Util.CustomAlertDialog
 import com.example.dowoom.activity.chat.ChatActivity
 import com.example.dowoom.adapter.ChatRoomAdapter
 import com.example.dowoom.databinding.TalkFragmentBinding
+import com.example.dowoom.firebase.Ref
 import com.example.dowoom.viewmodel.mainViewmodel.TalkViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -48,14 +49,9 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
             goIntoChatroom = { chatRoom ->
                 //채팅방 클릭시, 채팅방 내로
                 val intent = Intent(context, ChatActivity::class.java)
-                //만약 user1과 내 uid와 같거나
-                if (chatRoom.member?.user1 == auth?.uid) {
-                    intent.putExtra("otherUid", chatRoom.member?.user2)
-                } else {
-                    intent.putExtra("otherUid", chatRoom.member?.user1)
-                }
-                Log.d("abcd", " otherUid in talkfrag is : ${chatRoom.otherUid}")
-                intent.putExtra("otherNickname", chatRoom.nickname)
+                intent.putExtra("partnerNickname",chatRoom.user?.nickname)
+                intent.putExtra("profileImg",chatRoom.user?.profileImg)
+                intent.putExtra("partnerId",chatRoom.to)
 
                 context?.startActivity(intent)
             }
@@ -101,13 +97,13 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
 
     fun observerData() {
         //대화 recycler 만들기
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewModel.observeChat.observe(this@TalkFrag, Observer {
+                adapter.setChatroom(it)
+            })
 
-//        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-//            viewModel.observeChat().observe(viewLifecycleOwner, Observer { it ->
-//                Log.d("abcd","it chat is : "+it.toString())
-//                adapter.setChatroom(it)
-//            })
 
+        }
     }
 
 

@@ -6,5 +6,5 @@ data class Comment (
     var nickname:String? = null,
     var timeStamp:Long? = null,
     var comment:String? = null,
-    //todo : 답글?
+    //todo : 답글? (not now!)
     )

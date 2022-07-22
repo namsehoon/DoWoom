@@ -83,7 +83,7 @@ class PlayGameActivity : BaseActivity<ActivityPlayGameBinding>(TAG = "게임 플
 
         binding.tvCreator.text = creator ?: "남세훈"
 
-        //todo : 게임 종류에 따라 다름 액티비티로 가야 함
+        //todo : 게임 종류에 따라 다름 액티비티로 가야 함 (not now!)
 
 
         //결과 확인 버튼

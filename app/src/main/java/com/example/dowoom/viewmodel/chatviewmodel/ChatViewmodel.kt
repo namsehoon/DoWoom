@@ -44,16 +44,6 @@ class ChatViewmodel : ViewModel() {
     }
 
 
-    /** 메세지 삭제 */
-//    suspend fun deleteMessage(
-//        messageId: String
-//    ) {
-//        viewModelScope.launch {
-//            if (chatId.value.toString() != null) {
-//                chatRepo.deleteMessage(messageId,chatId.value.toString())
-//            }
-//        }
-//    }
 
 
     fun <T> merge(vararg flows: Flow<T>): Flow<T> = channelFlow {

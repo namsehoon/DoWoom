@@ -106,10 +106,6 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
                 adapter.setUser(it)
             })
 
-            viewModel.getChatId.observe(viewLifecycleOwner, Observer {
-                Log.d("abcd", "chatId in homefrag 채팅시작 is : ${it}")
-            })
-
             //참고 : https://stackoverflow.com/questions/50000975/am-i-allowed-to-observe-a-viewmodel-if-i-clean-up-the-back-references
             viewModel.getOnEndLive().observe(viewLifecycleOwner, Observer { onEnd ->
                 if (onEnd != null && onEnd == true) {

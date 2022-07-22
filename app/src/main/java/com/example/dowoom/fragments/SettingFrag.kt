@@ -27,7 +27,6 @@ class SettingFrag : BaseFragment<SettingFragmentBinding>("SettingFrag", R.layout
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(SettingViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
 }

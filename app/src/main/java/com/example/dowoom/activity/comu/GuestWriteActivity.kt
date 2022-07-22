@@ -62,7 +62,7 @@ class GuestWriteActivity : BaseActivity<ActivityGuestWriteBinding>("익게 글�
                 content = binding.etTextContent.text.toString()
 
 
-                //todo: 이미지 업로드할 수 있도록 기능추가
+                //todo: 이미지 업로드할 수 있도록 기능추가 (not now!)
                 if (subject.isNullOrEmpty()) {
                     Toast.makeText(this@GuestWriteActivity,"제목을 입력해 주세요.",Toast.LENGTH_SHORT).show()
                 }

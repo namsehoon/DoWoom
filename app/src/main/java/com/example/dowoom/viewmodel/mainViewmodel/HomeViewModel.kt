@@ -36,10 +36,6 @@ class HomeViewModel : ViewModel() {
         return userList
     }
 
-    //chatId 받아오기
-    val _getChatId = MutableLiveData<String>()
-    val getChatId:LiveData<String> get() = _getChatId
-
 
 //    //대화 생성완료
 //    suspend fun checkedChat(user:User) {

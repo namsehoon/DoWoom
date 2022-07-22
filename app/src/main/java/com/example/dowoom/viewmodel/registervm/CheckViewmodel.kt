@@ -50,8 +50,6 @@ class CheckViewmodel : ViewModel() {
     private val _insertComplete = MutableLiveData<Boolean>()
     val insertComplete:LiveData<Boolean> get() = _insertComplete
 
-
-    //todo = 사용자가 이미 존재해도 데이터 업데이트 됨.
     suspend fun userInsert(statusMsg:String,sOrB:Boolean) {
         viewModelScope.launch {
             if (!etNickname.get().toString().isNullOrEmpty()) {

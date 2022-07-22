@@ -67,7 +67,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
             Log.d("Abcd","부모에서 ComuAdapter 클릭됨")
 
             binding.llToWrite.visibility = View.GONE //글작성
-            binding.llComuList.visibility = View.GONE // 컨텐츠 리스트 .. todo: no adapter onttach 에러 ;;
+            binding.llComuList.visibility = View.GONE // 컨텐츠 리스트
             binding.llconTents.visibility = View.VISIBLE // 컨텐츠 보여주는 뷰
             // 이전 및 다음 페이지
             binding.tvNextPage.visibility = View.GONE
@@ -141,7 +141,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 binding.llToWrite.visibility = View.GONE //글작성 버튼 숨기기
                 binding.llconTents.visibility  = View.GONE //컨텐츠 표시 view 숨기기
                 binding.llComuList.visibility = View.VISIBLE
-                //todo : 데이터 불러오기 1, 2, 3, 4, 5
+                //todo : 데이터 불러오기 1, 2, 3, 4, 5 (not now!)
                 viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
                     adapter.setContents(it)
                 })
