@@ -253,10 +253,8 @@ class userRepo {
         //게임 카운터
         val userCount = GameCount(uid, 0)
 
-        return Ref().userRef().child("GameCount").child(uid).setValue(userCount)
+        return Ref().gameCountRef().child(uid).setValue(userCount)
     }
-
-
 
 
 }

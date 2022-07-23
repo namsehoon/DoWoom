@@ -3,7 +3,6 @@ package com.example.dowoom.viewmodel.mainViewmodel
 import androidx.lifecycle.*
 import com.example.dowoom.firebase.Ref
 import com.example.dowoom.model.talkModel.ChatRoom
-import com.example.dowoom.model.talkModel.Member
 import com.example.dowoom.repo.ChatRepo
 import kotlinx.coroutines.launch
 

@@ -1,13 +1,11 @@
 package com.example.dowoom.activity.chat
 
+import android.R.attr
 import android.content.Intent
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.MediaStore.Images.Media.insertImage
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
@@ -16,31 +14,26 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.collection.arraySetOf
 import androidx.lifecycle.Observer
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
-import com.example.dowoom.Util.CustomAlertDialog
-import com.example.dowoom.Util.CustomProgressDialog
-import com.example.dowoom.Util.HandleImage
-import com.example.dowoom.Util.PermissionCheck
+import com.example.dowoom.Util.*
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.adapter.chatMsgAdatper
 
 import com.example.dowoom.databinding.ActivityChatBinding
 import com.example.dowoom.firebase.Ref
-import com.example.dowoom.model.talkModel.Message
 import com.example.dowoom.repo.ChatRepo
 import com.example.dowoom.viewmodel.chatviewmodel.ChatViewmodel
-import com.google.firebase.auth.FirebaseAuth
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
-import java.io.IOException
+import android.R.attr.bitmap
+import android.graphics.BitmapFactory
+
 
 class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layout.activity_chat) {
 
@@ -51,6 +44,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
     var partnerNickname:String? = null
     var profileImg:String? = null
 
+    val ONE_MEGABYTE: Long = 1024 * 1024
     //start result for activity
     val TAKE_IMAGE_CODE = 10001
     //start result for activity
@@ -135,14 +129,8 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
                 adapter.addMessage(result)
                 binding.rvChatRoom.scrollToPosition(adapter.messages.size -1)
             })
-            //todo 사진 저장
 
-            viewModel.memberCheck.observe(this@ChatActivity, Observer { result ->
-                if (result) { // 둘 중 하나가 null 이라면,
-                     binding.ivSendMsg.isEnabled = false
-                    binding.etMessage.isEnabled = false
-                }
-            })
+
         }
     }
 
@@ -162,26 +150,20 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         Log.d("Abcd","partnerId : $partnerId")
 
         //어뎁터 설정
-        adapter = chatMsgAdatper(this@ChatActivity, msgClicked =  { message, position ->
-            //메세지 삭제
-            val dialog = CustomAlertDialog(this@ChatActivity)
-            dialog.start("삭제하시겠습니까?\n(상대방에게서도 삭제됨)")
-            dialog.onOkClickListener(object : CustomAlertDialog.onDialogCustomListener {
+        adapter = chatMsgAdatper(this@ChatActivity, imgClicked =  { message, position ->
+            //이미지 클릭 시,
+            Log.d("Abcd","here i am")
+            val imageDialog = ImageSaveDialog(this@ChatActivity)
+            imageDialog.start(message.imageUrl!!)
+            imageDialog.onOkClickListener(object : ImageSaveDialog.onDialogCustomListener{
                 override fun onClicked() {
-                    Log.d("abcd","삭제 확인 누름")
-                   CoroutineScope(Dispatchers.IO).launch {
-                       Log.d("abcd","\"클릭된 id : ${message.messageId}\"")
-                       Log.d("abcd","\"클릭된 message : ${message.message}\"")
-//                       viewModel.deleteMessage(message.messageId!!)
-                       withContext(Dispatchers.Main) {
-                           //그냥 position에 박아버리는 듯. 다른건 뒤로 밀려버리고
-                           message.message = "삭제되었습니다. activity"
-                           adapter.notifyItemChanged(position)
-                       }
-                   }
+                    Log.d("Abcd","저장버튼 클릭 됨")
 
+                    saveIMG(message.imageUrl!!)
                 }
+
             })
+
         }, profileImg)
         binding.rvChatRoom.layoutManager = LinearLayoutManager(this@ChatActivity)
         binding.rvChatRoom.adapter = adapter
@@ -189,6 +171,23 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         initialViewModel()
 
     }
+
+    fun saveIMG(imgPath:String) {
+        PermissionCheck(this@ChatActivity).checkPermission()
+        CoroutineScope(Dispatchers.IO).launch {
+            val imageRef = Ref().storage.getReferenceFromUrl(imgPath) //사진 ref
+            imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+                val bitmap = BitmapFactory.decodeByteArray(it,0,it.size) //bytes -> bitmap
+                SaveImage().imageExternalSave(this@ChatActivity,bitmap,"DoWoom")
+            }
+                .addOnFailureListener {
+                    Log.d("abcd","ChatActivity - image 저장실패 : ${it.message}")
+            }
+
+        }
+        Toast.makeText(this@ChatActivity,"사진 저장이 완료 되었습니다.",Toast.LENGTH_SHORT).show()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == TAKE_IMAGE_CODE && resultCode == RESULT_OK) {
@@ -197,7 +196,6 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
             if (uriList.isEmpty()) {
                 Toast.makeText(this@ChatActivity, "사진을 선택해 주세요.",Toast.LENGTH_SHORT).show()
             } else {
-                //사진 to db
                 CoroutineScope(Dispatchers.IO).launch {
                     HandleImage(uriList, Ref().auth.uid,partnerId!!).handleUpload()
                 }

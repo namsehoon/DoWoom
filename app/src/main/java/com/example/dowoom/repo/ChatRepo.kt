@@ -7,47 +7,12 @@ import com.example.dowoom.firebase.Ref
 import com.example.dowoom.model.talkModel.ChatRoom
 import com.example.dowoom.model.talkModel.Message
 import com.example.dowoom.model.User
-import com.example.dowoom.model.talkModel.UserChat
-import com.example.dowoom.model.talkModel.Member
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.coroutines.*
 import java.util.*
-import kotlin.math.log
 
 
 class ChatRepo {
-
-
-    /** 만약 채팅 멤버 한명만 null이면, 메세지 작성 및 버튼 비활성화 */
-
-    val _memberResult = MutableLiveData<Boolean>()
-    val memberResult : LiveData<Boolean>  = _memberResult
-
-    fun checkChatRoomMemberOneNull(chatId: String) : LiveData<Boolean> {
-
-
-        CoroutineScope(Dispatchers.IO).launch {
-            Ref().chatroomRef().child(chatId).child("member").addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    Log.d("abcd", "checkChatRoomMemberOneNull ref is : ${snapshot.ref}")
-                    val mem = snapshot.getValue(Member::class.java)
-                    _memberResult.value = mem?.user2 == null || mem.user1 == null
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Log.d("abcd","checkChatRoomMemberOneNull error is : ${error.message}")
-                }
-
-            })
-
-        }
-
-        return memberResult
-    }
-
 
 
 

@@ -62,7 +62,7 @@ class Ref {
         return database.reference.child(GAME)
     }
     fun gameCountRef() : DatabaseReference {
-        return database.reference.child(GAME)
+        return database.reference.child(GAMECOUNT)
     }
     fun gameLadderRef() : DatabaseReference {
         return database.reference.child(GAME).child(LADDER)

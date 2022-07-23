@@ -1,9 +1,5 @@
 package com.example.dowoom.model.comunityModel
 
-import android.graphics.Bitmap
-import com.example.dowoom.model.talkModel.Member
-import com.google.firebase.database.Exclude
-
 //talk fragment
 data class ComuModel(
     var uid:String? = null,

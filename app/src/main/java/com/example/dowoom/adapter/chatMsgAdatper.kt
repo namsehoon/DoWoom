@@ -18,9 +18,12 @@ import com.example.dowoom.model.talkModel.Message
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class chatMsgAdatper(val context: Context,
-                     val msgClicked:(Message, position:Int) -> Unit, val profileImg:String?
+                     val imgClicked:(Message, position:Int) -> Unit, val profileImg:String?
 ): RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
 
     /** 변수 */
@@ -80,12 +83,14 @@ class chatMsgAdatper(val context: Context,
                 viewHolder.sendBinding.imgSend.visibility = View.VISIBLE
                 viewHolder.sendBinding.tvTimestamp.visibility = View.GONE
 
-                Glide.with(context)
-                    .load(message.imageUrl) // 이미지를 로드
-                    .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
-                    .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
-                    .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
-                    .into(viewHolder.sendBinding.imgSend) //이미지를 보여줄 view를 지정
+                CoroutineScope(Dispatchers.Main).launch {
+                    Glide.with(context)
+                        .load(message.imageUrl) // 이미지를 로드
+                        .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
+                        .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
+                        .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null
+                        .into(viewHolder.sendBinding.imgSend) //이미지를 보여줄 view를 지정
+                }
             }
 
             //메세지
@@ -117,19 +122,19 @@ class chatMsgAdatper(val context: Context,
                         viewHolder.sendBinding.tvTimestamp.text = current
                     }
                 }
-
-
-
-
-            //메세지 삭제
-            viewHolder.itemView.setOnLongClickListener {
-                msgClicked(message, position)
+            viewHolder.sendBinding.imgSend.setOnClickListener {
+                imgClicked(message, position)
                 false
             }
+
             viewHolder.sendBinding.executePendingBindings()
 
         } else {
             /** 상대방  */
+            /** 상대방  */
+            /** 상대방  */
+            /** 상대방  */
+
             val viewHolder = holder as ReceiveMsgHolder
 
 
@@ -154,12 +159,14 @@ class chatMsgAdatper(val context: Context,
                 val res = R.drawable.ic_baseline_person_24
                 viewHolder.receiveBinding.ivProfile.setImageDrawable(context.getDrawable(res))
             } else {
-                GlideApp.with(context)
-                    .load(profileImg) // 이미지를 로드
-                    .override(80,80)
-                    .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
-                    .error(R.drawable.ic_baseline_person_24) // 불러오다가 에러발생
-                    .into(viewHolder.receiveBinding.ivProfile) //이미지를 보여줄 view를 지정
+                CoroutineScope(Dispatchers.Main).launch {
+                    GlideApp.with(context)
+                        .load(profileImg) // 이미지를 로드
+                        .override(80,80)
+                        .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
+                        .error(R.drawable.ic_baseline_person_24) // 불러오다가 에러발생
+                        .into(viewHolder.receiveBinding.ivProfile) //이미지를 보여줄 view를 지정
+                }
             }
 
             //다음 메세지가 null이 아니고, 보낸이가 같다면
@@ -190,11 +197,17 @@ class chatMsgAdatper(val context: Context,
                     }
                 }
 
-
+            viewHolder.receiveBinding.imgReceive.setOnClickListener {
+                imgClicked(message, position)
+                false
+            }
             //일반
             viewHolder.receiveBinding.msgReceive.text = message.message
             viewHolder.receiveBinding.executePendingBindings()
         }
+
+
+
     }
 
 

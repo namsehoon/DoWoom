@@ -189,9 +189,11 @@ class GameRepo {
         CoroutineScope(Dispatchers.IO).launch {
             Ref().gameCountRef().child(Ref().auth.uid).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(gameCount: DataSnapshot) {
-                    val gameCountData = gameCount.getValue(GameCount::class.java)
-                    //유저의 게임 count가 1보다 낮으면 true, 아니면 else
-                    mutableData.value = gameCountData?.count!! <= 1
+                    if (gameCount.exists()) {
+                        val gameCountData = gameCount.getValue(GameCount::class.java)
+                        //유저의 게임 count가 1보다 낮으면 true, 아니면 else
+                        mutableData.value = gameCountData?.count!! <= 1
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -214,11 +216,12 @@ class GameRepo {
 
     /** 게임 결과 삭제 및 leftcount 줄이기 -1 */
 
-    suspend fun deleteResult(gameId: String,result: String) {
+    suspend fun deleteResult(gameId: String,result: String) : LiveData<Boolean> {
+        val mutableData = MutableLiveData<Boolean>()
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            Ref().gameCountRef().child(gameId).addListenerForSingleValueEvent(object : ValueEventListener {
+            Ref().gameLadderRef().child(gameId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(game: DataSnapshot) {
                     if (game.exists()) {
                         Log.d("abcd","delte result snapshot.ref is : ${game.ref}")
@@ -226,8 +229,9 @@ class GameRepo {
                         val gameData = game.getValue(GameModel::class.java)
                         //아직 남아있는 게임이 있으면 해당 선물만 삭제
                         game.ref.child("gameResult").child(result).setValue(null)
-                            .addOnCompleteListener{
+                            .addOnSuccessListener{
                                 //성공 시, 게임 데이터 가져와서 leftCount가 0인지 확인
+                                mutableData.value = true
                                 if (gameData?.leftCount == 0) {
                                     //만약, 0이라면, 게임 없애기
                                     game.ref.removeValue().addOnCompleteListener { Log.d("abcd","게임이 삭제 되었습니다.") }
@@ -236,6 +240,9 @@ class GameRepo {
                                 }
                                 Log.d("abcd","게임 삭제완료 ${gameId} , result : ${result}")
                             }
+                            .addOnFailureListener { Log.d("abcd","게임 결과 삭제 ERROR : ${it.message}")
+                                mutableData.value = false
+                            }
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {
@@ -243,5 +250,6 @@ class GameRepo {
                 }
             })
         }
+        return mutableData
     }
 }

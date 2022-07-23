@@ -14,20 +14,8 @@ class ChatViewmodel : ViewModel() {
 
     private val chatRepo = ChatRepo()
 
-
     //etMessage
     val etMessage = MutableLiveData<String>("")
-
-    /** 만약 채팅 멤버 한명만 null이면, 메세지 작성 및 버튼 비활성화 */
-
-    val _memberCheck = MutableLiveData<Boolean>()
-    val memberCheck : LiveData<Boolean> get() = _memberCheck
-
-    suspend fun checkChatRoomMemberOneNull() {
-        chatRepo.memberResult.observeForever(Observer {
-            _memberCheck.value = it
-        })
-    }
 
 
     /** 메세지 보내기 (채팅룸 업데이트)*/
@@ -43,15 +31,6 @@ class ChatViewmodel : ViewModel() {
 
     }
 
-
-
-
-    fun <T> merge(vararg flows: Flow<T>): Flow<T> = channelFlow {
-        val flowJobs = flows.map { flow ->
-            GlobalScope.launch { flow.collect { send(it) } }
-        }
-        flowJobs.joinAll()
-    }
 
 }
 

@@ -39,9 +39,17 @@ class GamePlayViewModel : ViewModel() {
         return game
     }
 
+    /** 게임 결과 처리 before dismiss activity */
+
+    val _handleDone = MutableLiveData<Boolean>()
+    val handleDone:LiveData<Boolean> get() = _handleDone
+
     fun deleteResult(gameId:String, result:String) {
         viewModelScope.launch {
-            repo.deleteResult(gameId,result)
+            repo.deleteResult(gameId,result).observeForever(Observer {
+                //만약 처리 안되었으면 dismiss 보류
+                _handleDone.value = it
+            })
         }
     }
 
