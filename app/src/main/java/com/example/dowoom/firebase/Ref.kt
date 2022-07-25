@@ -20,6 +20,18 @@ class Ref {
         return database.reference.child(USER)
     }
 
+    val BLOCK = "Block"
+    val BLOCKBY = "BlockBy"
+
+    //내가 상대방을
+    fun blockRef() : DatabaseReference {
+        return database.reference.child(BLOCK)
+    }
+    //상대방은 나로인해
+    fun blockByRef() : DatabaseReference {
+        return database.reference.child(BLOCKBY)
+    }
+
     fun connectRef() : DatabaseReference {
         return database.reference.child(CONNECT)
     }
@@ -38,14 +50,14 @@ class Ref {
     val GUEST = "Guest"
     val CONTENT = "Content"
 
-    fun comunityRef() : DatabaseReference {
+    fun communityRef() : DatabaseReference {
         return database.reference.child(COMU)
     }
     fun commentRef() : DatabaseReference {
         return database.reference.child(COMMENT)
     }
     fun guestRef() : DatabaseReference {
-        return database.reference.child(GUEST)
+        return communityRef().child(GUEST)
     }
     fun contentRef() : DatabaseReference {
         return database.reference.child(CONTENT)
@@ -86,4 +98,7 @@ class Ref {
 
     val storageRef: StorageReference
         get() = storage.reference
+
+
+
 }

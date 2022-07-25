@@ -193,7 +193,7 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
     val guestList : LiveData<MutableList<ComuModel>>
         get() = _guestList
 
-    fun getGuest() {//todo: 여기서 개수 처리 하는게 나을 듯
+    fun getGuest() {//todo: 여기서 개수 처리 하는게 나을 듯 (recyclerview 개수 받고 개수 넘으면 다음 페이지로)
         viewModelScope.launch {
             comuRepo.getGuestList().observeForever(Observer { result ->
                 _guestList.value = result

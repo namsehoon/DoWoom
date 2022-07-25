@@ -31,10 +31,10 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import android.widget.Toast
+import com.example.dowoom.activity.comu.GuestWriteActivity
 
 import com.example.dowoom.activity.main.MainActivity.onBackPressedListener
-
-
+import com.example.dowoom.firebase.Ref
 
 
 //baseActivity() 상속 (intent, replaceFragment startNextActivity(클래스::class.java).
@@ -78,25 +78,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
 
     override fun onStart() {
         super.onStart()
-        if (viewModel.auth.currentUser == null) {
+        if (Ref().auth == null) {
             val intent = Intent(this, RegisterActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             finish()
-        } else if(viewModel.auth.currentUser?.displayName.isNullOrEmpty()) {
+        } else if(Ref().auth.displayName.isNullOrEmpty()) {
             val intent = Intent(this, CheckActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             finish()
         } else {
-            Log.d("asbcd","display name is : ${viewModel.auth.currentUser!!.displayName}")
+            Log.d("asbcd","display name is : ${Ref().auth.displayName}")
             Log.d("abcd", "else 임")
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        val connect = viewModel.database.reference.child("Connect/${viewModel.auth.uid}/connected")
+        val connect = Ref().connectRef().child("/${Ref().auth.uid}/connected")
         connect.setValue(false).addOnFailureListener {
             Log.d("abcd", " it.message is : " + it.message)
         }
@@ -104,7 +104,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
     //온라인
     override fun onResume() {
         super.onResume()
-        val connect = viewModel.database.reference.child("Connect/${viewModel.auth.uid}/connected")
+        val connect = Ref().connectRef().child("/${Ref().auth.uid}/connected")
         connect.setValue(true).addOnFailureListener {
             Log.d("abcd", " it.message is : " + it.message)
         }
@@ -150,7 +150,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-        Log.d("abcd","auth uid in mainac : "+viewModel.auth.uid)
+        Log.d("abcd","auth uid  : "+viewModel.auth.uid)
     }
 
     //시작시에,
@@ -204,6 +204,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
                 super.onOptionsItemSelected(item)
             }
             R.id.settingItem -> {
+
+                super.onOptionsItemSelected(item)
+            }
+            R.id.add -> {
+               val intent = Intent(this,GuestWriteActivity::class.java)
+                startActivity(intent)
 
                 super.onOptionsItemSelected(item)
             }

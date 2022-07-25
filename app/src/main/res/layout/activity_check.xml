@@ -110,9 +110,8 @@
             android:id="@+id/checkSpinner"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/tvSpinner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.397"
             app:layout_constraintStart_toEndOf="@+id/tvSpinner"
             app:layout_constraintTop_toTopOf="@+id/tvSpinner" />
 
@@ -123,7 +122,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="36dp"
             android:text="다음"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"

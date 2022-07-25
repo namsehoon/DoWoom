@@ -69,6 +69,10 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
                             context?.startActivity(intent)
                         }
 
+                        override fun onCanceled() {
+
+                        }
+
                     })
                 } else {
                     Toast.makeText(this.requireActivity(), "오늘 게임 횟수를 초과 했습니다.",Toast.LENGTH_SHORT).show()

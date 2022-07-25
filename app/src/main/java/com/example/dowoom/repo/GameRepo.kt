@@ -26,7 +26,7 @@ class GameRepo {
 
                 Log.d("abcd","여기까지는 오냐?")
                 //게임 모델
-                val gameModel = GameModel(gameTitle, Ref().auth.displayName,gameid,0,6,true,whatKindGame,result)
+                val gameModel = GameModel(gameTitle, Ref().auth.displayName,gameid,6,6,true,whatKindGame,result)
                 Ref().gameLadderRef().child(gameid).setValue(gameModel).addOnSuccessListener {
                     Log.d("abcd","game repo 게임 만들기 성공!!")
 

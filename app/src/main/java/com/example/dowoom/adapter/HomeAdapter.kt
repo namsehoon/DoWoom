@@ -61,8 +61,8 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
 
         viewHolder.binding.tvAge.text = user.age.toString()
         viewHolder.binding.tvNickname.text = user.nickname
-        viewHolder.binding.tvState.text = user.stateMsg
-        viewHolder.binding.tvPopularity.text = user.popularity.toString() ?: "0"
+        viewHolder.binding.tvState.text = user.stateMsg.toString()
+        viewHolder.binding.tvPopularity.text = user.popularity.toString()
 
 
 

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.dowoom.firebase.Ref
 import com.example.dowoom.model.User
 import com.example.dowoom.model.comunityModel.ComuModel
 import com.example.dowoom.viewmodel.BaseViewModel
@@ -15,15 +16,8 @@ import com.google.firebase.ktx.Firebase
 
 class MainViewModel : ViewModel() {
 
-    val database: FirebaseDatabase
-        get() = FirebaseDatabase.getInstance()
-
     val auth: FirebaseAuth
         get() = Firebase.auth
-
-    //root
-    val rootRef : DatabaseReference
-        get() = database.reference
 
 
     //로그아웃
@@ -49,7 +43,7 @@ class MainViewModel : ViewModel() {
 
 
     fun getUserInfo()  {
-        rootRef.child("User").child(auth.currentUser!!.uid).addListenerForSingleValueEvent(object : ValueEventListener {
+        Ref().userRef().child(Ref().auth.uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     val user = snapshot.getValue(User::class.java)

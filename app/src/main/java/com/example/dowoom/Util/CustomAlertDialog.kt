@@ -19,6 +19,9 @@ class CustomAlertDialog(context: Context) {
     fun onOkClickListener(listener: onDialogCustomListener) {
         onDialogCustomClicked = listener
     }
+    fun onCancelClickListener(listener: onDialogCustomListener) {
+        onDialogCustomClicked = listener
+    }
 
     fun start(content:String) {
         //타이틀바 제거
@@ -40,6 +43,7 @@ class CustomAlertDialog(context: Context) {
         }
 
         cancelBtn.setOnClickListener {
+            onDialogCustomClicked.onCanceled()
             dialog.dismiss()
         }
 
@@ -47,5 +51,6 @@ class CustomAlertDialog(context: Context) {
     }
     interface onDialogCustomListener{
         fun onClicked()
+        fun onCanceled()
     }
 }

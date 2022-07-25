@@ -15,6 +15,7 @@ import com.example.dowoom.activity.chat.ChatActivity
 import com.example.dowoom.databinding.HomeFragmentBinding
 import com.example.dowoom.Util.CustomAlertDialog
 import com.example.dowoom.Util.CustomProgressDialog
+import com.example.dowoom.activity.profile.ShowProfileActivity
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -46,8 +47,17 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
         //어뎁터
         adapter = HomeAdapter(requireActivity(),
             profileClick = { user ->
-                //todo 프로필 클릭시 이벤트
+                val intent = Intent(context,ShowProfileActivity::class.java)
+                intent.putExtra("partnerId", user.uid)
+                intent.putExtra("partnerAge",user.age)
+                intent.putExtra("partnerPopularity",user.popularity)
+                intent.putExtra("partnerSOrB",user.sOrB)
+                intent.putExtra("partnerStateMsg",user.stateMsg)
+                //상대방 nickname
+                intent.putExtra("partnerNickname", user.nickname)
+                intent.putExtra("profileImg", user.profileImg)
 
+                startActivity(intent)
         },
         talkClick = { user ->
             CoroutineScope(Dispatchers.Main).launch {
@@ -58,7 +68,7 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
 
             //상대방 uid
             intent.putExtra("partnerId", user.uid)
-//                intent.putExtra("",user.age) // todo : 나이 추가할 때
+                intent.putExtra("partnerAge",user.age)
             //상대방 nickname
             intent.putExtra("partnerNickname", user.nickname)
             intent.putExtra("profileImg", user.profileImg)
@@ -68,10 +78,11 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
             //대화생성 ok 클릭 시,
             alertDialog.onOkClickListener(object : CustomAlertDialog.onDialogCustomListener {
                 override fun onClicked() {
-
                     context?.startActivity(intent)
+                }
 
-
+                override fun onCanceled() {
+                    TODO("Not yet implemented")
                 }
             })
         }

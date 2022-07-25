@@ -32,7 +32,6 @@ import kotlinx.coroutines.launch
 class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임생성 ac", R.layout.activity_create_game) {
 
     val viewModel: GameCreateViewModel by viewModels()
-    val currentUser = FirebaseAuth.getInstance().currentUser
 
     // 사다리게임
     val LADDER_GAME = 1
@@ -42,11 +41,14 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
     val FASTER_GAME = 3
     var whatKindGame = 0
 
+    lateinit var progressDialog: CustomProgressDialog
     //이미지 코드
     val CHOOSE_IMAGES = 123;
 
     //start result for activity
     lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+
+
 
     //이미지 리스트
     var uriList : MutableList<Uri> = mutableListOf<Uri>()
@@ -67,11 +69,13 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
                 }
                 //돌림판
                 R.id.rbCircleGame -> {
-                    whatKindGame = CIRCLE_GAME
+                    //todo : not now!
+                    whatKindGame = LADDER_GAME
                 }
                 //선착순 게임
                 R.id.rbFasterGame -> {
-                    whatKindGame = FASTER_GAME
+                    //todo : not now!
+                    whatKindGame = LADDER_GAME
                 }
                 else -> {
                     whatKindGame = LADDER_GAME
@@ -105,13 +109,22 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
 
         //게임 생성
         binding.tvCreateGameRoom.setOnClickListener {
-            val progress = CustomProgressDialog(this@CreateGameActivity)
-            progress.start()
-            CoroutineScope(Dispatchers.IO).launch {
-                //todo : 사진이 한장도 없으면 안됨
-                createGame()
+            progressDialog = CustomProgressDialog(this@CreateGameActivity)
+            progressDialog.start()
+            CoroutineScope(Dispatchers.Main).launch {
+                if (!uriList.isNullOrEmpty()) {
+                    if (!binding.etGameTitle.text.toString().isNullOrEmpty()) {
+                        createGame()
+                    } else {
+                        Toast.makeText(this@CreateGameActivity,"방 제목을 입력 해주세요.",Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@CreateGameActivity,"상품 사진이 한 장도 없습니다.",Toast.LENGTH_SHORT).show()
+
+                }
+
             }
-            progress.dismiss()
+            progressDialog.dismiss()
         }
     }
 
@@ -142,7 +155,6 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
             val new = ladder.generateLadder(6,6) // 6 x 6
             val resultList = ladder.randomPresent(new) // 결과 리스트
             //방 제목, 닉네임, gameuid, 방인원, 남은인원, 게임
-            Log.d("abcd","여기는 언제 올까? : game id : ${gameUid}")
             viewModel.createGame(whatKindGame, resultList, gameUid)
         }
 

@@ -78,7 +78,6 @@ class CustomGameDialog(val context: Context, val image:String,val gameUid:String
         }
 
         btnOkAndFinish.setOnClickListener {
-            //todo : 사진 저장
             dialog.dismiss()
             onDialogCustomClicked.onClicked()
 

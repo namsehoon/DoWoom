@@ -24,9 +24,7 @@ class LoadingActivity : BaseActivity<ActivityLoadingBinding>(TAG = "로딩액티
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_loading)
 
 
         initialized()
@@ -36,21 +34,18 @@ class LoadingActivity : BaseActivity<ActivityLoadingBinding>(TAG = "로딩액티
         binding.lifecycleOwner = this
 
         auth = FirebaseAuth.getInstance()
+
+
         //유저 o , 닉네임 o
-        if (auth.currentUser?.uid != null && auth.currentUser!!.displayName != null) {
+        if (auth.currentUser != null ) {
             startNextActivity(MainActivity::class.java)
             finish()
             //유저 o , 닉네임 x
-        } else if (auth.currentUser?.uid != null && auth.currentUser!!.displayName == null) {
+        } else {
             startNextActivity(CheckActivity::class.java)
             finish()
             //유저 x , 닉네임 x
-        } else {
-            startNextActivity(StartActivity::class.java)
-            finish()
         }
-        startNextActivity(StartActivity::class.java)
-        finish()
 
 
     }

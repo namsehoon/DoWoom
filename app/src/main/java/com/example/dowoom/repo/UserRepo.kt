@@ -27,6 +27,44 @@ import kotlinx.coroutines.flow.flowOn
  **/
 class userRepo {
 
+    /** 차단 관촬 */
+    fun observeBlock(partnerUid: String) : LiveData<Boolean> {
+        val mutabledata = MutableLiveData<Boolean>()
+
+        //내가 너를 차단함
+        Ref().blockRef().child(partnerUid).child(Ref().auth.uid).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    Log.d("abcd","userRepo - observeBlock - 상대방이 너 차단함")
+                    mutabledata.value = true //차단됨
+                } else {
+                    mutabledata.value = false
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                mutabledata.value = false
+               Log.d("abcd","userRepo - observeBlock - error : ${error.message}")
+            }
+
+        })
+        return mutabledata
+    }
+
+    /** 차단 */
+    fun blockUser(partnerUid:String) {
+
+        val iBlockYou = hashMapOf<String,Any>(
+            partnerUid to true
+
+        )
+
+        Ref().blockRef().child(Ref().auth.uid).updateChildren(iBlockYou).addOnCompleteListener {
+            Log.d("abcd","userRepo - blockUserBy - 차단이 완료되었습니다.")
+        }
+
+    }
+
     /** 유저 phone number(id) 가져오기 */
     suspend fun getfireabseUserId() : Flow<String> {
         var phoneNum = ""

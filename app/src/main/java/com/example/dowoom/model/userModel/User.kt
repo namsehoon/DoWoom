@@ -1,6 +1,7 @@
 package com.example.dowoom.model
 
 import android.net.Uri
+import com.example.dowoom.model.userModel.Block
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 
@@ -14,9 +15,8 @@ data class User(
     var email: String? = null,
     var sOrB: Boolean? = true,
     var profileImg:String? = null,
-    var guestId:String? = null,
-    var birthDay:Int?= null
-
+    var guestId:String? = null, //익명 아이디
+    var birthDay:Int?= null, //생일
 
 
 ) {

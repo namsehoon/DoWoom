@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.widget.ImageView
 import android.widget.ScrollView
@@ -66,7 +67,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
             Log.d("Abcd","부모에서 ComuAdapter 클릭됨")
 
-            binding.llToWrite.visibility = View.GONE //글작성
+
             binding.llComuList.visibility = View.GONE // 컨텐츠 리스트
             binding.llconTents.visibility = View.VISIBLE // 컨텐츠 보여주는 뷰
             // 이전 및 다음 페이지
@@ -110,6 +111,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 // 게시판 이름
                 binding.tvKindOf.text = ANONYMOUS
 
+
             }
         })
         
@@ -128,19 +130,21 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         binding.tvBest.setOnClickListener(this@ComuFrag)
         binding.tvGuest.setOnClickListener(this@ComuFrag)
         binding.tvBackToRv.setOnClickListener(this@ComuFrag)
-
-        //글작성
         binding.tvToWrite.setOnClickListener(this@ComuFrag)
         binding.commentInsertBtn.setOnClickListener(this@ComuFrag)
 
     }
 
+
+
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.tvHumor -> {
-                binding.llToWrite.visibility = View.GONE //글작성 버튼 숨기기
                 binding.llconTents.visibility  = View.GONE //컨텐츠 표시 view 숨기기
                 binding.llComuList.visibility = View.VISIBLE
+                binding.llHandlePage.visibility = View.VISIBLE
+                binding.llToWrite.visibility= View.GONE //글 쓰기
+                binding.llImages.removeAllViews()
                 //todo : 데이터 불러오기 1, 2, 3, 4, 5 (not now!)
                 viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
                     adapter.setContents(it)
@@ -149,9 +153,11 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
             }
             R.id.tvGuest -> { //게스트
                 //글작성
-                binding.llToWrite.visibility = View.VISIBLE
                 binding.llconTents.visibility = View.GONE //컨텐츠 표시 view 숨기기
                 binding.llComuList.visibility = View.VISIBLE
+                binding.llHandlePage.visibility = View.VISIBLE
+                binding.llToWrite.visibility= View.VISIBLE
+                binding.llImages.removeAllViews()
 
                 viewModel.guestList.observe(viewLifecycleOwner, Observer { it ->
                     adapter.setContents(it)
@@ -160,6 +166,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
             }
             //글작성하러가기
             R.id.tvToWrite -> {
+
                 val intent = Intent(context, GuestWriteActivity::class.java)
                 context?.startActivity(intent)
             }
@@ -260,6 +267,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         //이전 및 다음 페이지
         binding.tvNextPage.visibility = View.VISIBLE
         binding.tvBeforePage.visibility = View.VISIBLE
+        binding.llImages.removeAllViews()
 
     }
 }

@@ -75,6 +75,10 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                         }
                     }
 
+                    override fun onCanceled() {
+                        TODO("Not yet implemented")
+                    }
+
                 })
             }
         )

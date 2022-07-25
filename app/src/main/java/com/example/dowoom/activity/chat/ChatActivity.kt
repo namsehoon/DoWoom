@@ -43,6 +43,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
     var partnerId:String? = null
     var partnerNickname:String? = null
     var profileImg:String? = null
+    var partnerAge:Int? = null
 
     val ONE_MEGABYTE: Long = 1024 * 1024
     //start result for activity

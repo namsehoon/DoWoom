@@ -79,17 +79,21 @@ class GezipRepo {
 
 
         })
-        while (humorList.isEmpty()) {
-            delay(1000)
-            count += 1
-            Log.d("abcd","humorList.isEmpty()")
-            if (count == 5) {
-                break
+        try {
+            while (humorList.isEmpty()) {
+                delay(1000)
+                count += 1
+                Log.d("abcd","humorList.isEmpty()")
+                if (count == 5) {
+                    break
+                }
             }
-        }
-        //todo : ConcurrentModificationException
 
-        emit(humorList)
+            emit(humorList)
+
+        }catch (e: ConcurrentModificationException) {
+            Log.d("Abcd","ConcurrentModificationException : ${e.message}")
+        }
 
 
     }.flowOn(Dispatchers.IO)
@@ -144,16 +148,20 @@ class GezipRepo {
 
 
         })
-        while (updateComuModel?.contentImg == null) {
-            delay(500)
-            Log.d("abcd","updateComuModel?.contentImg == null")
-            count += 1
-            if (count == 5) {
-                break
-            }
-        }
+       try {
+           while (updateComuModel?.contentImg == null) {
+               delay(500)
+               Log.d("abcd","updateComuModel?.contentImg == null")
+               count += 1
+               if (count == 5) {
+                   break
+               }
+           }
 
-        emit(updateComuModel)
+           emit(updateComuModel)
+       }catch (e:ConcurrentModificationException) {
+           Log.d("Abcd","ConcurrentModificationException : ${e.message}")
+       }
 
     }.flowOn(Dispatchers.IO)
 }
