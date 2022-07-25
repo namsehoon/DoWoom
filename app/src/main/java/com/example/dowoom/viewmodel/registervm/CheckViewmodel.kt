@@ -1,5 +1,6 @@
 package com.example.dowoom.viewmodel.registervm
 
+import android.app.backup.BackupAgent
 import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.*
@@ -50,11 +51,11 @@ class CheckViewmodel : ViewModel() {
     private val _insertComplete = MutableLiveData<Boolean>()
     val insertComplete:LiveData<Boolean> get() = _insertComplete
 
-    suspend fun userInsert(statusMsg:String,sOrB:Boolean) {
+    suspend fun userInsert(statusMsg:String,sOrB:Boolean,age:Int,birthday:Int) {
         viewModelScope.launch {
             if (!etNickname.get().toString().isNullOrEmpty()) {
                 Log.d("abcd","nickname in viewmodel is : ${etNickname.get().toString()}")
-                repo.insertNewUser(etNickname.get().toString(),statusMsg,sOrB).observeForever(
+                repo.insertNewUser(etNickname.get().toString(),statusMsg,sOrB,age,birthday).observeForever(
                     Observer {
                         _insertComplete.value = it
                     })

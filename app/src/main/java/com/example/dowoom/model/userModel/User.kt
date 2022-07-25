@@ -11,11 +11,11 @@ data class User(
     var nickname: String? = null,
     var stateMsg: String? = null,
     var popularity: Int? = 0,
-    var status: Boolean? = false,
     var email: String? = null,
     var sOrB: Boolean? = true,
     var profileImg:String? = null,
-    var guestId:String? = null
+    var guestId:String? = null,
+    var birthDay:Int?= null
 
 
 

@@ -198,7 +198,7 @@ class userRepo {
 
 
     /** insert new user */
-    suspend fun insertNewUser(nickname: String,stateMsg:String,sOrB:Boolean) : LiveData<Boolean> {
+    suspend fun insertNewUser(nickname: String,stateMsg:String,sOrB:Boolean,age:Int,birthday:Int) : LiveData<Boolean> {
         val mutableData = MutableLiveData<Boolean>(false)
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -207,7 +207,7 @@ class userRepo {
             val uid = Ref().auth.uid
 
             val profileImg = Ref().auth.photoUrl
-            val user = User(uid,0,nickname,stateMsg,0,false,null,sOrB,profileImg.toString())
+            val user = User(uid,age,nickname,stateMsg,0,null,sOrB,profileImg.toString(),null,birthday)
 
             //새로운 유저
             Ref().userRef().child(uid).setValue(user).continueWithTask {task ->

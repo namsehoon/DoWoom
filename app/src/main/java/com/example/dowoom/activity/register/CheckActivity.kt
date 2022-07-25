@@ -7,9 +7,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.example.dowoom.dataStore.DataStore
@@ -22,6 +19,7 @@ import com.example.dowoom.viewmodel.registervm.CheckViewmodel
 import android.graphics.ImageDecoder
 
 import android.os.Build
+import android.widget.*
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,8 +33,10 @@ import com.google.firebase.database.MutableData
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
+import kotlinx.android.synthetic.main.activity_check.*
 import kotlinx.coroutines.*
 import java.io.IOException
+import java.util.*
 
 
 class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", R.layout.activity_check), View.OnClickListener, AdapterView.OnItemSelectedListener {
@@ -49,6 +49,12 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
 
     var progressDialog:CustomProgressDialog? = null
     lateinit var intentFormain :Intent
+
+    /** age, birth */
+    var yearList = (1950..2023).toList()
+    var monthList = (1..12).toList()
+    var dateList = (1..31).toList()
+
 
     /** 이미지 */
 
@@ -96,7 +102,9 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
             ActivityResultContracts.StartActivityForResult(),
             ActivityResultCallback { result ->
 
-            })
+        })
+
+
     }
 
 
@@ -151,6 +159,36 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
         }
 
 
+
+        val yearStrConvertList = yearList.map { it.toString() }
+        val monthStrConvertList = monthList.map { it.toString() }
+        val dateStrConvertList = dateList.map { it.toString() }
+
+
+        binding.npYear.run {
+            minValue = 1950
+            maxValue = 2023
+            wrapSelectorWheel = false
+            displayedValues = yearStrConvertList.toTypedArray()
+        }
+
+        binding.npMonth.run {
+            minValue = 0
+            maxValue = monthStrConvertList.size - 1
+            // default 값은 true로 false시 picker의 범위가 시작 ~ 끝으로 고정
+            wrapSelectorWheel = false
+            displayedValues = monthStrConvertList.toTypedArray()
+        }
+
+        binding.npDay.run {
+            minValue = 0
+            maxValue = dateStrConvertList.size - 1
+            wrapSelectorWheel = false
+            displayedValues = dateStrConvertList.toTypedArray()
+        }
+
+
+
     }
 
 
@@ -172,6 +210,18 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
                 //DataStore 저장
                 progressDialog = CustomProgressDialog(this)
                 progressDialog!!.start()
+                val calendar = Calendar.getInstance()
+                //나이
+                val age = calendar.get(Calendar.YEAR) - binding.npYear.value + 1 //
+                //생일
+                val birthday: Int = if (binding.npMonth.value > 9) {
+                    (binding.npMonth.value + 1) * 1000 + (binding.npDay.value + 1)
+                } else {
+                    (binding.npMonth.value + 1) * 100 + (binding.npDay.value + 1)
+                }
+
+                Log.d("abcd","age : $age, birth : $birthday")
+
                 //task내에 해당 속성이 적용된 activity부터 top activity까지 모두 제거한 뒤 해당 activity를 활성화하여 top이 되도록 함
                 intentFormain =  Intent(this,MainActivity::class.java).apply { Intent.FLAG_ACTIVITY_CLEAR_TOP }
 
@@ -181,7 +231,7 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
                 CoroutineScope(Dispatchers.Main).launch {
                     val sOrB = spinnerText.equals("서포터")
                     Log.d("Abcd",", statusmsg : ${statusMsg} , sorb : ${sOrB} ")
-                    viewModel.userInsert(statusMsg!!,sOrB)
+                    viewModel.userInsert(statusMsg!!,sOrB,age ,birthday)
                 }
             }
         }
@@ -226,6 +276,7 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
         }
 
     }
+
 }
 
 

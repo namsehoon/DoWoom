@@ -16,26 +16,35 @@
         android:layout_height="match_parent"
         tools:context=".activity.register.CheckActivity">
 
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:text="프로필 사진 선택"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
         <ImageView
             android:id="@+id/ivProfile"
             android:layout_width="100sp"
             android:layout_height="100sp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="8dp"
             android:src="@drawable/ic_baseline_person_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
         <TextView
             android:id="@+id/tvSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="서포터 또는 수혜자 중 선택해주세요. \n(추후 변경 가능)"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.523"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="36dp"
+            android:text="서포터 또는 수혜자 \n   (추후 변경 가능)"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivProfile" />
 
@@ -43,49 +52,46 @@
             android:id="@+id/etNickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:privateImeOptions="defaultInputmode=korean"
             android:text="@={vm.etNickname}"
-            app:layout_constraintEnd_toStartOf="@+id/checkBtn"
-            app:layout_constraintHorizontal_bias="0.534"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvNickname" />
+            app:layout_constraintBottom_toBottomOf="@+id/tvNickname"
+            app:layout_constraintStart_toEndOf="@+id/tvNickname"
+            app:layout_constraintTop_toTopOf="@+id/tvNickname"
+            app:layout_constraintVertical_bias="0.538" />
 
         <TextView
             android:id="@+id/tvStatusMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:text="상태메시지를 입력 해주세요.\n(변경가능)"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.516"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etNickname" />
+            android:layout_marginTop="36dp"
+            android:text="상태메시지 : "
+            app:layout_constraintEnd_toEndOf="@+id/tvNickname"
+            app:layout_constraintTop_toBottomOf="@+id/tvNickname" />
+
 
         <EditText
             android:id="@+id/etStatusMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:privateImeOptions="defaultInputmode=korean"
             android:text="@={vm.etStateMsg}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.517"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvStatusMsg" />
+            app:layout_constraintBottom_toBottomOf="@+id/tvStatusMsg"
+            app:layout_constraintStart_toEndOf="@+id/tvStatusMsg"
+            app:layout_constraintTop_toTopOf="@+id/tvStatusMsg"
+            app:layout_constraintVertical_bias="0.538" />
 
         <Button
             android:id="@+id/checkBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="40dp"
+            android:layout_marginStart="8dp"
             android:text="확인"
             app:layout_constraintBottom_toBottomOf="@+id/etNickname"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/etNickname"
             app:layout_constraintTop_toTopOf="@+id/etNickname"
             app:layout_constraintVertical_bias="1.0" />
 
@@ -93,35 +99,109 @@
             android:id="@+id/tvNickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="36dp"
             android:layout_marginTop="36dp"
-            android:text="닉네임을 입력 해주세요. \n(변경불가)"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.513"
+            android:text="닉네임 : "
+            app:layout_constraintEnd_toEndOf="@+id/textView12"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkSpinner" />
+            app:layout_constraintTop_toBottomOf="@+id/npYear" />
 
         <Spinner
             android:id="@+id/checkSpinner"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvSpinner"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.516"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvSpinner" />
-
+            app:layout_constraintHorizontal_bias="0.397"
+            app:layout_constraintStart_toEndOf="@+id/tvSpinner"
+            app:layout_constraintTop_toTopOf="@+id/tvSpinner" />
 
         <Button
             android:id="@+id/nextBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="24dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="36dp"
             android:text="다음"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <NumberPicker
+            android:id="@+id/npYear"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_marginStart="8dp"
+            android:descendantFocusability="blocksDescendants"
+            app:layout_constraintBottom_toBottomOf="@+id/textView12"
+            app:layout_constraintStart_toEndOf="@+id/textView12"
+            app:layout_constraintTop_toTopOf="@+id/textView12" />
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="년"
+            android:textSize="24dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/npYear"
+            app:layout_constraintStart_toEndOf="@+id/npYear"
+            app:layout_constraintTop_toTopOf="@+id/npYear" />
+
+        <NumberPicker
+            android:id="@+id/npMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_marginStart="8dp"
+            android:descendantFocusability="blocksDescendants"
+            app:layout_constraintBottom_toBottomOf="@+id/npYear"
+            app:layout_constraintStart_toEndOf="@+id/textView22"
+            app:layout_constraintTop_toTopOf="@+id/npYear" />
+
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24dp"
+            android:layout_marginStart="8dp"
+            android:text="월"
+            app:layout_constraintBottom_toBottomOf="@+id/npMonth"
+            app:layout_constraintStart_toEndOf="@+id/npMonth"
+            app:layout_constraintTop_toTopOf="@+id/npMonth" />
+
+        <NumberPicker
+            android:id="@+id/npDay"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_height="100dp"
+            android:descendantFocusability="blocksDescendants"
+            app:layout_constraintBottom_toBottomOf="@+id/npMonth"
+            app:layout_constraintStart_toEndOf="@+id/textView13"
+            app:layout_constraintTop_toTopOf="@+id/npMonth" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24dp"
+            android:layout_marginStart="8dp"
+            android:text="일"
+            app:layout_constraintBottom_toBottomOf="@+id/npDay"
+            app:layout_constraintStart_toEndOf="@+id/npDay"
+            app:layout_constraintTop_toTopOf="@+id/npDay" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:text="생년월일 : "
+            app:layout_constraintStart_toStartOf="@+id/tvSpinner"
+            app:layout_constraintTop_toBottomOf="@+id/tvSpinner" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
