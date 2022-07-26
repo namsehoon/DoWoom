@@ -68,7 +68,7 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
 
             //상대방 uid
             intent.putExtra("partnerId", user.uid)
-                intent.putExtra("partnerAge",user.age)
+            intent.putExtra("partnerAge",user.age)
             //상대방 nickname
             intent.putExtra("partnerNickname", user.nickname)
             intent.putExtra("profileImg", user.profileImg)

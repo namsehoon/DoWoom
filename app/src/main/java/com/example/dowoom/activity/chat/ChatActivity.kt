@@ -116,6 +116,21 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
         lifecycleScope.launchWhenResumed {
 
+            viewModel.blockCheck.observe(this@ChatActivity, Observer { blocked ->
+                if (blocked) {
+                    val dialog = CustomBlockDialog(this@ChatActivity!!)
+                    dialog.start("상대방과 대화 할 수 없습니다. \n (사유: 차단 등)")
+                    dialog.onOkClickListener(object : CustomBlockDialog.onDialogCustomListener {
+                        override fun onClicked() {
+                            finish()
+                        }
+
+                    })
+                }
+
+            })
+
+
             ChatRepo().observeMessage(Ref().auth.uid,partnerId!!).observe(this@ChatActivity, Observer {
                 adapter.addMessage(it)
             })
@@ -147,6 +162,8 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
         //상대방 img
         profileImg = i.getStringExtra("profileImg")
 
+
+        viewModel.observeBlock(partnerId!!)
 
         Log.d("Abcd","partnerId : $partnerId")
 

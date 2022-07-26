@@ -85,11 +85,6 @@ class ShowProfileActivity : BaseActivity<ActivityShowProfileBinding>("프로필 
                     })
                 }
             })
-            //todo : 해서 true이면, 상대방에 의해 제한되었습니다. 다이어로그 띄어주기. 확인 시, finish
-            //todo : 해서 true이면, 상대방에 의해 제한되었습니다. 다이어로그 띄어주기. 확인 시, finish
-            //todo : 해서 true이면, 상대방에 의해 제한되었습니다. 다이어로그 띄어주기. 확인 시, finish
-            //todo : 해서 true이면, 상대방에 의해 제한되었습니다. 다이어로그 띄어주기. 확인 시, finish
-            //todo : 해서 true이면, 상대방에 의해 제한되었습니다. 다이어로그 띄어주기. 확인 시, finish
         }
     }
 

@@ -13,7 +13,7 @@ class ChatViewmodel : ViewModel() {
 
 
     private val chatRepo = ChatRepo()
-
+    private val userRepo = com.example.dowoom.repo.userRepo()
     //etMessage
     val etMessage = MutableLiveData<String>("")
 
@@ -29,6 +29,16 @@ class ChatViewmodel : ViewModel() {
             chatRepo.sendMessage(from, to, message)
         }
 
+    }
+
+    /** 차단 관찰 */
+    val _blockCheck = MutableLiveData<Boolean>()
+    val blockCheck : LiveData<Boolean> get() = _blockCheck
+
+    fun observeBlock(partnerUid: String) {
+        userRepo.observeBlock(partnerUid).observeForever(Observer {
+            _blockCheck.value = it
+        })
     }
 
 
