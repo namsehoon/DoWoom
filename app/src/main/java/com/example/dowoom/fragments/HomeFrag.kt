@@ -111,20 +111,23 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
     fun observerData() {
         //어뎁터 설정
         //observe
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.observeUser().observe(viewLifecycleOwner, Observer {
+        lifecycleScope.launchWhenResumed {
+            viewModel.userList.observe(viewLifecycleOwner, Observer {
                 Log.d("Abcd","home is : ${it}")
                 adapter.setUser(it)
             })
 
-            //참고 : https://stackoverflow.com/questions/50000975/am-i-allowed-to-observe-a-viewmodel-if-i-clean-up-the-back-references
-            viewModel.getOnEndLive().observe(viewLifecycleOwner, Observer { onEnd ->
-                if (onEnd != null && onEnd == true) {
-//                    context?.startActivity(intent)
-                }
+            // 새로고침 progress
+            viewModel.progress.observe(viewLifecycleOwner, Observer { result ->
+                binding.refresh.isRefreshing = result
             })
 
-
+            //새로고침
+            binding.refresh.setOnRefreshListener {
+                CoroutineScope(Dispatchers.Main).launch {
+                    viewModel.observeUser()
+                }
+            }
         }
     }
 

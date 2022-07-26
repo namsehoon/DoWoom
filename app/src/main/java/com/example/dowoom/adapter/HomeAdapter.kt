@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dowoom.model.User
@@ -17,8 +19,8 @@ import com.example.dowoom.databinding.ItemRecyclerBinding
 //private val itemClickListener:(User) -> Unit
 class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talkClick:(User) -> Unit) : RecyclerView.Adapter<HomeAdapter.UserHolder>() {
 
-    //유저
-    var users = mutableListOf<User>()
+    //diff
+    private val diffUtil = AsyncListDiffer(this,UserDiffUtil())
 
     //onclicklistener은 view에서 구현하는것이 바람직하다고 합니다.(viewModel 사용 또는 fragment간 화면전환 )
     interface OnItemClickListener {
@@ -26,11 +28,8 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
     }
 
     //유저 셋
-    fun setUser(user:MutableList<User>) {
-        //유저 데이터를 불러 올 때, 데이터가 바뀌면 before데이터랑 after 데이터를 다불러와서
-        users.clear()
-        users.addAll(user)
-        notifyDataSetChanged()
+    fun setUser(newUsers:MutableList<User>) {
+        diffUtil.submitList(newUsers)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeAdapter.UserHolder {
@@ -42,7 +41,9 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
 
     override fun onBindViewHolder(holder: HomeAdapter.UserHolder, position: Int) {
        //databinding한 useritem에 users의 positoin에 맞게 뿌려줌
-        val user = users[position]
+        val user = diffUtil.currentList[position]
+        Log.d("abcd","user : ${user}")
+
         val viewHolder = holder as UserHolder
         Log.d("abcd","user.profile : ${user.profileImg.toString()}")
         if (user.profileImg.isNullOrEmpty()) {
@@ -82,7 +83,8 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
 
 
     override fun getItemCount(): Int {
-       return users.size
+        Log.d("Abcd"," diffUtil.currentList.size : ${ diffUtil.currentList.size}")
+       return diffUtil.currentList.size
     }
 
     inner class UserHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {

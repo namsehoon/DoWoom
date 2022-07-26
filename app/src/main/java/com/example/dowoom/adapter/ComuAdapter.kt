@@ -32,8 +32,16 @@ class ComuAdapter(val context: Context
         comuList.clear()
         comuList.addAll(comuModelList)
         Log.d("abcd","recyclerview - setcontents is : $comuModelList")
+        notifyItemRangeChanged(0,41)
+    }
+
+    fun setGuestContents(comuModelList: MutableList<ComuModel>) {
+        comuList.clear()
+        comuList.addAll(comuModelList)
+        Log.d("abcd","recyclerview - setGuestContents is : $comuModelList")
         notifyDataSetChanged()
     }
+
 
 
 

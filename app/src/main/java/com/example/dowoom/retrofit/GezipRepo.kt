@@ -62,6 +62,7 @@ class GezipRepo {
                             humorList.add(comuModel)
 
                         }
+                        Log.d("abcd","humorList.size is : ${humorList.size}")
 
                     }catch (e: Exception) {
                         e.printStackTrace()

@@ -3,6 +3,7 @@ package com.example.dowoom.viewmodel.mainViewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.dowoom.model.User
+import com.example.dowoom.model.comunityModel.ComuModel
 import com.example.dowoom.repo.ChatRepo
 import com.example.dowoom.repo.userRepo
 import com.example.dowoom.viewmodel.SingleLiveEvent
@@ -24,30 +25,29 @@ import kotlinx.coroutines.launch
 class HomeViewModel : ViewModel() {
     //유저 가져옴
     private val userRepo = userRepo()
-    private val chatRepo = ChatRepo()
 
+    init {
+        viewModelScope.launch {
+            observeUser()
+        }
+    }
+    /** 유저 관찰 */
 
-    suspend fun observeUser() : LiveData<MutableList<User>> {
-        val userList =  MutableLiveData<MutableList<User>>()
+    private val _userList = MutableLiveData<MutableList<User>>()
+    val userList: LiveData<MutableList<User>>
+        get() = _userList
+
+    suspend fun observeUser() {
         userRepo.getData().observeForever(Observer { it ->
-            userList.value = it
+            _userList.value = it
+            _progress.value = false
         })
-
-        return userList
     }
 
-
-
-    private val onEndLive = MutableLiveData<Boolean>(false)
-
-    fun getOnEndLive(): MutableLiveData<Boolean> {
-        return onEndLive
-    }
-
-    fun somethingHappens() {
-        onEndLive.value = true
-    }
-
+    /** 프로세스(새로고침) */
+    private val _progress = MutableLiveData<Boolean>(true)
+    val progress: LiveData<Boolean>
+        get() = _progress
 
 
 

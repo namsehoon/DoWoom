@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
 import com.example.dowoom.Util.GlideApp
@@ -160,7 +161,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 binding.llImages.removeAllViews()
 
                 viewModel.guestList.observe(viewLifecycleOwner, Observer { it ->
-                    adapter.setContents(it)
+                    adapter.setGuestContents(it)
                 })
 
             }
