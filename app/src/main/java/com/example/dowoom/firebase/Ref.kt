@@ -13,12 +13,6 @@ class Ref {
     val database: FirebaseDatabase
         get() = FirebaseDatabase.getInstance()
 
-    val USER = "User"
-    val CONNECT = "Connect"
-
-    fun userRef() : DatabaseReference {
-        return database.reference.child(USER)
-    }
 
     val BLOCK = "Block"
     val BLOCKBY = "BlockBy"
@@ -30,6 +24,13 @@ class Ref {
     //상대방은 나로인해
     fun blockByRef() : DatabaseReference {
         return database.reference.child(BLOCKBY)
+    }
+
+    val USER = "User"
+    val CONNECT = "Connect"
+
+    fun userRef() : DatabaseReference {
+        return database.reference.child(USER)
     }
 
     fun connectRef() : DatabaseReference {
@@ -48,7 +49,7 @@ class Ref {
     val COMU = "Comu"
     val COMMENT = "Comment"
     val GUEST = "Guest"
-    val CONTENT = "Content"
+    val POLICE = "Police"
 
     fun communityRef() : DatabaseReference {
         return database.reference.child(COMU)
@@ -59,8 +60,8 @@ class Ref {
     fun guestRef() : DatabaseReference {
         return communityRef().child(GUEST)
     }
-    fun contentRef() : DatabaseReference {
-        return database.reference.child(CONTENT)
+    fun policeRef() : DatabaseReference {
+        return communityRef().child(POLICE)
     }
 
     val GAME = "Game"

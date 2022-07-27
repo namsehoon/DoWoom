@@ -1,6 +1,8 @@
 package com.example.dowoom.model.gameModel
 
+import android.util.Log
 import com.google.firebase.database.Exclude
+import java.sql.Timestamp
 
 data class GameModel(var title:String? = null,
                      var nickname:String? = null,
@@ -9,6 +11,7 @@ data class GameModel(var title:String? = null,
                      var leftCount:Int? = 0,
                      var active:Boolean? = true,
                      var whatKindGame:Int? = 0,
+                     var timestamp: Long? = null,
                      var gameResult: GameResultModel? = null) {
     @Exclude
     fun toMap(): Map<String, Any?> {

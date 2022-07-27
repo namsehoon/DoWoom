@@ -16,7 +16,7 @@ class ChatRepo {
 
 
 
-    /** 채팅방 삭제 */
+    /** 채팅방 삭제 */ //Todo
 //    suspend fun deleteChatRoom(
 //        chatId: String,
 //        member: Member,
@@ -184,6 +184,7 @@ class ChatRepo {
 
         val mutableData = MutableLiveData<MutableList<ChatRoom>>()
         val listData: MutableList<ChatRoom> = mutableListOf<ChatRoom>()
+        val idList : MutableList<String> = mutableListOf<String>()
 
         Ref().chatroomRef().child(uid).addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -197,7 +198,8 @@ class ChatRepo {
                         override fun onDataChange(snapshot: DataSnapshot) {
                            val user = snapshot.getValue(User::class.java)
                             chatroom?.user = user
-                            listData.add(chatroom!!)
+                            idList.add(user?.uid!!) //user id 저장
+                            listData.add(0,chatroom!!)
                             mutableData.value = listData
                         }
 
@@ -212,10 +214,30 @@ class ChatRepo {
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 Log.d("Abcd","ChatRepo - getChatRoomData - onChildChanged")
+
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
                 Log.d("Abcd","ChatRepo - getChatRoomData - onChildRemoved")
+                if (snapshot.exists()) {
+
+                    val chatroom = snapshot.getValue(ChatRoom::class.java)
+
+                    Ref().userRef().child(snapshot.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val user = snapshot.getValue(User::class.java)
+                            chatroom?.user = user
+                            val index = idList.indexOf(user?.uid) //d
+                            listData.removeAt(index)
+                            mutableData.value = listData
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.d("Abcd","ChatRepo - getChatRoomData - onChildAdded - error : ${error.message}")
+                        }
+
+                    })
+                }
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {

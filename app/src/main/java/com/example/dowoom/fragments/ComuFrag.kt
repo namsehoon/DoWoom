@@ -9,10 +9,12 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
@@ -31,7 +33,8 @@ import kotlinx.android.synthetic.main.comu_fragment.*
 import kotlinx.coroutines.*
 
 class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.comu_fragment), View.OnClickListener, MainActivity.onBackPressedListener {
-    
+
+
     companion object {
         fun newInstance() = ComuFrag()
     }
@@ -44,8 +47,9 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
     val HUMOR = "유머게시판"
     val ANONYMOUS = "익명게시판"
+    val POLICE = "신고 및 건의"
     var comuModelId:String? = null
-    var kindOf : Int? = null
+    var kindOf : Int? = 0
     var user:User? = null
 
     //관찰
@@ -89,30 +93,40 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
             CoroutineScope(Dispatchers.Main).launch {
                 binding.llImages.removeAllViews()
                 commentAdapter.commentList.clear()
-                commentAdapter.notifyDataSetChanged()
+                commentAdapter.notifyDataSetChanged() //todo
                 viewModel.getComments(comuModel.uid!!)
             }
-
-            if (comuModel.kindOf == 1) { // 유머게시판
+            /** 유머게시판 */
+            if (comuModel.kindOf == 0) {
                 Log.d("abcd", "comufrag - adapter - humor : 유머게시판 ")
 
                 // 게시판 이름
                 binding.tvKindOf.text = HUMOR
+                binding.tvSubject.visibility = View.GONE
 
                 CoroutineScope(Dispatchers.Main).launch {
                     viewModel.getHumorContent(comuModel)
                 }
 
-
-            } else { // 익명 게시판
+                /** 익명게시판 */
+            } else if (comuModel.kindOf == 1) {
                 Log.d("abcd", "comufrag - adapter - guest : 익명게시판으로 ")
 
+                binding.tvKindOf.text = ANONYMOUS // 게시판 이름
+
                 binding.llName.visibility = View.VISIBLE //익명 : 이름
+                binding.tvSubject.visibility = View.VISIBLE // 글내용
 
-                // 게시판 이름
-                binding.tvKindOf.text = ANONYMOUS
+                binding.tvSubject.text = comuModel.contentText
 
+                /** 신고 및 건의 */
+            } else {
+                Log.d("abcd", "comufrag - adapter - police : 신고 및 건의 ")
+                binding.tvKindOf.text = POLICE
 
+                binding.tvSubject.visibility = View.VISIBLE // 글내용
+
+                binding.tvSubject.text = comuModel.contentText
             }
         })
         
@@ -128,7 +142,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
 
         binding.tvHumor.setOnClickListener(this@ComuFrag)
-        binding.tvBest.setOnClickListener(this@ComuFrag)
+        binding.tvPolice.setOnClickListener(this@ComuFrag)
         binding.tvGuest.setOnClickListener(this@ComuFrag)
         binding.tvBackToRv.setOnClickListener(this@ComuFrag)
         binding.tvToWrite.setOnClickListener(this@ComuFrag)
@@ -140,11 +154,13 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
     override fun onClick(v: View?) {
         when(v?.id) {
-            R.id.tvHumor -> {
+            R.id.tvHumor -> {  /** 유머 */
+
+                kindOf = 0
                 binding.llconTents.visibility  = View.GONE //컨텐츠 표시 view 숨기기
                 binding.llComuList.visibility = View.VISIBLE
                 binding.llHandlePage.visibility = View.VISIBLE
-                binding.llToWrite.visibility= View.GONE //글 쓰기
+                binding.llToWrite.visibility = View.GONE //글 쓰기
                 binding.llImages.removeAllViews()
                 //todo : 데이터 불러오기 1, 2, 3, 4, 5 (not now!)
                 viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
@@ -152,23 +168,32 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 })
 
             }
-            R.id.tvGuest -> { //게스트
+            R.id.tvGuest -> { /** 게스트 */
                 //글작성
-                binding.llconTents.visibility = View.GONE //컨텐츠 표시 view 숨기기
-                binding.llComuList.visibility = View.VISIBLE
-                binding.llHandlePage.visibility = View.VISIBLE
-                binding.llToWrite.visibility= View.VISIBLE
-                binding.llImages.removeAllViews()
-
+                kindOf = 1
+                guestAndPolice() //visible 관리
+                tvToWrite.text = "익명 글쓰기"
                 viewModel.guestList.observe(viewLifecycleOwner, Observer { it ->
                     adapter.setGuestContents(it)
                 })
 
             }
-            //글작성하러가기
-            R.id.tvToWrite -> {
+            R.id.tvPolice -> { /** 신고 및 건의 */
+                kindOf = 2
+                guestAndPolice() //visible 관리
+                tvToWrite.text = "신고 및 건의 글쓰기"
+
+                viewModel.policeList.observe(viewLifecycleOwner, Observer { it ->
+                    adapter.setPoliceContents(it)
+                })
+
+            }
+            R.id.tvToWrite -> {  /** 글작성 */
 
                 val intent = Intent(context, GuestWriteActivity::class.java)
+
+                intent.putExtra("guestId",user?.guestId!!)
+                intent.putExtra("kindOf",kindOf)
                 context?.startActivity(intent)
             }
             //댓글 작성
@@ -195,33 +220,43 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
         }
     }
+    private fun guestAndPolice() {
+        binding.llconTents.visibility = View.GONE //컨텐츠 표시 view 숨기기
+        binding.llComuList.visibility = View.VISIBLE //rv
+        binding.llHandlePage.visibility = View.GONE // 이전 다음 페이지
+        binding.llToWrite.visibility= View.VISIBLE // 글작성
+        binding.llImages.removeAllViews() // remove content view
+    }
 
     private fun observerData() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            /** 유머 */
             viewModel.comuList.observe(viewLifecycleOwner, Observer { it ->
                 Log.d("abcd","it is : ${it}")
                 adapter.setContents(it)
-
             })
 
-            // 새로고침 progress
+            /** 새로고침 progress */
             viewModel.progress.observe(viewLifecycleOwner, Observer { result ->
                 binding.refresh.isRefreshing = result
             })
 
-            //새로고침
+            /** 새로고침 */
             binding.refresh.setOnRefreshListener {
                 CoroutineScope(Dispatchers.Main).launch {
-                    viewModel.getHumors()
-                    viewModel.getGuest()
+                    when (kindOf) {
+                        0 -> viewModel.getHumors()
+                        1 -> viewModel.getGuest()
+                        2 -> viewModel.getPolice()
+                        else -> viewModel.getHumors()
+                    }
                 }
             }
 
+            /** 댓글 리스트 */
             viewModel.commentList.observe(viewLifecycleOwner, Observer { comments ->
-
                 commentAdapter.setComments(comments)
-
             })
 
         }
@@ -230,6 +265,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.getHumors()
             viewModel.getGuest()
+            viewModel.getPolice()
         }
 
         //이미지 가져와서 추가
@@ -273,3 +309,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
     }
 }
 
+//todo : 신고 및 건의 게시판  에러 : java.lang.IndexOutOfBoundsException: Inconsistency detected. Invalid view holder adapter
+//todo : 신고 및 건의 게시판  에러 : java.lang.IndexOutOfBoundsException: Inconsistency detected. Invalid view holder adapter
+//todo : 신고 및 건의 게시판  에러 : java.lang.IndexOutOfBoundsException: Inconsistency detected. Invalid view holder adapter
+//todo : 신고 및 건의 게시판  에러 : java.lang.IndexOutOfBoundsException: Inconsistency detected. Invalid view holder adapter

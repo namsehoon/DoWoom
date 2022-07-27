@@ -82,7 +82,7 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
                 }
 
                 override fun onCanceled() {
-                    TODO("Not yet implemented")
+                    return
                 }
             })
         }

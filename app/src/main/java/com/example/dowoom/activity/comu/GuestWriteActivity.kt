@@ -20,11 +20,15 @@ class GuestWriteActivity : BaseActivity<ActivityGuestWriteBinding>("익게 글�
 
     var subject:String? = null //제목
     var content:String? = null //내용
+    var guestId:String? = null
+    var kindOf:Int?= null //익명인지 신고인지
 
     override fun onDestroy() {
         super.onDestroy()
         subject = null
         content = null
+        guestId = null
+        kindOf = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +55,10 @@ class GuestWriteActivity : BaseActivity<ActivityGuestWriteBinding>("익게 글�
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
+        val intent = intent
+        guestId = intent.getStringExtra("guestId")
+        kindOf = intent.getIntExtra("kindOf",2)
+
         binding.tvWritedIn.setOnClickListener(this@GuestWriteActivity)
     }
 
@@ -70,7 +78,7 @@ class GuestWriteActivity : BaseActivity<ActivityGuestWriteBinding>("익게 글�
                     Toast.makeText(this@GuestWriteActivity,"내용을 입력해 주세요.",Toast.LENGTH_SHORT).show()
                 }
 
-                viewModel.insertGuestWriteIn(subject!!, content!!)
+                viewModel.insertGuestWriteIn(subject!!, content!!,guestId!!, kindOf!!)
                 Log.d("abcd","GuestWriteActivity - 익명게시판 글쓰기 완료")
             }
         }

@@ -29,6 +29,7 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
 
     //유저 셋
     fun setUser(newUsers:MutableList<User>) {
+        newUsers.reversed() //최신이 위로
         diffUtil.submitList(newUsers)
     }
 
@@ -83,7 +84,6 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
 
 
     override fun getItemCount(): Int {
-        Log.d("Abcd"," diffUtil.currentList.size : ${ diffUtil.currentList.size}")
        return diffUtil.currentList.size
     }
 

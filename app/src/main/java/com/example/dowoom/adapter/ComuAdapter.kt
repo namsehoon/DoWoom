@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dowoom.R
@@ -21,25 +22,28 @@ import com.google.firebase.storage.StorageReference
 class ComuAdapter(val context: Context
 , val contentClicked:(ComuModel, position:Int) -> Unit): RecyclerView.Adapter<ComuAdapter.ComuHolder>() {
 
+    private val diffUtil = AsyncListDiffer(this,ComuModelDiffUtil())
+
     /** 변수 */
 
-    // comu fragment
-    var comuList = mutableListOf<ComuModel>()
-
     //comu set
-    @SuppressLint("NotifyDataSetChanged")
     fun setContents(comuModelList: MutableList<ComuModel>) {
-        comuList.clear()
-        comuList.addAll(comuModelList)
+        diffUtil.submitList(comuModelList)
         Log.d("abcd","recyclerview - setcontents is : $comuModelList")
-        notifyItemRangeChanged(0,41)
+
     }
 
     fun setGuestContents(comuModelList: MutableList<ComuModel>) {
-        comuList.clear()
-        comuList.addAll(comuModelList)
+        diffUtil.submitList(comuModelList)
         Log.d("abcd","recyclerview - setGuestContents is : $comuModelList")
-        notifyDataSetChanged()
+
+    }
+
+    fun setPoliceContents(comuModelList: MutableList<ComuModel>) {
+        diffUtil.submitList(comuModelList)
+        Log.d("abcd","recyclerview - setPoliceContents is : $comuModelList")
+
+
     }
 
 
@@ -53,18 +57,22 @@ class ComuAdapter(val context: Context
     }
 
     override fun onBindViewHolder(holder: ComuAdapter.ComuHolder, position: Int) {
-        val comu = comuList[position]
+        val comu = diffUtil.currentList[position]
 
-
+            //todo kindof으로 각자 핸들 가능
 
 //        viewHolder.comuBinding.tvComentCount.text = comu.commentCount.toString() ?: "카운터없음"
         holder.comuBinding.tvContentTitle.text = comu.title ?: "타이틀없음"
         holder.comuBinding.tvNickname.text = comu.creator ?: "닉없음"
-
+        if (comu.commentCount != 0) {
+            holder.comuBinding.tvCommentCount.text = comu.commentCount.toString()
+        } else {
+            holder.comuBinding.tvCommentCount.text = " "
+        }
             //메세지 삭제
 
         holder.comuBinding.llContents.setOnClickListener {
-            contentClicked(comuList[position], position)
+            contentClicked(diffUtil.currentList[position], position)
         }
         holder.comuBinding.executePendingBindings()
 
@@ -74,7 +82,7 @@ class ComuAdapter(val context: Context
 
 
     override fun getItemCount(): Int {
-        return comuList.size
+        return diffUtil.currentList.size
     }
 
     /** binding */

@@ -19,9 +19,9 @@ class GuestWriteViewModel : ViewModel() {
     val result : LiveData<Boolean> get() = _result
 
 
-    fun insertGuestWriteIn(subject: String, content: String) {
+    fun insertGuestWriteIn(subject: String, content: String,guestId:String,kindOf:Int) {
         viewModelScope.launch {
-            repo.insertGuestWriteIn(subject, content)
+            repo.insertGuestWriteIn(subject, content,guestId,kindOf)
                 .catch { e ->
                     Log.d("abcd","GuestWriteViewModel - insertGuestWriteIn - error : ${e.message}")
                 }

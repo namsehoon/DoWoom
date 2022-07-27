@@ -54,11 +54,11 @@ class GezipRepo {
                         val list = document.select(".cnt_article_wrap > .cnt_lef_area > .board_cnt_wrap > table > tbody > tr")
                         for (content in list) {
                             val title = content.select("td.b_td2 > a").text()
-                            val kindOf = 1
+                            val kindOf = 0
                             val creator = content.select("td.b_td3 > span").text()
                             val contentNumber = content.select("td.b_td1").text()
 
-                            val comuModel = ComuModel(contentNumber,title,kindOf,null,creator,false,null,null,null,null,page.toString())
+                            val comuModel = ComuModel(contentNumber,title,kindOf,0,creator,false,null,null,null,null,page.toString())
                             humorList.add(comuModel)
 
                         }

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dowoom.R
 import com.example.dowoom.Util.GlideApp
@@ -24,7 +25,7 @@ class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Uni
         Log.d("abcd","chatrooms is :"+chatrooms.toString())
         chatRooms.clear()
         chatRooms.addAll(chatrooms)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(0,chatrooms.size)
     }
 
 

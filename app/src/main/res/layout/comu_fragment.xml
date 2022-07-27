@@ -36,14 +36,6 @@
                 android:weightSum="3">
 
                 <TextView
-                    android:id="@+id/tvBest"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="베스트" />
-
-                <TextView
                     android:id="@+id/tvHumor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -58,6 +50,14 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="익명게시판" />
+
+                <TextView
+                    android:id="@+id/tvPolice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="신고 및 건의" />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/llToWrite"
@@ -139,6 +139,14 @@
                 android:layout_height="match_parent"
                 android:layout_marginVertical="16dp"
                 android:orientation="vertical"/>
+
+            <TextView
+                android:id="@+id/tvSubject"
+                android:visibility="gone"
+                android:padding="8sp"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginVertical="20dp"/>
 
             <TextView
                 android:id="@+id/textView14"

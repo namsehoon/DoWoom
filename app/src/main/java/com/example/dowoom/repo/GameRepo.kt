@@ -23,10 +23,10 @@ class GameRepo {
                 val gameid = gameUid
                 //결과 : { one : 1 , two : 4 }
                 val result = GameResultModel(resultList[0], resultList[1], resultList[2], resultList[3], resultList[4], resultList[5])
-
+                val time = System.currentTimeMillis()/1000
                 Log.d("abcd","여기까지는 오냐?")
                 //게임 모델
-                val gameModel = GameModel(gameTitle, Ref().auth.displayName,gameid,6,6,true,whatKindGame,result)
+                val gameModel = GameModel(gameTitle, Ref().auth.displayName,gameid,6,6,true,whatKindGame,time,result)
                 Ref().gameLadderRef().child(gameid).setValue(gameModel).addOnSuccessListener {
                     Log.d("abcd","game repo 게임 만들기 성공!!")
 
@@ -49,7 +49,7 @@ class GameRepo {
                     if (ladders.exists()) {
                         Log.d("abcd","gamerepo - getGameList - onChildAdded")
                         val ladderData = ladders.getValue(GameModel::class.java)
-                        listData.add(ladderData!!)
+                        listData.add(0,ladderData!!) //역순
                         idList.add(ladderData.gameUid!!)
                         mutableData.value = listData
                     }

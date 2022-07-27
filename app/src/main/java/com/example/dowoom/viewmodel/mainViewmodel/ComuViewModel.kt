@@ -197,7 +197,25 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
         viewModelScope.launch {
             comuRepo.getGuestList().observeForever(Observer { result ->
                 _guestList.value = result
-                if (result == null) {
+                if (result.isNullOrEmpty()) {
+                    _progress.value = false
+                }
+                _progress.value= false
+            })
+        }
+    }
+
+
+    /** 신고 및 건의 */
+    private val _policeList = MutableLiveData<MutableList<ComuModel>>()
+    val policeList : LiveData<MutableList<ComuModel>>
+        get() = _policeList
+
+    fun getPolice() {
+        viewModelScope.launch {
+            comuRepo.getPoliceList().observeForever(Observer { result ->
+                _policeList.value = result
+                if (result.isNullOrEmpty()) {
                     _progress.value = false
                 }
                 _progress.value= false

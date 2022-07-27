@@ -15,6 +15,7 @@ import com.example.dowoom.model.comunityModel.ComuModel
 
 class CommentAdapter(val context: Context) : RecyclerView.Adapter<CommentAdapter.CommentHolder>() {
 
+
     /** 변수 */
 
     // comment

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dowoom.firebase.Ref
+import com.example.dowoom.model.Connect
 import com.example.dowoom.model.gameModel.GameCount
 import com.example.dowoom.model.User
 import com.google.android.gms.tasks.Task
@@ -93,6 +94,7 @@ class userRepo {
         // livedata 객체 만들기
         //firebase 추가 된 데이터 이벤트 리스너
         val listData: MutableList<User> = mutableListOf<User>()
+        val idList: MutableList<String> = mutableListOf<String>()
         val mutableData = MutableLiveData<MutableList<User>>()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -101,17 +103,17 @@ class userRepo {
                 override fun onChildAdded(connects: DataSnapshot, previousChildName: String?) {
                     if (connects.exists()) {
                         //유저
-                        Log.d("abcd","userRepo - onChildAdded")
+                        Log.d("abcd","userRepo - getData - onChildAdded")
                         Ref().userRef().child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(users: DataSnapshot) {
                                 if (users.exists()) {
                                     val getData = users.getValue(User::class.java)
+                                    Log.d("Abcd","getdata is : ${getData}")
                                     //나는 나를 볼 수 없게.
-                                    if (!getData?.uid.equals(Ref().auth.uid) && !listData.contains(getData)) {
-                                        listData.add(getData!!)
+                                    if (!getData?.uid.equals(Ref().auth.uid)) {
+                                        listData.add(0,getData!!)
+                                        idList.add(0,getData.uid!!)
                                     }
-                                    listData.reverse()
-                                    Log.d("abcd","listdata is empty? : ${listData.isEmpty()}")
                                     mutableData.value = listData
                                 }
                             }
@@ -140,13 +142,12 @@ class userRepo {
 
                                 val getData = users.getValue(User::class.java)
 
-                                //유저가 '나' 이거나, 이미 리스트에 포함 되어있다면 뺌
-                                if (!getData?.uid.equals(Ref().auth.uid) && !listData.contains(getData)) {
-                                    listData.add(getData!!)
-                                } else {
-                                    listData.remove(getData)
+                                //유저가 내가 아니라면
+                                if (!getData?.uid.equals(Ref().auth.uid)) {
+                                    val index = idList.indexOf(getData?.uid) //
+                                    listData.removeAt(index)
                                 }
-                                listData.reverse()
+
                                 Log.d("abcd","listdata is empty? : ${listData}")
                                 mutableData.value = listData
                             }
@@ -164,24 +165,6 @@ class userRepo {
                 //목록의 항목 삭제를 수신 대기
                 override fun onChildRemoved(connects: DataSnapshot) {
                     if (connects.exists()) {
-                        Log.d("abcd","userRepo - onChildRemoved")
-
-
-                        Ref().userRef().child(connects.key!!).addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(users: DataSnapshot) {
-
-                                val getData = users.getValue(User::class.java)
-                                Log.d("abcd","getdata is : ${getData?.uid!!}")
-                                listData.remove(getData)
-
-                                mutableData.value = listData
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                Log.d("abcd","error in child add is : "+error.message)
-                            }
-
-                        })
                     }
                 }
 
@@ -235,7 +218,7 @@ class userRepo {
     }
 
 
-    /** insert new user */
+    /** insert new user  새로운유저 + connect + gamecount*/
     suspend fun insertNewUser(nickname: String,stateMsg:String,sOrB:Boolean,age:Int,birthday:Int) : LiveData<Boolean> {
         val mutableData = MutableLiveData<Boolean>(false)
         CoroutineScope(Dispatchers.IO).launch {
@@ -258,16 +241,25 @@ class userRepo {
                 it.exception?.let {
                     Log.d("abcd","게임 카운터 setvalue 실패 in userrepo")
                 }
-                updateUser(nickname).addOnCompleteListener {
-                    Log.d("abcd","사용자가 추가 되었습니다. in userrepo")
-                    mutableData.value = true
+                updateUser(nickname)
+            }.addOnCompleteListener {
+                it.exception?.let {
+                    Log.d("abcd","사용자가 추가 실패 in userrepo")
                 }
+                Log.d("abcd","사용자가 추가 되었습니다. in userrepo")
+                registerConnect(uid)
+            }.addOnCompleteListener {
+                it.exception?.let {
+                    Log.d("abcd","connected in userrepo 실패 in userrepo")
+                }
+                Log.d("abcd","connected insert in userrepo")
+                mutableData.value = true
             }
 
             while (mutableData.value!!) {
                 delay(1000)
                 count += 1
-                Log.d("abcd","count : $count")
+                Log.d("abcd","user insert count : $count")
                 if (count == 5) {
                     break
                 }
@@ -286,12 +278,21 @@ class userRepo {
         return Ref().auth.updateProfile(updateProfile)
     }
 
-    //게임 카운터 등록
+    /** 게임 카운터 등록 */
     private fun registGameCount(uid: String): Task<Void> {
         //게임 카운터
         val userCount = GameCount(uid, 0)
 
         return Ref().gameCountRef().child(uid).setValue(userCount)
+    }
+
+
+    /** CONNECT */
+    private fun registerConnect(uid: String): Task<Void> {
+        //게임 카운터
+        val userConnect = Connect(false)
+
+        return Ref().connectRef().child(uid).setValue(userConnect)
     }
 
 

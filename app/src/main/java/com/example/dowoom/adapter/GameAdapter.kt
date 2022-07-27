@@ -26,7 +26,7 @@ class GameAdapter(val context: Context,val goIntoGameRoom:(GameModel) -> Unit) :
         Log.d("abcd","games is :"+Games.toString())
         games.clear()
         games.addAll(Games)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(0,games.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameAdapter.GameViewHolder {
