@@ -13,8 +13,20 @@ class ShowProfileViewModel : ViewModel() {
     val repo = userRepo()
 
     /** 차단하기 */
-    fun blockUser(partnerUid:String) {
-        repo.blockUser(partnerUid)
+
+
+
+    val _block = MutableLiveData<Boolean>()
+    val block : LiveData<Boolean> get() = _block
+
+    fun blockUser(partnerUid:String,blockedState:String) {
+        repo.blockUser(partnerUid,blockedState).observeForever(Observer { result ->
+            //false = 차단해제됨
+            //true = 차단됨
+            if (result != null) {
+                _block.value = result
+            }
+        })
     }
 
 
@@ -26,6 +38,17 @@ class ShowProfileViewModel : ViewModel() {
         repo.observeBlock(partnerUid).observeForever(Observer {
             if (it != null) {
                 _blockCheck.value = it
+            }
+        })
+    }
+    /** 차단 관찰 */
+    val _iblockCheckYou = MutableLiveData<Boolean>()
+    val iblockCheckYou : LiveData<Boolean> get() = _iblockCheckYou
+
+    fun iobserveBlockedYou(partnerUid: String) {
+        repo.iObserveBlockedYou(partnerUid).observeForever(Observer {
+            if (it != null) {
+                _iblockCheckYou.value = it
             }
         })
     }

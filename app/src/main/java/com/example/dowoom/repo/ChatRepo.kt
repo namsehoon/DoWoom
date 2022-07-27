@@ -17,34 +17,18 @@ class ChatRepo {
 
 
 
-    /** 채팅방 삭제 */ //Todo
-//    suspend fun deleteChatRoom(
-//        chatId: String,
-//        member: Member,
-//    ) {
-//        //각 사용자가 대화방 나갈 때
-//        CoroutineScope(Dispatchers.IO).launch {
-//            Log.d("abcd","여기까지 옴")
-//            if (member.user1 == auth.uid) { // user1이 나라면,
-//
-//                // userChat chatid 삭제
-//                userChatRef.child(member.user1!!).child(chatId).removeValue()
-//                    .addOnCompleteListener {
-//                        Log.d("abcd","(deleteChatRoom) userChat chaid 삭제")
-//                        //상대방 uid로 검색해서 상대방도 null이면 db에서 삭제
-//                        checkChatRoomMemberBothNull(chatId, member.user2!!)
-//                    }
-//                //1. member : false, 메세지 et : disabled -> messageinsert()
-//            } else {
-//
-//                userChatRef.child(member.user2!!).child(chatId).removeValue()
-//                    .addOnCompleteListener {
-//                        Log.d("abcd","(deleteChatRoom) userChat chaid 삭제")
-//                        checkChatRoomMemberBothNull(chatId, member.user1!!)
-//                    }
-//            }
-//        }
-//    }
+    /** 채팅방 삭제 */
+    suspend fun deleteChatRoom(
+        from: String,
+        to: String,
+    ) {
+        //각 사용자가 대화방 나갈 때
+        CoroutineScope(Dispatchers.IO).launch {
+            Ref().chatroomRef().child(from).child(to).removeValue().addOnCompleteListener {
+                Log.d("Abcd","채팅룸 삭제 완료")
+            }
+        }
+    }
 
     /** 만약 채팅 멤버가 둘다 null 이면, chatroom, message 삭제 */
 //     fun checkChatRoomMemberBothNull(chatId: String, otherUid: String) {
@@ -233,7 +217,7 @@ class ChatRepo {
                             chatroom?.user = user
                             val index = idList.indexOf(user?.uid) //d
                             listData.removeAt(index)
-                            listData.removeAt(index)
+                            idList.removeAt(index)
                             mutableData.value = listData
                         }
 

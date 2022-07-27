@@ -67,11 +67,13 @@ class HomeFrag : BaseFragment<HomeFragmentBinding>(TAG = "HomeFrag", R.layout.ho
             intent = Intent(context, ChatActivity::class.java)
 
             //상대방 uid
-            intent.putExtra("partnerId", user.uid)
-            intent.putExtra("partnerAge",user.age)
-            //상대방 nickname
-            intent.putExtra("partnerNickname", user.nickname)
-            intent.putExtra("profileImg", user.profileImg)
+                intent.putExtra("partnerId", user.uid)
+                intent.putExtra("partnerAge",user.age)
+                intent.putExtra("partnerPopularity",user.popularity)
+                intent.putExtra("partnerStateMsg",user.stateMsg)
+                //상대방 nickname
+                intent.putExtra("partnerNickname", user.nickname)
+                intent.putExtra("profileImg", user.profileImg)
 
             val alertDialog = CustomAlertDialog(requireActivity())
             alertDialog.start(user.nickname.plus("님과 대화를 시작하시겠습니까?"))

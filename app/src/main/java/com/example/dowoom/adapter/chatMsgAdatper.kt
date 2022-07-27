@@ -23,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class chatMsgAdatper(val context: Context,
-                     val imgClicked:(Message, position:Int) -> Unit, val profileImg:String?
+                     val imgClicked:(Message, position:Int) -> Unit, val profileClicked:(Message) -> Unit,val profileImg:String?
 ): RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
 
     /** 변수 */
@@ -199,6 +199,11 @@ class chatMsgAdatper(val context: Context,
 
             viewHolder.receiveBinding.imgReceive.setOnClickListener {
                 imgClicked(message, position)
+                false
+            }
+
+            viewHolder.receiveBinding.ivProfile.setOnClickListener {
+                profileClicked(message)
                 false
             }
             //일반

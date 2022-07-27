@@ -1,6 +1,7 @@
 package com.example.dowoom.activity.profile
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +16,7 @@ class ShowProfileActivity : BaseActivity<ActivityShowProfileBinding>("프로필 
 
     val vm: ShowProfileViewModel by viewModels()
     var partnerUid:String? = null
+    var blockedState:String?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +27,8 @@ class ShowProfileActivity : BaseActivity<ActivityShowProfileBinding>("프로필 
         //차단하기
         binding.tvBlock.setOnClickListener {
            if (!partnerUid.isNullOrEmpty()) {
-               vm.blockUser(partnerUid!!)
+               Log.d("abcd","blockedState : $blockedState")
+               vm.blockUser(partnerUid!!,blockedState!!)
            }
         }
     }
@@ -62,8 +65,10 @@ class ShowProfileActivity : BaseActivity<ActivityShowProfileBinding>("프로필 
                 .into(binding.profileImg) //이미지를 보여줄 view를 지정
         }
 
-        //상대방이 나 차단함?
+        /** 상대방이 나 차단 */
         vm.observeBlock(partnerUid!!)
+        /** 내가 상대방을 차단 했는지 */
+        vm.iobserveBlockedYou(partnerUid!!)
 
     }
 
@@ -79,6 +84,25 @@ class ShowProfileActivity : BaseActivity<ActivityShowProfileBinding>("프로필 
                         }
 
                     })
+                }
+            })
+
+            //내가 널 차단했니?
+            vm.iblockCheckYou.observe(this@ShowProfileActivity, Observer { blocked ->
+                if (blocked) {
+                    blockedState = "차단해제"
+                    binding.tvBlock.text = "차단해제"
+                } else {
+                    blockedState = "차단하기"
+                    binding.tvBlock.text = "차단하기"
+                }
+            })
+            //차단하기 및 차단해제 버튼
+            vm.block.observe(this@ShowProfileActivity, Observer { block ->
+                if (block) {
+                    binding.tvBlock.text = "차단해제"
+                } else {
+                    binding.tvBlock.text = "차단하기"
                 }
             })
         }

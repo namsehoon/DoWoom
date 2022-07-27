@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.*
 import java.io.File
 import android.R.attr.bitmap
 import android.graphics.BitmapFactory
+import com.example.dowoom.activity.profile.ShowProfileActivity
 
 
 class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layout.activity_chat) {
@@ -41,9 +42,12 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
     private lateinit var adapter: chatMsgAdatper
 
     var partnerId:String? = null
-    var partnerNickname:String? = null
-    var profileImg:String? = null
-    var partnerAge:Int? = null
+    var age :Int? = null
+    var popularity :Int? = null
+    var statusMsg :String? = null
+    //상대방 nickname
+    var nickname :String? = null
+    var profileImg :String? = null
 
     val ONE_MEGABYTE: Long = 1024 * 1024
     //start result for activity
@@ -157,11 +161,11 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
         //상대방 uid
         partnerId = i.getStringExtra("partnerId")
-        //상대방 닉네임
-        partnerNickname = i.getStringExtra("partnerNickname")
-        //상대방 img
-        profileImg = i.getStringExtra("profileImg")
-
+        age = intent.getIntExtra("partnerAge",0)
+        popularity = intent.getIntExtra("partnerPopularity",0)
+        statusMsg = intent.getStringExtra("partnerStateMsg")
+        nickname = intent.getStringExtra("partnerNickname")
+        profileImg = intent.getStringExtra("profileImg")
 
         viewModel.observeBlock(partnerId!!)
 
@@ -182,7 +186,18 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(TAG = "채팅룸", R.layo
 
             })
 
-        }, profileImg)
+        }, profileClicked = { //상대방 프로필 사진 클릭 시,
+                            val intent = Intent(this, ShowProfileActivity::class.java)
+            intent.putExtra("partnerId", partnerId)
+            intent.putExtra("partnerAge",age)
+            intent.putExtra("partnerPopularity",popularity)
+            intent.putExtra("partnerStateMsg",statusMsg)
+            //상대방 nickname
+            intent.putExtra("partnerNickname", nickname)
+            intent.putExtra("profileImg", profileImg)
+
+            startActivity(intent)
+        } ,profileImg)
         binding.rvChatRoom.layoutManager = LinearLayoutManager(this@ChatActivity)
         binding.rvChatRoom.adapter = adapter
 

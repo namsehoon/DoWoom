@@ -28,9 +28,9 @@ class TalkViewModel : ViewModel() {
 
     /** 채팅룸 삭제*/
 
-//    suspend fun deleteChatRoom(chatId: String, member: Member) {
-//        viewModelScope.launch {
-//            chatRepo.deleteChatRoom(chatId, member)
-//        }
-//    }
+    suspend fun deleteChatRoom(from: String, to: String) {
+        viewModelScope.launch {
+            chatRepo.deleteChatRoom(from, to)
+        }
+    }
 }

@@ -92,62 +92,82 @@ class userRepo {
 
 
 
-    /** 차단 관촬 */
+    /** 차단 관촬 (상대방이 나 관찰)*/
     fun observeBlock(partnerUid: String) : LiveData<Boolean> {
         val mutabledata = MutableLiveData<Boolean>()
 
-        //내가 너를 차단함
-        Ref().blockRef().child(partnerUid).child(Ref().auth.uid).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    Log.d("abcd","userRepo - observeBlock - 상대방이 너 차단함")
-                    mutabledata.value = true //차단됨
-                } else {
-                    mutabledata.value = false
+        CoroutineScope(Dispatchers.IO).launch {
+            //내가 너를 차단함
+            Ref().blockRef().child(partnerUid).child(Ref().auth.uid).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        Log.d("abcd","userRepo - observeBlock - 상대방이 너 차단함")
+                        mutabledata.value = true //차단됨
+                    } else {
+                        mutabledata.value = false
+                    }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                mutabledata.value = false
-               Log.d("abcd","userRepo - observeBlock - error : ${error.message}")
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    mutabledata.value = false
+                    Log.d("abcd","userRepo - observeBlock - error : ${error.message}")
+                }
 
-        })
+            })
+        }
+        return mutabledata
+    }
+    /** 차단 관촬 (내가 상대방 관찰)*/
+    fun iObserveBlockedYou(partnerUid: String) : LiveData<Boolean> {
+        val mutabledata = MutableLiveData<Boolean>()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            //내가 너를 차단함
+            Ref().blockRef().child(Ref().auth.uid).child(partnerUid).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        Log.d("abcd","userRepo - iObserveBlockedYou - 내가 상대방 차단함")
+                        mutabledata.value = true //차단됨
+                    } else {
+                        mutabledata.value = false
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    mutabledata.value = false
+                    Log.d("abcd","userRepo - iObserveBlockedYou - error : ${error.message}")
+                }
+
+            })
+        }
         return mutabledata
     }
 
     /** 차단 */
-    fun blockUser(partnerUid:String) {
+    fun blockUser(partnerUid:String,blockedState:String) : LiveData<Boolean> {
+        val mutabledata = MutableLiveData<Boolean>()
 
-        val iBlockYou = hashMapOf<String,Any>(
-            partnerUid to true
+        CoroutineScope(Dispatchers.IO).launch {
+            if (blockedState == "차단해제") {
+                Ref().blockRef().child(Ref().auth.uid).removeValue().addOnCompleteListener {
+                    Log.d("abcd","userRepo - blockUserBy - 차단이 해제되었습니다.")
+                    mutabledata.value = false
+                }
+            } else {
+                val iBlockYou = hashMapOf<String,Any>(
+                    partnerUid to true
+                )
 
-        )
-
-        Ref().blockRef().child(Ref().auth.uid).updateChildren(iBlockYou).addOnCompleteListener {
-            Log.d("abcd","userRepo - blockUserBy - 차단이 완료되었습니다.")
+                Ref().blockRef().child(Ref().auth.uid).updateChildren(iBlockYou).addOnCompleteListener {
+                    Log.d("abcd","userRepo - blockUserBy - 차단이 완료되었습니다.")
+                    mutabledata.value = true
+                }
+            }
         }
 
+        return mutabledata
+
     }
-
-    /** 유저 phone number(id) 가져오기 */
-    suspend fun getfireabseUserId() : Flow<String> {
-        var phoneNum = ""
-        return flow {
-            val auth = Firebase.auth
-            val firebaseUser: FirebaseUser? = auth.currentUser
-            if (firebaseUser?.phoneNumber != null) {
-                phoneNum = firebaseUser.phoneNumber.toString()
-            } else {
-                phoneNum = ""
-                Log.d("abcd", "사용자의 폰 번호를 찾을 수 없습니다. : "+phoneNum)
-            }
-            delay(500)
-            emit(phoneNum)
-
-        }.flowOn(Dispatchers.IO)
-    }
-
 
 
 

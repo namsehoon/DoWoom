@@ -53,6 +53,10 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                 intent.putExtra("profileImg",chatRoom.user?.profileImg)
                 intent.putExtra("partnerId",chatRoom.to)
 
+                intent.putExtra("partnerAge",chatRoom.user?.age)
+                intent.putExtra("partnerPopularity",chatRoom.user?.popularity)
+                intent.putExtra("partnerStateMsg",chatRoom.user?.stateMsg)
+
                 context?.startActivity(intent)
             }
             //채팅방 나가기
@@ -64,7 +68,7 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                         Log.d("abcd","삭제 확인 누름")
                         CoroutineScope(Dispatchers.IO).launch {
 
-//                            viewModel.deleteChatRoom(chatRoom.chatId!!,chatRoom.member!!)
+                            viewModel.deleteChatRoom(chatRoom.from!!,chatRoom.to!!)
 
                             withContext(Dispatchers.Main) {
                                 adapter.chatRooms.removeAt(position)
