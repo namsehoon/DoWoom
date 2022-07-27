@@ -45,8 +45,8 @@ class CommentAdapter(val context: Context) : RecyclerView.Adapter<CommentAdapter
 
 
 //        viewHolder.comuBinding.tvComentCount.text = comu.commentCount.toString() ?: "카운터없음"
-        holder.commentBinding.tvComment.text = comment.comment ?: "익명이라 말함"
-        holder.commentBinding.tvCommenter.text = comment.nickname ?: "익명이"
+        holder.commentBinding.tvComment.text = comment.comment.toString()
+        holder.commentBinding.tvCommenter.text = comment.nickname.toString()
 
 
 

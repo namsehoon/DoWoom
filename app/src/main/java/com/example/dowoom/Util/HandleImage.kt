@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.dowoom.firebase.Ref
 import com.example.dowoom.model.talkModel.Message
+import com.example.dowoom.repo.ChatRepo
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +26,7 @@ import java.util.concurrent.Flow
 
 class HandleImage(val uriList: List<Uri>,val from:String,val to:String)  {
 
+    val repo = ChatRepo()
 
     fun handleUpload() {
         //사진 업로드 and 위치 기억  /users/<userId>/profileImages/<image-file>
@@ -52,7 +54,7 @@ class HandleImage(val uriList: List<Uri>,val from:String,val to:String)  {
                 }.addOnCompleteListener {task ->
                     if (task.isSuccessful) {
                         val downloadUri = task.result
-                        insertImageToDB(downloadUri,time)
+                        insertImageToDB(downloadUri)
                     }
                 }
 
@@ -62,16 +64,11 @@ class HandleImage(val uriList: List<Uri>,val from:String,val to:String)  {
 
     }
 
-    fun insertImageToDB(uri:Uri,date: Long)  {
+    fun insertImageToDB(uri:Uri)  {
         CoroutineScope(Dispatchers.IO).launch {
-            val key = Ref().messageRef().push().key
-            delay(100)
 
-            val message = Message(from,to,uri.toString(),"이미지",key,date,false)
+            repo.sendMessage(from,to,"이미지",uri)
 
-            Ref().messageRef().child(from).child(to).child(key!!).setValue(message).addOnCompleteListener {
-                Log.d("abcd","HandleImage - insertImageToDB 성공")
-            }
         }
     }
 

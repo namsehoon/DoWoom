@@ -16,6 +16,9 @@
         android:theme="@style/Theme.DoWoom"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.profile.ChangeProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.profile.ShowProfileActivity"
             android:exported="false" />
         <activity

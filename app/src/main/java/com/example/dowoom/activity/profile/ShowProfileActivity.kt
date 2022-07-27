@@ -1,19 +1,15 @@
 package com.example.dowoom.activity.profile
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.example.dowoom.R
-import com.example.dowoom.Util.CustomAlertDialog
 import com.example.dowoom.Util.CustomBlockDialog
 import com.example.dowoom.Util.GlideApp
 import com.example.dowoom.activity.BaseActivity
 import com.example.dowoom.databinding.ActivityShowProfileBinding
-import com.example.dowoom.viewmodel.ShowProfileViewModel
-import com.example.dowoom.viewmodel.loginViewmodel.LoginViewmodel
-import java.sql.Ref
+import com.example.dowoom.viewmodel.profile.ShowProfileViewModel
 
 class ShowProfileActivity : BaseActivity<ActivityShowProfileBinding>("프로필 액티비티", R.layout.activity_show_profile) {
 
@@ -60,7 +56,7 @@ class ShowProfileActivity : BaseActivity<ActivityShowProfileBinding>("프로필 
         } else {
             GlideApp.with(this)
                 .load(profileImg) // 이미지를 로드
-                .override(80,80)
+                .override(150,150)
                 .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
                 .error(R.drawable.ic_baseline_person_24) // 불러오다가 에러발생
                 .into(binding.profileImg) //이미지를 보여줄 view를 지정

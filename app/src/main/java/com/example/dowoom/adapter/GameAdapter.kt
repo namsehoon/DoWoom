@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dowoom.R
 import com.example.dowoom.databinding.ItemGameBinding
@@ -12,6 +13,7 @@ import com.example.dowoom.model.gameModel.GameModel
 
 class GameAdapter(val context: Context,val goIntoGameRoom:(GameModel) -> Unit) : RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
 
+    val diffUtil = AsyncListDiffer(this,GameModelDiffUtil())
 
     var games = mutableListOf<GameModel>()
 
@@ -24,9 +26,7 @@ class GameAdapter(val context: Context,val goIntoGameRoom:(GameModel) -> Unit) :
 
     fun setGameRoom(Games:MutableList<GameModel>) {
         Log.d("abcd","games is :"+Games.toString())
-        games.clear()
-        games.addAll(Games)
-        notifyItemRangeInserted(0,games.size)
+        diffUtil.submitList(Games)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameAdapter.GameViewHolder {
@@ -35,7 +35,7 @@ class GameAdapter(val context: Context,val goIntoGameRoom:(GameModel) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: GameAdapter.GameViewHolder, position: Int) {
-        val game = games[position]
+        val game = diffUtil.currentList[position]
 
         holder.gameBinding.tvCreatorName.text = game.nickname
         holder.gameBinding.tvLeftCount.text = game.leftCount.toString()
@@ -58,7 +58,7 @@ class GameAdapter(val context: Context,val goIntoGameRoom:(GameModel) -> Unit) :
     }
 
     override fun getItemCount(): Int {
-        return games.size
+        return diffUtil.currentList.size
     }
 
     inner class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

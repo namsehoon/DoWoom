@@ -91,13 +91,15 @@
                 android:paddingTop="10dp"
                 android:paddingRight="10dp"
                 android:layout_marginHorizontal="5dp"
+                android:visibility="gone"
+                android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
 
                 <ImageView
                     android:id="@+id/imgReceive"
-                    android:layout_width="200sp"
+                    android:layout_width="200dp"
                     android:layout_height="130dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_baseline_attach_file_24"/>

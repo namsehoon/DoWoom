@@ -138,7 +138,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
                         replaceview(comuFrag)
                     }
                     4 -> {
-                        replaceview(settingFrag)
+                        replaceToSetting(settingFrag)
                     }
                 }
             }
@@ -235,6 +235,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
         })
     }
 
+    private fun replaceToSetting(tab: Fragment) {
+        var selectedFragment : Fragment? = null
+        selectedFragment = tab
+        selectedFragment.let {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout,SettingPreference()).commit()
+        }
+
+    }
 
     //fragment 변경
     private fun replaceview(tab:Fragment) {
@@ -243,7 +252,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
         selectedFragment = tab
         selectedFragment.let {
             //프레그먼트 변경
-
             replaceFragment(selectedFragment,selectedFragment::class.simpleName!!)
         }
     }

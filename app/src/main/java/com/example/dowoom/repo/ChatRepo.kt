@@ -1,5 +1,6 @@
 package com.example.dowoom.repo
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -71,7 +72,7 @@ class ChatRepo {
 
 
     /** 메세지 보내기 */
-    suspend fun sendMessage( from: String, to: String, text: String? = null) {
+    suspend fun sendMessage( from: String, to: String, text: String? = null,uri: Uri? = null) {
 
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -79,7 +80,7 @@ class ChatRepo {
             val time = System.currentTimeMillis()/1000
             var message:Message? = null
 
-            message = Message(from,to,null,text,key,time,false)
+            message = Message(from,to,uri.toString(),text,key,time,false)
 
 
             Ref().messageRef().child(from).child(to).child(key!!).setValue(message)
@@ -214,7 +215,10 @@ class ChatRepo {
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 Log.d("Abcd","ChatRepo - getChatRoomData - onChildChanged")
-
+                if (snapshot.exists()) {
+                    //채팅방 데이터 변경 시,,,
+                    //todo ... 흠
+                }
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
@@ -228,6 +232,7 @@ class ChatRepo {
                             val user = snapshot.getValue(User::class.java)
                             chatroom?.user = user
                             val index = idList.indexOf(user?.uid) //d
+                            listData.removeAt(index)
                             listData.removeAt(index)
                             mutableData.value = listData
                         }

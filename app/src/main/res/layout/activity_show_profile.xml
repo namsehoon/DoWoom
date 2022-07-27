@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.example.dowoom.viewmodel.ShowProfileViewModel" />
+            type="com.example.dowoom.viewmodel.profile.ShowProfileViewModel" />
         <variable
             name="user"
             type="com.example.dowoom.model.User" />
@@ -113,12 +113,12 @@
             android:id="@+id/tvBlock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:text="차단하기"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/profileImg"
-            app:layout_constraintTop_toTopOf="@+id/profileImg" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

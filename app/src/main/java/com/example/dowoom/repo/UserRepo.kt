@@ -28,6 +28,70 @@ import kotlinx.coroutines.flow.flowOn
  **/
 class userRepo {
 
+
+    /** 유저 프로필 업데이트 */
+    fun updateUserProfile(stateMsg: String) :LiveData<Boolean> {
+        val mutableData = MutableLiveData<Boolean>()
+
+        val userUpdates = hashMapOf<String,Any>(
+            "stateMsg" to stateMsg,
+            "profileImg" to Ref().auth.photoUrl.toString()
+        )
+
+        //내 프로필 업데이트
+        Ref().userRef().child(Ref().auth.uid).updateChildren(userUpdates).addOnCompleteListener {
+            Log.d("abcd", "userRepo - updateUserProfile - 성공")
+            mutableData.value = true
+        }
+            .addOnFailureListener {
+                Log.d("abcd", "userRepo - updateUserProfile - 실패 : ${it.message}")
+                mutableData.value = false
+            }
+
+
+        return mutableData
+    }
+
+    /** 유저 정보 가져오기 */
+    fun observeUser(uid: String) : LiveData<User> {
+
+        val mutableData = MutableLiveData<User>()
+
+        Ref().userRef().orderByKey().equalTo(uid).addChildEventListener(object  : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                if (snapshot.exists()) {
+                    Log.d("abcd","snapshot : ${snapshot.ref}")
+                    val user = snapshot.getValue(User::class.java)
+                    mutableData.value = user!!
+                }
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                if (snapshot.exists()) {
+                    val user = snapshot.getValue(User::class.java)
+                    mutableData.value = user!!
+                }
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        return mutableData
+    }
+
+
+
     /** 차단 관촬 */
     fun observeBlock(partnerUid: String) : LiveData<Boolean> {
         val mutabledata = MutableLiveData<Boolean>()

@@ -4,6 +4,7 @@ const admin = require("firebase-admin");
 admin.initializeApp(functions.config().firebase);
 
 exports.everyDayTask = functions.pubsub.schedule("0 0 * * *")
+    .timeZone("Asia/Seoul")
     .onRun(async () => {
       console.log("everyDayTask - starting ...");
       const updates = {};
@@ -23,6 +24,7 @@ exports.everyDayTask = functions.pubsub.schedule("0 0 * * *")
 
 
 exports.resetRandomId = functions.pubsub.schedule("0 0 * * *")
+    .timeZone("Asia/Seoul")
     .onRun(async () => {
       console.log("resetRandomId - starting ...");
       const updates = {};
