@@ -240,7 +240,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(TAG = "MainActivity", R.l
         selectedFragment = tab
         selectedFragment.let {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.frameLayout,SettingPreference()).commit()
+                .replace(R.id.frameLayout,SettingFrag()).commit()
         }
 
     }

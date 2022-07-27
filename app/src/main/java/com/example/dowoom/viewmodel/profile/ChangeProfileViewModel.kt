@@ -19,7 +19,9 @@ class ChangeProfileViewModel : ViewModel() {
 
     fun getUserInfo() {
         repo.observeUser(Ref().auth.uid).observeForever(Observer {
-            _user.value = it
+            if (it != null) {
+                _user.value = it
+            }
         })
     }
 
@@ -30,7 +32,9 @@ class ChangeProfileViewModel : ViewModel() {
 
     fun updateUserProfile(statusMsg:String) {
         repo.updateUserProfile(statusMsg).observeForever(Observer {
-            _completed.value = it
+            if (it != null) {
+                _completed.value = it
+            }
         })
     }
 }

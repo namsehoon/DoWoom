@@ -24,17 +24,9 @@ class ShowProfileViewModel : ViewModel() {
     /** 차단 관찰 */
     fun observeBlock(partnerUid: String) {
         repo.observeBlock(partnerUid).observeForever(Observer {
-            _blockCheck.value = it
-        })
-    }
-    /** 내 정보 가져오기 */
-    val _user = MutableLiveData<User>()
-    val user : LiveData<User> get() = _user
-
-
-    fun getUserInfo() {
-        repo.observeUser(Ref().auth.uid).observeForever(Observer {
-            _user.value = it
+            if (it != null) {
+                _blockCheck.value = it
+            }
         })
     }
 }

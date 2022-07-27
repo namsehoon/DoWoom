@@ -82,7 +82,7 @@ class userRepo {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.d("Abcd","userRepo - observeUser - error : ${error.message}")
             }
 
         })
@@ -292,7 +292,7 @@ class userRepo {
             val uid = Ref().auth.uid
 
             val profileImg = Ref().auth.photoUrl
-            val user = User(uid,age,nickname,stateMsg,0,null,sOrB,profileImg.toString(),null,birthday)
+            val user = User(uid,age,nickname,stateMsg,0,null,sOrB, Ref().auth.photoUrl.toString(),null,birthday)
 
             //새로운 유저
             Ref().userRef().child(uid).setValue(user).continueWithTask {task ->

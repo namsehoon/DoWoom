@@ -29,6 +29,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.dowoom.Util.CustomProgressDialog
 import com.example.dowoom.Util.HandleProfileImage
 import com.example.dowoom.Util.PermissionCheck
+import com.example.dowoom.firebase.Ref
 import com.google.firebase.database.MutableData
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
@@ -146,6 +147,11 @@ class CheckActivity : BaseActivity<ActivityCheckBinding>(TAG = "CheckActivity", 
     fun initialized() {
         //datastore
         datastore = DataStoreST.getInstance(this)
+
+        if (Ref().auth.displayName != null) {
+            val intent = Intent(this,MainActivity::class.java).apply { Intent.FLAG_ACTIVITY_CLEAR_TOP }
+            startActivity(intent)
+        }
 
         //리스너
         binding.nextBtn.setOnClickListener(this)

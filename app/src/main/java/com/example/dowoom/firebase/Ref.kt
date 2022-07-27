@@ -1,5 +1,6 @@
 package com.example.dowoom.firebase
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -99,6 +100,9 @@ class Ref {
 
     val storageRef: StorageReference
         get() = storage.reference
+
+    val firebaseAuth: FirebaseAuth
+        get() = Firebase.auth
 
 
 

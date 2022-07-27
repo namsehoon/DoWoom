@@ -37,7 +37,9 @@ class ChatViewmodel : ViewModel() {
 
     fun observeBlock(partnerUid: String) {
         userRepo.observeBlock(partnerUid).observeForever(Observer {
-            _blockCheck.value = it
+            if (it != null) {
+                _blockCheck.value = it
+            }
         })
     }
 

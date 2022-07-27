@@ -42,7 +42,7 @@ class LoadingActivity : BaseActivity<ActivityLoadingBinding>(TAG = "로딩액티
             finish()
             //유저 o , 닉네임 x
         } else {
-            startNextActivity(CheckActivity::class.java)
+            startNextActivity(StartActivity::class.java)
             finish()
             //유저 x , 닉네임 x
         }

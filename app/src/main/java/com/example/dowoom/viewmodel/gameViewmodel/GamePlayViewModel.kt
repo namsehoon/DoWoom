@@ -21,7 +21,6 @@ class GamePlayViewModel : ViewModel() {
         viewModelScope.launch {
             repo.getGameResult(gameId,result).observeForever(Observer { it ->
                 Log.d("abcd","play viewmodel result is : ${it}")
-                _img.value = it
             })
         }
     }
@@ -32,8 +31,10 @@ class GamePlayViewModel : ViewModel() {
         val game =  MutableLiveData<GameModel>()
         viewModelScope.launch {
             repo.observeFinishedGame(gameId).observeForever(Observer { it ->
-                Log.d("abcd","play viewmodel finished is : ${it}")
-                game.value = it
+                if (it != null) {
+                    Log.d("abcd","play viewmodel finished is : ${it}")
+                    game.value = it
+                }
             })
         }
         return game
@@ -48,7 +49,9 @@ class GamePlayViewModel : ViewModel() {
         viewModelScope.launch {
             repo.deleteResult(gameId,result).observeForever(Observer {
                 //만약 처리 안되었으면 dismiss 보류
-                _handleDone.value = it
+                if (it != null) {
+                    _handleDone.value = it
+                }
             })
         }
     }
