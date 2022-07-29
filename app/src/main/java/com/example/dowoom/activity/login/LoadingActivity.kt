@@ -12,10 +12,14 @@ import com.example.dowoom.dataStore.DataStore
 import com.example.dowoom.dataStore.DataStoreST
 import com.example.dowoom.databinding.ActivityLoadingBinding
 import com.example.dowoom.viewmodel.registervm.LoadingViewmodel
+import com.google.firebase.FirebaseApp
+import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class LoadingActivity : BaseActivity<ActivityLoadingBinding>(TAG = "로딩액티비티",R.layout.activity_loading) {
 
@@ -31,10 +35,19 @@ class LoadingActivity : BaseActivity<ActivityLoadingBinding>(TAG = "로딩액티
     }
 
     private fun initialized() {
+
+        //firebase app check
+        try {
+            FirebaseApp.initializeApp(this)
+            val firebaseAppCheck = FirebaseAppCheck.getInstance()
+            firebaseAppCheck.installAppCheckProviderFactory(SafetyNetAppCheckProviderFactory.getInstance())
+        }catch (e:Exception) {
+            Log.d("abcd","appCheck Exeption : ${e.message}")
+        }
+
+
         binding.lifecycleOwner = this
-
         auth = FirebaseAuth.getInstance()
-
 
         //유저 o , 닉네임 o
         if (auth.currentUser != null ) {
@@ -46,6 +59,7 @@ class LoadingActivity : BaseActivity<ActivityLoadingBinding>(TAG = "로딩액티
             finish()
             //유저 x , 닉네임 x
         }
+
 
 
     }
