@@ -116,6 +116,8 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
                 binding.tvKindOf.text = ANONYMOUS // 게시판 이름
 
+                binding.tvBack.visibility = View.GONE
+                binding.tvNext.visibility = View.GONE
                 binding.llName.visibility = View.VISIBLE //익명 : 이름
                 binding.tvSubject.visibility = View.VISIBLE // 글내용
 
@@ -123,6 +125,8 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
                 /** 신고 및 건의 */
             } else {
+                binding.tvBack.visibility = View.GONE
+                binding.tvNext.visibility = View.GONE
                 Log.d("abcd", "comufrag - adapter - police : 신고 및 건의 ")
                 binding.tvKindOf.text = POLICE
 
@@ -149,6 +153,8 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
         binding.tvBackToRv.setOnClickListener(this@ComuFrag)
         binding.tvToWrite.setOnClickListener(this@ComuFrag)
         binding.commentInsertBtn.setOnClickListener(this@ComuFrag)
+        binding.tvNext.setOnClickListener(this@ComuFrag)
+        binding.tvBack.setOnClickListener(this@ComuFrag)
 
     }
 
@@ -171,7 +177,8 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
             }
             R.id.tvGuest -> { /** 게스트 */
-                //글작성
+                binding.tvBack.visibility = View.GONE
+                binding.tvNext.visibility = View.GONE
                 kindOf = 1
                 guestAndPolice() //visible 관리
                 tvToWrite.text = "익명 글쓰기"
@@ -181,6 +188,8 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
             }
             R.id.tvPolice -> { /** 신고 및 건의 */
+                binding.tvBack.visibility = View.GONE
+                binding.tvNext.visibility = View.GONE
                 kindOf = 2
                 guestAndPolice() //visible 관리
                 tvToWrite.text = "신고 및 건의 글쓰기"
@@ -223,7 +232,16 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
                 binding.tvNextPage.visibility = View.VISIBLE
                 binding.llComuList.visibility = View.VISIBLE
             }
-
+            R.id.tvNext -> {
+                commentAdapter.commentList.clear()
+                commentAdapter.notifyDataSetChanged() //todo
+                viewModel.nextBtnClicked()
+            }
+            R.id.tvBack -> {
+                commentAdapter.commentList.clear()
+                commentAdapter.notifyDataSetChanged() //todo
+                viewModel.beforeBtnClicked()
+            }
         }
     }
     private fun guestAndPolice() {

@@ -57,7 +57,6 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
     fun nextBtnClicked() {
         Log.d("abcd","다음버튼 클릭 됨")
         //현재 컨텐츠 리스트에 이 컨텐츠를 포함하고 있다면
-        Log.d("Abcd","comu content is :${comuContent.value?.uid}")
         if (uidLists.contains(comuContent.value?.uid)) {
             //이 인덱스를 가져와서
             val index = uidLists.indexOf(comuContent.value?.uid)
@@ -231,8 +230,10 @@ class ComuViewModel(private val repo:GezipRepo) : ViewModel() {
 
     fun getComments(comuUid: String) {
         viewModelScope.launch {
-            comuRepo.getComments(comuUid).observeForever(Observer {
-                _commentList.value = it
+            comuRepo.getComments(comuUid).observeForever(Observer { comments ->
+                if (comments != null) {
+                    _commentList.value = comments
+                }
             })
         }
     }
