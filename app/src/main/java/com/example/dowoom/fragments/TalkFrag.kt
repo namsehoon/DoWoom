@@ -23,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.InputStream
+import java.lang.IndexOutOfBoundsException
 import java.net.URL
 import java.net.URLConnection
 
@@ -66,17 +67,12 @@ class TalkFrag : BaseFragment<TalkFragmentBinding>("TalkFrag", R.layout.talk_fra
                 dialog.onOkClickListener(object : CustomAlertDialog.onDialogCustomListener {
                     override fun onClicked() {
                         Log.d("abcd","삭제 확인 누름")
+
                         CoroutineScope(Dispatchers.IO).launch {
-
                             viewModel.deleteChatRoom(chatRoom.from!!,chatRoom.to!!)
-
-                            withContext(Dispatchers.Main) {
-                                adapter.chatRooms.removeAt(position)
-                                adapter.notifyItemRemoved(position)
-
-                                //todo : 더이상 메세지를 작성할 수없게
-                            }
                         }
+                        adapter.notifyItemRemoved(position)
+
                     }
 
                     override fun onCanceled() {

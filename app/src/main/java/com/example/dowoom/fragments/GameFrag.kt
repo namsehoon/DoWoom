@@ -16,6 +16,9 @@ import com.example.dowoom.activity.game.CreateGameActivity
 import com.example.dowoom.activity.game.PlayGameActivity
 import com.example.dowoom.adapter.GameAdapter
 import com.example.dowoom.databinding.GameFragmentBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 //게임 프레그먼트
 class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fragment) {
@@ -34,9 +37,11 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
         super.onViewCreated(view, savedInstanceState)
 
         //게임 생성
-        binding.tvCreateGame.setOnClickListener {
-            val intent = Intent(context, CreateGameActivity::class.java)
-            context?.startActivity(intent)
+        lifecycleScope.launchWhenResumed {
+            binding.tvCreateGame.setOnClickListener {
+                val intent = Intent(context, CreateGameActivity::class.java)
+                context?.startActivity(intent)
+            }
         }
 
         //어뎁터
@@ -65,12 +70,13 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
                     alertDialog.onOkClickListener(object :CustomAlertDialog.onDialogCustomListener {
                         override fun onClicked() {
                             //유저의 게임 카운터를 +1
-                            viewModel.addGameCount(game.gameUid!!)
+                            CoroutineScope(Dispatchers.Main).launch {
+                                viewModel.addGameCount(game.gameUid!!)
+                            }
                             context?.startActivity(intent)
                         }
 
                         override fun onCanceled() {
-
                         }
 
                     })
@@ -100,12 +106,12 @@ class GameFrag : BaseFragment<GameFragmentBinding>("GameFrag", R.layout.game_fra
 
     private fun observerData() {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            viewModel.observeLadderGame().observe(viewLifecycleOwner, Observer { ladders ->
+            viewModel.gameList.observe(viewLifecycleOwner, Observer { ladders ->
                 adapter.setGameRoom(ladders)
             })
 
             viewModel.checkGameCount().observe(viewLifecycleOwner, Observer { gamecount ->
-                Log.d("abcd","gamecount in gamefrag is : ${gamecount}")
+                Log.d("abcd","gamefrag - checkGameCount is : ${gamecount}")
             })
         }
     }

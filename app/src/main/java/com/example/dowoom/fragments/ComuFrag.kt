@@ -1,5 +1,6 @@
 package com.example.dowoom.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -63,6 +64,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
     }
 
     //버튼 리스너, recyclerview 어뎁터
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)  {
                    super.onViewCreated(view, savedInstanceState)
 
@@ -190,11 +192,15 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
             }
             R.id.tvToWrite -> {  /** 글작성 */
 
-                val intent = Intent(context, GuestWriteActivity::class.java)
+                if (user?.guestId.isNullOrEmpty()) {
+                    Toast.makeText(context,"하루가 지난 후 작성할 수 있습니다.",Toast.LENGTH_SHORT).show()
+                } else {
+                    val intent = Intent(context, GuestWriteActivity::class.java)
+                    intent.putExtra("guestId",user?.guestId!!)
+                    intent.putExtra("kindOf",kindOf)
+                    context?.startActivity(intent)
+                }
 
-                intent.putExtra("guestId",user?.guestId!!)
-                intent.putExtra("kindOf",kindOf)
-                context?.startActivity(intent)
             }
             //댓글 작성
             //1. 유머 게시판 : 내용만 써서
@@ -245,6 +251,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
             /** 새로고침 */
             binding.refresh.setOnRefreshListener {
                 CoroutineScope(Dispatchers.Main).launch {
+                    Log.d("abc","kindof is : ${kindOf}")
                     when (kindOf) {
                         0 -> viewModel.getHumors()
                         1 -> viewModel.getGuest()
@@ -256,6 +263,7 @@ class ComuFrag : BaseFragment<ComuFragmentBinding>(TAG = "ComeFrag", R.layout.co
 
             /** 댓글 리스트 */
             viewModel.commentList.observe(viewLifecycleOwner, Observer { comments ->
+                commentAdapter.commentList.clear()
                 commentAdapter.setComments(comments)
             })
 

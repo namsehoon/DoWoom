@@ -57,10 +57,6 @@ class GuestWriteActivity : BaseActivity<ActivityGuestWriteBinding>("익게 글�
 
         val intent = intent
         guestId = intent.getStringExtra("guestId")
-        if (guestId == null) {
-            Toast.makeText(this,"하루가 지난 후 작성할 수 있습니다.",Toast.LENGTH_SHORT).show()
-            finish()
-        }
         kindOf = intent.getIntExtra("kindOf",2)
 
         binding.tvWritedIn.setOnClickListener(this@GuestWriteActivity)

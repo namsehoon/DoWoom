@@ -14,17 +14,26 @@ class GameViewModel : ViewModel() {
 
     val gameRepo = GameRepo()
 
+    init {
+        viewModelScope.launch {
+            checkGameCount()
+            observeLadderGame()
+        }
+    }
 
 
     /** 게임 리스트 (사다리 게임)*/
 
-    suspend fun observeLadderGame(): LiveData<MutableList<GameModel>> {
-        val gameList = MutableLiveData<MutableList<GameModel>>()
+    val _gameList = MutableLiveData<MutableList<GameModel>>()
+    val gameList : LiveData<MutableList<GameModel>> get() = _gameList
+
+    suspend fun observeLadderGame() {
         gameRepo.getGameList().observeForever(Observer { ladders ->
-            gameList.value = ladders
+           if (ladders != null) {
+               _gameList.value = ladders
+           }
         })
 
-        return gameList
     }
 
     /** 게임 카운터 체크 ! */

@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dowoom.model.User
@@ -19,8 +17,8 @@ import com.example.dowoom.databinding.ItemRecyclerBinding
 //private val itemClickListener:(User) -> Unit
 class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talkClick:(User) -> Unit) : RecyclerView.Adapter<HomeAdapter.UserHolder>() {
 
-    //diff
-    private val diffUtil = AsyncListDiffer(this,UserDiffUtil())
+    //유저
+    var users = mutableListOf<User>()
 
     //onclicklistener은 view에서 구현하는것이 바람직하다고 합니다.(viewModel 사용 또는 fragment간 화면전환 )
     interface OnItemClickListener {
@@ -28,9 +26,11 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
     }
 
     //유저 셋
-    fun setUser(newUsers:MutableList<User>) {
-        newUsers.reversed() //최신이 위로
-        diffUtil.submitList(newUsers)
+    fun setUser(user:MutableList<User>) {
+        //유저 데이터를 불러 올 때, 데이터가 바뀌면 before데이터랑 after 데이터를 다불러와서
+        users.clear()
+        users.addAll(user)
+        notifyItemRangeChanged(0,user.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeAdapter.UserHolder {
@@ -42,9 +42,7 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
 
     override fun onBindViewHolder(holder: HomeAdapter.UserHolder, position: Int) {
        //databinding한 useritem에 users의 positoin에 맞게 뿌려줌
-        val user = diffUtil.currentList[position]
-        Log.d("abcd","user : ${user}")
-
+        val user = users[position]
         val viewHolder = holder as UserHolder
         Log.d("abcd","user.profile : ${user.profileImg.toString()}")
         if (user.profileImg.isNullOrEmpty()) {
@@ -84,7 +82,7 @@ class HomeAdapter(val context: Context,val profileClick:(User) -> Unit, val talk
 
 
     override fun getItemCount(): Int {
-       return diffUtil.currentList.size
+       return users.size
     }
 
     inner class UserHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {

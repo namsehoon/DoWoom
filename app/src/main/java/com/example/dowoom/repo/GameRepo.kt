@@ -16,8 +16,10 @@ class GameRepo {
 
 
     /** 게임 생성 */
-    suspend fun createGame(whatKindGame: Int, resultList: ArrayList<Int>, gameUid: String, gameTitle: String) {
+    suspend fun createGame(whatKindGame: Int, resultList: ArrayList<Int>, gameUid: String, gameTitle: String) : LiveData<Boolean> {
+        val created = MutableLiveData<Boolean>()
         CoroutineScope(Dispatchers.IO).launch {
+
             if ( whatKindGame == 0 || whatKindGame == 1) { //사다리 게임
 
                 val gameid = gameUid
@@ -27,13 +29,17 @@ class GameRepo {
                 Log.d("abcd","여기까지는 오냐?")
                 //게임 모델
                 val gameModel = GameModel(gameTitle, Ref().auth.displayName,gameid,6,6,true,whatKindGame,time,result)
-                Ref().gameLadderRef().child(gameid).setValue(gameModel).addOnSuccessListener {
+                Ref().gameLadderRef().child(gameid).setValue(gameModel).addOnCompleteListener {
                     Log.d("abcd","game repo 게임 만들기 성공!!")
+                    created.value = true
 
+                }.addOnFailureListener {
+                    created.value = false
                 }
             }
 
         }
+        return created
 
     }
     /** 게임 리스트 가져오기 */
@@ -50,7 +56,7 @@ class GameRepo {
                         Log.d("abcd","gamerepo - getGameList - onChildAdded")
                         val ladderData = ladders.getValue(GameModel::class.java)
                         listData.add(0,ladderData!!) //역순
-                        idList.add(ladderData.gameUid!!)
+                        idList.add(0,ladderData.gameUid!!)
                         mutableData.value = listData
                     }
                 }
@@ -64,7 +70,7 @@ class GameRepo {
                         //게임 아이디 index 찾기
                         val index = idList.indexOf(ladderData?.gameUid!!)
                         if (index > -1) {
-                            listData[index] = ladderData
+                            listData[index] = ladderData //todo : ??
                         }
                         mutableData.value = listData
                     }
@@ -73,7 +79,14 @@ class GameRepo {
                 override fun onChildRemoved(ladders: DataSnapshot) {
                     if (ladders.exists()) {
                         Log.d("abcd","gamerepo - getGameList - onChildRemoved")
-                        Log.d("abcd"," ladders : ${ladders.ref}")
+
+                        val ladderData = ladders.getValue(GameModel::class.java)
+                        //게임 아이디 index 찾기
+                        val index = idList.indexOf(ladderData?.gameUid!!)
+                        listData.removeAt(index)
+                        idList.removeAt(index)
+
+                        mutableData.value = listData
                     }
                 }
 
@@ -224,12 +237,10 @@ class GameRepo {
             Ref().gameLadderRef().child(gameId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(game: DataSnapshot) {
                     if (game.exists()) {
-                        Log.d("abcd","delte result snapshot.ref is : ${game.ref}")
-                        Log.d("abcd","has child is : "+game.hasChild("gameResult/"))
                         val gameData = game.getValue(GameModel::class.java)
                         //아직 남아있는 게임이 있으면 해당 선물만 삭제
                         game.ref.child("gameResult").child(result).setValue(null)
-                            .addOnSuccessListener{
+                            .addOnCompleteListener{
                                 //성공 시, 게임 데이터 가져와서 leftCount가 0인지 확인
                                 mutableData.value = true
                                 if (gameData?.leftCount == 0) {
@@ -242,7 +253,7 @@ class GameRepo {
                             }
                             .addOnFailureListener { Log.d("abcd","게임 결과 삭제 ERROR : ${it.message}")
                                 mutableData.value = false
-                            }
+                        }
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {

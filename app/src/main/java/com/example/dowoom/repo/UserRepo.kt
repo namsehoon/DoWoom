@@ -230,6 +230,7 @@ class userRepo {
                                 if (!getData?.uid.equals(Ref().auth.uid)) {
                                     val index = idList.indexOf(getData?.uid) //
                                     listData.removeAt(index)
+                                    idList.removeAt(index)
                                 }
 
                                 Log.d("abcd","listdata is empty? : ${listData}")

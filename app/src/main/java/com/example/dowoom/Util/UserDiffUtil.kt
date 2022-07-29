@@ -36,3 +36,13 @@ class GameModelDiffUtil : DiffUtil.ItemCallback<GameModel>() {
     override fun areContentsTheSame(oldItem: GameModel, newItem: GameModel) =
         oldItem.gameUid == newItem.gameUid
 }
+
+
+class ChatRoomDiffUtil : DiffUtil.ItemCallback<ChatRoom>() {
+
+    override fun areItemsTheSame(oldItem: ChatRoom, newItem: ChatRoom) =
+        oldItem.user?.uid == newItem.user?.uid
+
+    override fun areContentsTheSame(oldItem: ChatRoom, newItem: ChatRoom) =
+        oldItem.user?.uid == newItem.user?.uid
+}

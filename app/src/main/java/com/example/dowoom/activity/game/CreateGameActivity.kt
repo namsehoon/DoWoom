@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.collection.arraySetOf
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dowoom.R
 import com.example.dowoom.Util.CustomProgressDialog
@@ -27,6 +28,7 @@ import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임생성 ac", R.layout.activity_create_game) {
@@ -113,7 +115,7 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
             progressDialog.start()
             CoroutineScope(Dispatchers.Main).launch {
                 if (!uriList.isNullOrEmpty()) {
-                    if (!binding.etGameTitle.text.toString().isNullOrEmpty()) {
+                    if (binding.etGameTitle.text.isNotEmpty()) {
                         createGame()
                     } else {
                         Toast.makeText(this@CreateGameActivity,"방 제목을 입력 해주세요.",Toast.LENGTH_SHORT).show()
@@ -165,12 +167,13 @@ class CreateGameActivity : BaseActivity<ActivityCreateGameBinding>(TAG = "게임
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
-
-        viewModel.getOnEndLive().observe(this, Observer { onEnd ->
-            if (onEnd != null && onEnd) {
-                finish()
-            }
-        })
+        lifecycleScope.launchWhenResumed {
+            viewModel.created.observe(this@CreateGameActivity, Observer {
+                if (it) {
+                    finish()
+                }
+            })
+        }
     }
 
 

@@ -18,14 +18,14 @@ import com.google.firebase.storage.StorageReference
 
 class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Unit, val chatClicked:(ChatRoom, position:Int) -> Unit) : RecyclerView.Adapter<ChatRoomAdapter.ChatRoomViewHolder>() {
 
+
+    val diffUtil = AsyncListDiffer(this,ChatRoomDiffUtil())
     //유저
     var chatRooms = mutableListOf<ChatRoom>()
 
     fun setChatroom(chatrooms:MutableList<ChatRoom>) {
+        diffUtil.submitList(chatrooms)
         Log.d("abcd","chatrooms is :"+chatrooms.toString())
-        chatRooms.clear()
-        chatRooms.addAll(chatrooms)
-        notifyItemRangeInserted(0,chatrooms.size)
     }
 
 
@@ -38,7 +38,7 @@ class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Uni
 
     override fun onBindViewHolder(holder: ChatRoomAdapter.ChatRoomViewHolder, position: Int) {
         //databinding한 useritem에 users의 positoin에 맞게 뿌려줌
-        val chatroom = chatRooms[position]
+        val chatroom = diffUtil.currentList[position]
 
 
         if (chatroom.user?.profileImg.isNullOrEmpty()) {
@@ -81,7 +81,7 @@ class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Uni
     }
 
     override fun getItemCount(): Int {
-        return chatRooms.size
+        return diffUtil.currentList.size
     }
 
     inner class ChatRoomViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {

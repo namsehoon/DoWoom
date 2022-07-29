@@ -21,6 +21,7 @@ class GamePlayViewModel : ViewModel() {
         viewModelScope.launch {
             repo.getGameResult(gameId,result).observeForever(Observer { it ->
                 Log.d("abcd","play viewmodel result is : ${it}")
+                _img.value = it
             })
         }
     }
