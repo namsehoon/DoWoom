@@ -38,9 +38,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
     private lateinit var auth:FirebaseAuth
     lateinit var datastore: DataStore
     var nickname:String? = null
-    var age: Int = 0
-    var stateMsg: String? = null
-    var sOrB: Boolean? = false
+    var age: Int? = null
     var authNum:String? = null
     var phoneNum: String? = null
 
@@ -69,8 +67,6 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
         initViewmodelCallback()
         datastore = DataStoreST.getInstance(this)
 
-        //firebase
-        firebase = Firebase.database
     }
 
     //콜백
@@ -167,7 +163,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
     }
 
     //이미 있는 유저라면, 로그인으로 처리
-    private fun ifUserExist() {
+    private fun ifUserExist(intent:Intent) {
         phoneNum = binding.etPhoneNumber.text.toString()
         if (phoneNum == binding.etPhoneNumber.text.toString() && authNum == binding.etAuthNumber.text.toString())
         { // 이전에  인증한 번호와 인증번호인 경우
@@ -186,7 +182,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>(TAG = "RegisterAc
         val intent = Intent(this,CheckActivity::class.java)
 
         //이미 있는 유저라면,
-        ifUserExist()
+        ifUserExist(intent)
 
 
         //신규

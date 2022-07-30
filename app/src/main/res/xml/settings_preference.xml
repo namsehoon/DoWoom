@@ -10,9 +10,9 @@
         </intent>
     </PreferenceScreen>
     <EditTextPreference
+        android:defaultValue="아니요"
         android:dialogTitle="로그아웃 하시겠습니까?\n('네'라고 입력 해주세요.)"
         android:key="logOut"
-        android:privateImeOptions="defaultInputmode=korean"
         android:title="로그아웃"
         />
 </PreferenceScreen>

@@ -41,7 +41,7 @@ class RegisterViewmodel : ViewModel() {
             Log.d("Abcd","폰번호 : "+etPhoneNum.value)
             //editText 폰 번호가 null이나 blank가 아니면 true else false
            _requestAuth.value = !etPhoneNum.value.isNullOrBlank()
-       } else {
+        } else {
            //인증 번호 재요청
                Log.d("Abcd","폰번호 : "+etPhoneNum.value)
            _requestResendPhoneAuth.value = !etPhoneNum.value.isNullOrBlank()
