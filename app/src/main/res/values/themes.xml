@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.DoWoom" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/logoYellow</item>
+        <item name="colorPrimary">@color/custom_light_blue_2</item>
 
         <item name="colorPrimaryVariant">#6B2BFB</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -14,8 +14,11 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
 
+        <item name="logoyellow">@color/custom_light_blue_2</item>
 
-        <item name="logoyellow">@color/logoYellow</item>
+        <item name="android:textViewStyle">@style/customTextViewFontStyle</item>
+        <item name="android:editTextStyle">@style/customTextViewFontStyle</item>
+        <item name="android:buttonStyle">@style/customTextViewFontStyle</item>
     </style>
 
     <style name="CustomAlertDialog">

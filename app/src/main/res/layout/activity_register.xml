@@ -19,9 +19,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/nanumgothic"
+        android:padding="1dp"
         android:textSize="25sp"
         android:layout_marginHorizontal="20sp"
-        android:text="안녕하세요!\n휴대폰 번호로 가입해주세요."
+        android:text="@string/register_phone_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.081"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,36 +33,59 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="휴대폰 번호는 안전하게 보관되며 공개되지 않아요."
+        android:layout_marginTop="4dp"
+        android:padding="1dp"
+        android:fontFamily="@font/nanum_bold"
+        android:text="@string/register_phone_2"
+        android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <EditText
-        android:id="@+id/etPhoneNumber"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/filledTextField"
+
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="1dp"
         android:layout_marginHorizontal="20sp"
         android:layout_marginTop="16dp"
-        android:ems="10"
-        android:text="@={vm.etPhoneNum}"
-        android:hint="휴대폰 번호(- 없이 숫자만 입력)"
-        android:inputType="textPersonName"
+        android:hint="@string/input_number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+        <!--this is the actual edit text which takes the input-->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:text="@={vm.etPhoneNum}"
+            android:inputType="number" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
 
     <TextView
         android:id="@+id/btGetAuthNumber"
         android:layout_width="0dp"
-        android:background="@color/logoYellow"
+        android:background="@drawable/rounded_corner"
         android:layout_height="40sp"
-        android:text="인증문자 받기"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textSize="16dp"
+        android:textColor="@color/custom_almost_whit_1"
+        android:text="@string/register_auth_number"
         android:onClick="@{() -> vm.requestAuth()}"
-        app:layout_constraintEnd_toEndOf="@+id/etPhoneNumber"
-        app:layout_constraintStart_toStartOf="@+id/etPhoneNumber"
-        app:layout_constraintTop_toBottomOf="@+id/etPhoneNumber" />
+        app:layout_constraintEnd_toEndOf="@+id/filledTextField"
+        app:layout_constraintStart_toStartOf="@+id/filledTextField"
+        app:layout_constraintTop_toBottomOf="@+id/filledTextField" />
 
     <LinearLayout
         android:id="@+id/registerLL"
@@ -69,7 +94,7 @@
         android:layout_marginTop="36dp"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btGetAuthNumber">
@@ -79,7 +104,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="인증번호 입력"
+            android:fontFamily="@font/nanumgothic"
+            android:textColor="@color/custom_dark_blue_1"
+            android:padding="1dp"
+            android:text="@string/register_text_auth"
             android:layout_marginHorizontal="20sp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -87,18 +115,32 @@
             app:layout_constraintStart_toStartOf="@+id/btGetAuthNumber"
             app:layout_constraintTop_toBottomOf="@+id/btGetAuthNumber" />
 
-        <EditText
-            android:id="@+id/etAuthNumber"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filledTextFields"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20sp"
-            android:ems="10"
-            android:text="@={vm.etAuthNum}"
-            android:inputType="textPersonName"
+            android:layout_marginTop="16dp"
+            android:hint="@string/input_auth"
+            android:padding="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/textView4"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+            app:layout_constraintTop_toBottomOf="@+id/textView4">
+
+            <!--this is the actual edit text which takes the input-->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAuthNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:text="@={vm.etAuthNum}"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/tvReGetAuthNumber"
@@ -106,7 +148,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginHorizontal="20sp"
-            android:text="인증번호 다시받기"
+            android:textColor="@color/custom_light_red_1"
+            android:padding="1dp"
+            android:text="@string/regiser_re_auth"
             android:onClick="@{() -> vm.requestAuth()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -118,9 +162,12 @@
             android:layout_width="match_parent"
             android:layout_height="40sp"
             android:layout_marginHorizontal="20sp"
-            android:background="@color/logoYellow"
-            android:layout_marginTop="44dp"
-            android:text="인증하기"
+            android:background="@drawable/rounded_corner"
+            android:layout_marginTop="16dp"
+            android:text="@string/register_auth"
+            android:textSize="16dp"
+            android:textColor="@color/custom_almost_whit_1"
+            android:gravity="center"
             android:onClick="@{() -> vm.authComplete()}"
             app:layout_constraintEnd_toEndOf="@+id/etAuthNumber"
             app:layout_constraintHorizontal_bias="0.0"
@@ -140,6 +187,7 @@
             android:id="@+id/textView6"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
+            android:fontFamily="@font/nanum_bold"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:text="휴대폰 번호가 변경되었나요?" />

@@ -34,7 +34,7 @@
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/textView5"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@color/logoYellow"
+            android:background="@color/custom_light_blue_2"
             app:layout_constraintStart_toEndOf="@+id/textView5"
             app:layout_constraintTop_toTopOf="@+id/textView5" />
 
@@ -55,7 +55,7 @@
             android:layout_marginTop="16dp"
             android:ems="10"
             android:hint="내용을 입력 해주세요."
-            android:background="@color/logoYellow"
+            android:background="@color/custom_light_blue_2"
             android:layout_marginBottom="24sp"
             app:layout_constraintBottom_toTopOf="@+id/tvWritedIn"
             app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +65,7 @@
             android:id="@+id/tvWritedIn"
             android:layout_width="match_parent"
             android:layout_height="40sp"
-            android:background="@color/logoYellow"
+            android:background="@color/custom_light_blue_2"
             android:layout_marginHorizontal="16sp"
             android:text="등록하기"
             android:layout_marginBottom="20sp"

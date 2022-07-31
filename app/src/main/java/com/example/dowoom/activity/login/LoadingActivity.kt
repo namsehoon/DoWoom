@@ -26,7 +26,6 @@ class LoadingActivity : BaseActivity<ActivityLoadingBinding>(TAG = "로딩액티
     //뷰모델
     //파이어베이스 auth
     private lateinit var auth: FirebaseAuth
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,7 +33,10 @@ class LoadingActivity : BaseActivity<ActivityLoadingBinding>(TAG = "로딩액티
         initialized()
     }
 
+
     private fun initialized() {
+
+
 
         //firebase app check
         try {

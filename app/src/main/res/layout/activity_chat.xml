@@ -81,7 +81,7 @@
                     android:id="@+id/ivSendMsg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/logoYellow"
+                    android:background="@color/custom_light_blue_2"
                     android:padding="9dp"
                     android:src="@drawable/ic_baseline_send_24"
                     tools:layout_editor_absoluteX="289dp"

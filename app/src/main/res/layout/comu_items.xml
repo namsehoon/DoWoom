@@ -7,7 +7,7 @@
         android:id="@+id/llContents"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/logoYellow"
+        android:background="@color/custom_light_blue_2"
         android:orientation="horizontal">
 
         <LinearLayout

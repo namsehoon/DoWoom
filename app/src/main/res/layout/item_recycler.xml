@@ -16,7 +16,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/logoYellow"
+        android:background="@color/custom_light_blue_2"
         android:layout_marginBottom="5sp"
         android:orientation="horizontal">
 

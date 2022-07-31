@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <color name="purple_200">#726D81</color>
+    <color name="purple_500">#4A4E69</color>
+    <color name="purple_700">#363852</color>
+    <color name="teal_200">#9A8C98</color>
+    <color name="teal_700">#C9ADA7</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="logoYellow">#FFDD02</color>
+
+    <color name="custom_dark_blue_1">#22223B</color>
+    <color name="custom_dark_blue_2">#363852</color>
+    <color name="custom_light_blue_1">#4A4E69</color>
+    <color name="custom_light_blue_2">#726D81</color>
+    <color name="custom_light_purple_1">#9A8C98</color>
+    <color name="custom_light_purple_2">#B29DA0</color>
+    <color name="custom_light_red_1">#FF9800</color>
+    <color name="custom_light_red_2">#C9ADA7</color>
+    <color name="custom_light_red_3">#DECBC6</color>
+    <color name="custom_almost_whit_1">#F1EDEA</color>
+    <color name="custom_almost_whit_2">#E8DAD5</color>
+    <color name="custom_almost_whit_3">#F2E9E4</color>
 </resources>

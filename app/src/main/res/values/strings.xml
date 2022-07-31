@@ -8,4 +8,16 @@
         <item>서포터</item>
         <item>수혜자</item>
     </string-array>
+
+    <string name="input_number">휴대폰 번호(- 없이 숫자만 입력)</string>
+    <string name="input_auth">인증번호 입력</string>
+    <string name="register_phone_1">안녕하세요!\n휴대폰 번호로 가입해주세요.</string>
+    <string name="register_phone_2">휴대폰 번호는 안전하게 보관되며 공개되지 않아요.</string>
+    <string name="register_auth_number">인증문자 받기</string>
+    <string name="register_auth">인증하기</string>
+    <string name="regiser_re_auth">인증번호 다시받기</string>
+    <string name="start_startbtn">시작하기</string>
+    <string name="start_already_has">이미 계정이 있나요?</string>
+    <string name="register_text_auth">인증번호를 입력 해주세요.</string>
+
 </resources>

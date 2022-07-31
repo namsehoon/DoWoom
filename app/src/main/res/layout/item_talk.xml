@@ -13,7 +13,7 @@
         android:id="@+id/llChatroom"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@color/logoYellow"
+        android:background="@color/custom_light_blue_2"
         android:orientation="horizontal">
 
         <LinearLayout
