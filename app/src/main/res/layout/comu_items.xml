@@ -7,7 +7,9 @@
         android:id="@+id/llContents"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/custom_light_blue_2"
+        android:padding="5dp"
+        android:background="@drawable/custom_items"
+        android:layout_marginBottom="4dp"
         android:orientation="horizontal">
 
         <LinearLayout

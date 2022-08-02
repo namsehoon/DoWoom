@@ -15,14 +15,15 @@
     </data>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/custom_light_blue_2"
-        android:layout_marginBottom="5sp"
+        android:layout_height="90dp"
+        android:padding="5dp"
+        android:background="@drawable/custom_items"
+        android:layout_marginBottom="8dp"
         android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/llImage"
-            android:layout_width="100sp"
+            android:layout_width="90sp"
             android:layout_height="match_parent"
             android:layout_gravity="start">
 
@@ -30,8 +31,8 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:padding="5sp"
-                android:layout_width="100sp"
-                android:layout_height="100sp"
+                android:layout_width="80sp"
+                android:layout_height="80sp"
                 android:adjustViewBounds="true"
                 tools:srcCompat="@tools:sample/avatars" />
 
@@ -55,25 +56,28 @@
 
                 <TextView
                     android:id="@+id/nickname"
-                    android:layout_marginStart="15sp"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/custom_dark_blue_2"
                     android:layout_height="wrap_content"
                     android:text="닉네임 : " />
 
                 <TextView
                     android:id="@+id/tvNickname"
+                    android:textColor="@color/custom_dark_blue_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
                     android:layout_marginStart="15sp"
                     android:id="@+id/age"
+                    android:textColor="@color/custom_dark_blue_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="나이 : " />
 
                 <TextView
                     android:id="@+id/tvAge"
+                    android:textColor="@color/custom_dark_blue_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
@@ -81,6 +85,7 @@
                 <TextView
                     android:layout_marginStart="15sp"
                     android:id="@+id/popularity"
+                    android:textColor="@color/custom_dark_blue_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="인기도 : "
@@ -88,6 +93,7 @@
 
                 <TextView
                     android:id="@+id/tvPopularity"
+                    android:textColor="@color/custom_dark_blue_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -102,7 +108,7 @@
 
                 <TextView
                     android:id="@+id/tvState"
-                    android:layout_marginStart="15sp"
+                    android:textColor="@color/custom_dark_blue_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp" />

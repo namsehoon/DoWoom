@@ -5,7 +5,7 @@
     android:layout_height="60sp"
     android:id="@+id/toolbar"
     app:contentInsetStart="0dp"
-    android:background="@color/black"
+    android:background="@color/custom_dark_blue_2"
     android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
     app:layout_scrollFlags="enterAlways">
 

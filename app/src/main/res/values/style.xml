@@ -3,6 +3,7 @@
 
     <style name="customTextViewFontStyle" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:fontFamily">@font/custom_font_family</item>
+        <item name="android:textColor">@color/custom_dark_blue_2</item>
     </style>
     <style name="customButtonFontStyle" parent="@android:style/Widget.DeviceDefault.Button.Borderless">
         <item name="android:fontFamily">@font/custom_font_family</item>

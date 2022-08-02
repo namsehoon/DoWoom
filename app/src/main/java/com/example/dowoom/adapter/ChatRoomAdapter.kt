@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.dowoom.R
 import com.example.dowoom.Util.GlideApp
 import com.example.dowoom.Util.TimeStampToDate
@@ -47,6 +49,7 @@ class ChatRoomAdapter(val context: Context, val goIntoChatroom:(ChatRoom) -> Uni
         } else {
             GlideApp.with(context)
                 .load(chatroom.user?.profileImg) // 이미지를 로드
+                .transform(CenterCrop(), RoundedCorners(R.drawable.custom_image))
                 .placeholder(R.drawable.ic_baseline_placeholder_24) // 이미지로딩을 시작하기전에 보여줄 이미지
                 .error(R.drawable.ic_baseline_image_not_supported_24) // 불러오다가 에러발생
                 .fallback(R.drawable.ic_baseline_image_not_supported_24) // 이미지가 null

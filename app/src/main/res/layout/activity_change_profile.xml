@@ -16,108 +16,138 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".activity.profile.ChangeProfileActivity">
 
-<ImageView
-    android:id="@+id/profileImg"
-    android:layout_width="150dp"
-    android:layout_height="150dp"
-    android:layout_marginTop="24dp"
-    android:adjustViewBounds="true"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    tools:srcCompat="@tools:sample/avatars" />
+    <LinearLayout
+        android:id="@+id/llProfileImg"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/custom_dark_blue_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-<TextView
-    android:id="@+id/tvNickname"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="60dp"
-    android:layout_marginTop="36dp"
-    android:text="닉네임 : "
-    android:textSize="18sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/profileImg" />
+        <ImageView
+            android:id="@+id/profileImg"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center"
+            tools:srcCompat="@tools:sample/avatars" />
+    </LinearLayout>
 
-<TextView
-    android:id="@+id/tvAge"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="24dp"
-    android:text="나이 : "
-    android:textSize="18sp"
-    app:layout_constraintEnd_toEndOf="@+id/tvNickname"
-    app:layout_constraintTop_toBottomOf="@+id/tvNickname" />
+    <TextView
+        android:id="@+id/tvNickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="36dp"
+        android:text="닉네임"
+        android:textColor="@color/custom_almost_gray_3"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llProfileImg" />
 
-<TextView
-    android:id="@+id/tvPopularity"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="24dp"
-    android:text="인기도 : "
-    android:textSize="18sp"
-    app:layout_constraintEnd_toEndOf="@+id/tvAge"
-    app:layout_constraintTop_toBottomOf="@+id/tvAge" />
+    <TextView
+        android:id="@+id/tvAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="나이"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/custom_almost_gray_3"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/tvNickname"
+        app:layout_constraintTop_toBottomOf="@+id/proifileNickname" />
 
-<TextView
-    android:id="@+id/tvStatusMsg"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="24dp"
-    android:text="상태메세지 : "
-    android:textSize="18sp"
-    app:layout_constraintEnd_toEndOf="@+id/tvPopularity"
-    app:layout_constraintTop_toBottomOf="@+id/tvPopularity" />
+    <TextView
+        android:id="@+id/tvPopularity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="인기도"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/custom_almost_gray_3"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/tvAge"
+        app:layout_constraintTop_toBottomOf="@+id/proifileAge" />
 
-<TextView
-    android:id="@+id/proifileNickname"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:text="@{user.nickname.toString()}"
-    app:layout_constraintBottom_toBottomOf="@+id/tvNickname"
-    app:layout_constraintStart_toEndOf="@+id/tvNickname"
-    app:layout_constraintTop_toTopOf="@+id/tvNickname" />
+    <TextView
+        android:id="@+id/tvStatusMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="상태메세지"
+        android:textColor="@color/custom_almost_gray_3"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/tvPopularity"
+        app:layout_constraintTop_toBottomOf="@+id/profilePopularity" />
 
-<TextView
-    android:id="@+id/proifileAge"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:text="@{user.age.toString()}"
-    app:layout_constraintBottom_toBottomOf="@+id/tvAge"
-    app:layout_constraintStart_toEndOf="@+id/tvAge"
-    app:layout_constraintTop_toTopOf="@+id/tvAge" />
+    <TextView
+        android:id="@+id/proifileNickname"
+        android:layout_width="1dp"
+        android:layout_height="21dp"
+        android:text="@{user.nickname.toString()}"
+        app:layout_constraintStart_toStartOf="@+id/tvNickname"
+        app:layout_constraintTop_toBottomOf="@+id/tvNickname" />
 
-<TextView
-    android:id="@+id/profilePopularity"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:text="@{user.popularity.toString()}"
-    app:layout_constraintBottom_toBottomOf="@+id/tvPopularity"
-    app:layout_constraintStart_toEndOf="@+id/tvPopularity"
-    app:layout_constraintTop_toTopOf="@+id/tvPopularity" />
+    <TextView
+        android:id="@+id/proifileAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{user.age.toString()}"
+        app:layout_constraintStart_toStartOf="@+id/tvAge"
+        app:layout_constraintTop_toBottomOf="@+id/tvAge" />
 
-<EditText
-    android:id="@+id/etprofileStateMsg"
-    android:layout_width="250dp"
-    android:layout_height="200dp"
-    android:layout_marginStart="16dp"
-    android:text="@{user.stateMsg.toString()}"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toEndOf="@+id/tvStatusMsg"
-    app:layout_constraintTop_toTopOf="@+id/tvStatusMsg" />
+    <TextView
+        android:id="@+id/profilePopularity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{user.popularity.toString()}"
+        app:layout_constraintStart_toStartOf="@+id/tvPopularity"
+        app:layout_constraintTop_toBottomOf="@+id/tvPopularity" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/filledTextField"
+
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginEnd="16dp"
+        android:padding="1dp"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tvStatusMsg"
+        app:layout_constraintTop_toBottomOf="@+id/tvStatusMsg">
+        <!--this is the actual edit text which takes the input-->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etprofileStateMsg"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            android:gravity="top"
+            android:inputType="number"
+            android:lineSpacingExtra="5dp"
+            android:text="@{user.stateMsg.toString()}" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <TextView
         android:id="@+id/tvSave"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="16dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="저장"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/custom_button"
+        android:textColor="@color/custom_almost_whit_2"
+        android:gravity="center"
+        android:padding="3dp"
+        android:text="@string/custom_text_save"
         android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

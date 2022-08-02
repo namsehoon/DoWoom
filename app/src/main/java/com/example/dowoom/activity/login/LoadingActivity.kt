@@ -1,6 +1,7 @@
 package com.example.dowoom.activity.login
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -26,6 +27,9 @@ class LoadingActivity : BaseActivity<ActivityLoadingBinding>(TAG = "로딩액티
     //뷰모델
     //파이어베이스 auth
     private lateinit var auth: FirebaseAuth
+    //로딩
+    private val LOADING_TIME:Long = 1000
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,31 +40,39 @@ class LoadingActivity : BaseActivity<ActivityLoadingBinding>(TAG = "로딩액티
 
     private fun initialized() {
 
+        Handler().postDelayed({
+
+            //firebase app check
+            try {
+                FirebaseApp.initializeApp(this)
+                val firebaseAppCheck = FirebaseAppCheck.getInstance()
+                firebaseAppCheck.installAppCheckProviderFactory(SafetyNetAppCheckProviderFactory.getInstance())
+            }catch (e:Exception) {
+                Log.d("abcd","appCheck Exeption : ${e.message}")
+            }
 
 
-        //firebase app check
-        try {
-            FirebaseApp.initializeApp(this)
-            val firebaseAppCheck = FirebaseAppCheck.getInstance()
-            firebaseAppCheck.installAppCheckProviderFactory(SafetyNetAppCheckProviderFactory.getInstance())
-        }catch (e:Exception) {
-            Log.d("abcd","appCheck Exeption : ${e.message}")
-        }
+            binding.lifecycleOwner = this
+            auth = FirebaseAuth.getInstance()
+
+            //유저 o , 닉네임 o
+            if (auth.currentUser != null ) {
+                startNextActivity(MainActivity::class.java)
+                finish()
+                //유저 o , 닉네임 x
+            } else {
+                startNextActivity(StartActivity::class.java)
+                finish()
+                //유저 x , 닉네임 x
+            }
 
 
-        binding.lifecycleOwner = this
-        auth = FirebaseAuth.getInstance()
+        }, LOADING_TIME)
 
-        //유저 o , 닉네임 o
-        if (auth.currentUser != null ) {
-            startNextActivity(MainActivity::class.java)
-            finish()
-            //유저 o , 닉네임 x
-        } else {
-            startNextActivity(StartActivity::class.java)
-            finish()
-            //유저 x , 닉네임 x
-        }
+
+
+
+
 
 
 

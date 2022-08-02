@@ -5,6 +5,9 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.20092592592592592" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/custom_button.xml" value="0.29635416666666664" />
+        <entry key="app/src/main/res/drawable/custom_image.xml" value="0.3921875" />
+        <entry key="app/src/main/res/drawable/custom_items.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/ic_baseline_attach_file_24.xml" value="0.209375" />
         <entry key="app/src/main/res/drawable/ic_baseline_image_not_supported_24.xml" value="0.209375" />
         <entry key="app/src/main/res/drawable/ic_baseline_new_releases_24.xml" value="0.209375" />
@@ -19,7 +22,7 @@
         <entry key="app/src/main/res/drawable/rounded_corner.xml" value="0.378125" />
         <entry key="app/src/main/res/font-v26/custom_font_family.xml" value="0.7252601259705338" />
         <entry key="app/src/main/res/font/custom_font_family.xml" value="0.30416666666666664" />
-        <entry key="app/src/main/res/layout/activity_change_profile.xml" value="0.18958333333333333" />
+        <entry key="app/src/main/res/layout/activity_change_profile.xml" value="0.37090073025355014" />
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_chat_room.xml" value="0.2640625" />
         <entry key="app/src/main/res/layout/activity_check.xml" value="0.4238517324738114" />
@@ -30,9 +33,9 @@
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_play_game.xml" value="0.39978331527627303" />
-        <entry key="app/src/main/res/layout/activity_register.xml" value="0.22360856496988565" />
+        <entry key="app/src/main/res/layout/activity_register.xml" value="0.4947994056463596" />
         <entry key="app/src/main/res/layout/activity_show_profile.xml" value="0.2628408636531099" />
-        <entry key="app/src/main/res/layout/activity_start.xml" value="0.3249049172139067" />
+        <entry key="app/src/main/res/layout/activity_start.xml" value="0.214168039538715" />
         <entry key="app/src/main/res/layout/blank_fragment.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/block_dialog.xml" value="0.2203125" />
         <entry key="app/src/main/res/layout/chatroom_item.xml" value="0.2640625" />
@@ -54,8 +57,8 @@
         <entry key="app/src/main/res/layout/game_result_dialog.xml" value="0.22" />
         <entry key="app/src/main/res/layout/home_fragment.xml" value="0.24210526315789474" />
         <entry key="app/src/main/res/layout/item_comu.xml" value="0.37604166666666666" />
-        <entry key="app/src/main/res/layout/item_game.xml" value="0.37604166666666666" />
-        <entry key="app/src/main/res/layout/item_recycler.xml" value="0.37322515212981744" />
+        <entry key="app/src/main/res/layout/item_game.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_recycler.xml" value="0.3535714285714286" />
         <entry key="app/src/main/res/layout/item_talk.xml" value="0.1" />
         <entry key="app/src/main/res/layout/my_dialog.xml" value="0.33" />
         <entry key="app/src/main/res/layout/popup_image_dialog.xml" value="0.22" />
@@ -64,7 +67,7 @@
         <entry key="app/src/main/res/layout/receivemsg_item.xml" value="0.4103019538188277" />
         <entry key="app/src/main/res/layout/sendmsg_item.xml" value="0.46452964591196655" />
         <entry key="app/src/main/res/layout/setting_fragment.xml" value="0.20885416666666667" />
-        <entry key="app/src/main/res/layout/talk_fragment.xml" value="0.20885416666666667" />
+        <entry key="app/src/main/res/layout/talk_fragment.xml" value="0.3645005334921646" />
         <entry key="app/src/main/res/layout/toolbar_main.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/menu/menu_comu.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/menu/menu_game.xml" value="0.21197916666666666" />

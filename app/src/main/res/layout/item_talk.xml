@@ -12,8 +12,10 @@
     <LinearLayout
         android:id="@+id/llChatroom"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@color/custom_light_blue_2"
+        android:layout_height="90dp"
+        android:padding="5dp"
+        android:background="@drawable/custom_items"
+        android:layout_marginBottom="4dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -24,9 +26,9 @@
 
             <ImageView
                 android:id="@+id/profileImg"
-                android:padding="5sp"
-                android:layout_width="100sp"
-                android:layout_height="100sp"
+                android:padding="4sp"
+                android:layout_width="80sp"
+                android:layout_height="80sp"
                 android:adjustViewBounds="true"
                 tools:srcCompat="@tools:sample/avatars" />
 
@@ -48,6 +50,7 @@
                     android:id="@+id/tvNickname"
                     android:gravity="start"
                     android:layout_weight="1"
+                    android:textColor="@color/custom_dark_blue_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                      />
@@ -57,6 +60,7 @@
                     android:layout_marginStart="20sp"
                     android:id="@+id/tvLastTime"
                     android:gravity="end"
+                    android:textColor="@color/custom_dark_blue_2"
                     android:layout_weight="1"
                     android:layout_gravity="center|end"
                     android:layout_width="wrap_content"
@@ -73,6 +77,7 @@
                 <TextView
                     android:id="@+id/tvLastMsg"
                     android:layout_weight="9"
+                    android:textColor="@color/custom_dark_blue_2"
                     android:gravity="center|start"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />

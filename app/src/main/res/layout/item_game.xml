@@ -11,7 +11,9 @@
         android:id="@+id/llGame"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@color/custom_light_blue_2"
+        android:padding="5dp"
+        android:background="@drawable/custom_items"
+        android:layout_marginBottom="4dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -31,6 +33,7 @@
                     android:id="@+id/tvWhatGame"
                     android:layout_weight="1"
                     android:gravity="start"
+                    android:textColor="@color/custom_dark_blue_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="사다리게임" />

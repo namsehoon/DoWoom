@@ -18,6 +18,7 @@
     <RelativeLayout
         android:id="@+id/rll"
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -298,6 +299,7 @@
                     android:id="@+id/rvMainComuList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="8dp"
                     android:layout_marginVertical="8dp"
                     tools:listitem="@layout/comu_items" />
 
