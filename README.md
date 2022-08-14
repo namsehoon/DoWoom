@@ -42,3 +42,24 @@
 
 <a>https://tv.kakao.com/v/430854450</a>
 
+
+---
+
+### 5. 티스토리
+
+<a>https://fffounding.tistory.com/entry/%EB%8F%84%EC%9B%80%ED%86%A1</a>
+
+
+---
+
+### 6. DB 구조
+
+<a>https://docs.google.com/presentation/d/1obQW7cRaxwMVlS13VAYsL4IPMEse0bNQwiCZICJ_mxI/edit#slide=id.p</a>
+
+
+---
+
+### 7. UI
+
+<a>https://docs.google.com/presentation/d/1b2BrpPXV2Gnu3niV67J6DGpy2fvHmf4-Z9hNBnkhI20/edit#slide=id.p</a>
+
