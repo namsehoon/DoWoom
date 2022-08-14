@@ -33,6 +33,8 @@
 * Jsoup
 * Retrofit
 * Glide
+* PreferenceCompat
+* datastore-preferences
 
 
 ---
